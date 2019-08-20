@@ -29,12 +29,6 @@
 			<scope>provided</scope>
 			<classifier>tests</classifier>
 		</dependency>
-
-		<dependency>
-			<groupId>org.openmrs.module</groupId>
-			<artifactId>uiframework-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 
 	<build>

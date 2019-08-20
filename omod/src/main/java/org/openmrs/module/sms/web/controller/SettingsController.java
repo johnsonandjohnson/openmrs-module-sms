@@ -2,12 +2,12 @@ package org.openmrs.module.sms.web.controller;
 
 import org.apache.commons.io.IOUtils;
 import org.motechproject.config.SettingsFacade;
-import org.motechproject.sms.configs.Configs;
-import org.motechproject.sms.json.TemplateJsonParser;
-import org.motechproject.sms.service.ConfigService;
-import org.motechproject.sms.service.TemplateService;
-import org.motechproject.sms.templates.TemplateForWeb;
-import org.motechproject.sms.util.Constants;
+import org.openmrs.module.sms.api.configs.Configs;
+import org.openmrs.module.sms.api.json.TemplateJsonParser;
+import org.openmrs.module.sms.api.service.ConfigService;
+import org.openmrs.module.sms.api.service.TemplateService;
+import org.openmrs.module.sms.api.templates.TemplateForWeb;
+import org.openmrs.module.sms.api.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
 
-import static org.motechproject.sms.util.Constants.HAS_MANAGE_SMS_ROLE;
+import static org.openmrs.module.sms.api.util.Constants.HAS_MANAGE_SMS_ROLE;
 
 //todo: find a way to report useful information if encountering malformed templates?
 

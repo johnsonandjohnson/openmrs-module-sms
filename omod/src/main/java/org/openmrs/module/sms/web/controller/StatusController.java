@@ -4,14 +4,14 @@ import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
-import org.motechproject.sms.audit.*;
-import org.motechproject.sms.audit.constants.DeliveryStatuses;
-import org.motechproject.sms.configs.Config;
-import org.motechproject.sms.service.ConfigService;
-import org.motechproject.sms.service.TemplateService;
-import org.motechproject.sms.templates.Status;
-import org.motechproject.sms.templates.Template;
-import org.motechproject.sms.util.SmsEventSubjects;
+import org.openmrs.module.sms.api.audit.*;
+import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
+import org.openmrs.module.sms.api.configs.Config;
+import org.openmrs.module.sms.api.service.ConfigService;
+import org.openmrs.module.sms.api.service.TemplateService;
+import org.openmrs.module.sms.api.templates.Status;
+import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.module.sms.api.util.SmsEventSubjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
-import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
-import static org.motechproject.sms.util.SmsEvents.outboundEvent;
+import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
+import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 
 /**
  * Handles message delivery status updates sent by sms providers to
