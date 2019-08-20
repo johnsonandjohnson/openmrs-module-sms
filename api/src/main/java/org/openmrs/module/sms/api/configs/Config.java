@@ -1,6 +1,6 @@
 package org.openmrs.module.sms.api.configs;
 
-import org.motechproject.sms.audit.constants.DeliveryStatuses;
+import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 
 import java.util.ArrayList;
 import java.util.List;

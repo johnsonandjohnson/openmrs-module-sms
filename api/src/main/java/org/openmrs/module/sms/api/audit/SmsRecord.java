@@ -13,7 +13,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.UIFilterable;
 import org.motechproject.mds.util.SecurityMode;
 
-import static org.motechproject.sms.util.Constants.VIEW_SMS_LOGS_PERMISSION;
+import static org.openmrs.module.sms.api.util.Constants.VIEW_SMS_LOGS_PERMISSION;
 
 /**
  * SMS audit record for the database.

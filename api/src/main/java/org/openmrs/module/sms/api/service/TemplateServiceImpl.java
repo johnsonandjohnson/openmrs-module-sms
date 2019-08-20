@@ -10,8 +10,8 @@ import org.motechproject.config.SettingsFacade;
 import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.sms.templates.Template;
-import org.motechproject.sms.templates.TemplateForWeb;
+import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.module.sms.api.templates.TemplateForWeb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * See {@link org.motechproject.sms.service.TemplateService}.
+ * See {@link org.openmrs.module.sms.api.service.TemplateService}.
  * This implementation uses the MOTECH configuration system to store the templates.
  */
 @Service("templateService")

@@ -2,7 +2,7 @@ package org.openmrs.module.sms.api.service;
 
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.sms.util.SmsEventParams;
+import org.openmrs.module.sms.api.util.SmsEventParams;
 
 import java.util.Collections;
 import java.util.List;

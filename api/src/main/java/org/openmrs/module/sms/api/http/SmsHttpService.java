@@ -12,15 +12,15 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.sms.audit.SmsRecord;
-import org.motechproject.sms.audit.SmsRecordsDataService;
-import org.motechproject.sms.configs.Config;
-import org.motechproject.sms.configs.ConfigProp;
-import org.motechproject.sms.service.ConfigService;
-import org.motechproject.sms.service.OutgoingSms;
-import org.motechproject.sms.service.TemplateService;
-import org.motechproject.sms.templates.Response;
-import org.motechproject.sms.templates.Template;
+import org.openmrs.module.sms.api.audit.SmsRecord;
+import org.openmrs.module.sms.api.audit.SmsRecordsDataService;
+import org.openmrs.module.sms.api.configs.Config;
+import org.openmrs.module.sms.api.configs.ConfigProp;
+import org.openmrs.module.sms.api.service.ConfigService;
+import org.openmrs.module.sms.api.service.OutgoingSms;
+import org.openmrs.module.sms.api.service.TemplateService;
+import org.openmrs.module.sms.api.templates.Response;
+import org.openmrs.module.sms.api.templates.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
-import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
-import static org.motechproject.sms.util.SmsEvents.outboundEvent;
+import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
+import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 
 /**
  * This is the main meat - here we talk to the providers using HTTP.

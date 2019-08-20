@@ -1,14 +1,14 @@
 package org.openmrs.module.sms.api.service;
 
-import org.motechproject.sms.templates.Template;
-import org.motechproject.sms.templates.TemplateForWeb;
+import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.module.sms.api.templates.TemplateForWeb;
 
 import java.util.List;
 import java.util.Map;
 
 /**
  * Template service, manages SMS Templates. A template represents the way all users connect to an SMS provider.
- * See {@link org.motechproject.sms.templates.Template}
+ * See {@link org.openmrs.module.sms.api.templates.Template}
  */
 public interface TemplateService {
 

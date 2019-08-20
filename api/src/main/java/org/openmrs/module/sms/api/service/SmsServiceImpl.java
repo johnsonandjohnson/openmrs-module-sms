@@ -5,13 +5,13 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
-import org.motechproject.sms.audit.SmsRecord;
-import org.motechproject.sms.audit.SmsRecordsDataService;
-import org.motechproject.sms.audit.constants.DeliveryStatuses;
-import org.motechproject.sms.configs.Config;
-import org.motechproject.sms.templates.Template;
-import org.motechproject.sms.util.SmsEventParams;
-import org.motechproject.sms.util.SmsEventSubjects;
+import org.openmrs.module.sms.api.audit.SmsRecord;
+import org.openmrs.module.sms.api.audit.SmsRecordsDataService;
+import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
+import org.openmrs.module.sms.api.configs.Config;
+import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.module.sms.api.util.SmsEventParams;
+import org.openmrs.module.sms.api.util.SmsEventSubjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
-import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
-import static org.motechproject.sms.util.SmsEvents.outboundEvent;
+import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
+import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 
 //todo: final pass over how we use motechId system-wide
 

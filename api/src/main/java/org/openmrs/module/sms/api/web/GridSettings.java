@@ -7,8 +7,8 @@ import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.commons.api.Range;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
-import org.motechproject.sms.audit.SmsDirection;
-import org.motechproject.sms.audit.SmsRecordSearchCriteria;
+import org.openmrs.module.sms.api.audit.SmsDirection;
+import org.openmrs.module.sms.api.audit.SmsRecordSearchCriteria;
 
 import java.util.Arrays;
 import java.util.HashSet;

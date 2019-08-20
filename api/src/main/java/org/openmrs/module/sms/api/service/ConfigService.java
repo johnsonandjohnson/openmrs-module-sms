@@ -1,13 +1,13 @@
 package org.openmrs.module.sms.api.service;
 
-import org.motechproject.sms.configs.Config;
-import org.motechproject.sms.configs.Configs;
+import org.openmrs.module.sms.api.configs.Config;
+import org.openmrs.module.sms.api.configs.Configs;
 
 import java.util.List;
 
 /**
  * Config service, manages SMS Configs. A config represents the way a particular user connects to an SMS provider.
- * See {@link org.motechproject.sms.configs.Config}
+ * See {@link org.openmrs.module.sms.api.configs.Config}
  */
 public interface ConfigService {
 

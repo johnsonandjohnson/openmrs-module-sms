@@ -9,9 +9,9 @@ import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.sms.configs.Config;
-import org.motechproject.sms.configs.Configs;
-import org.motechproject.sms.event.constants.EventSubjects;
+import org.openmrs.module.sms.api.configs.Config;
+import org.openmrs.module.sms.api.configs.Configs;
+import org.openmrs.module.sms.api.event.constants.EventSubjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * See {@link org.motechproject.sms.service.ConfigService}
+ * See {@link org.openmrs.module.sms.api.service.ConfigService}
  */
 @Service("configService")
 public class ConfigServiceImpl implements ConfigService {

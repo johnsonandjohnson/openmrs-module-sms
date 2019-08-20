@@ -2,11 +2,11 @@ package org.openmrs.module.sms.api.event;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.sms.tasks.SmsTasksNotifier;
+import org.openmrs.module.sms.api.tasks.SmsTasksNotifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.motechproject.sms.event.constants.EventSubjects.CONFIGS_CHANGED;
+import static org.openmrs.module.sms.api.event.constants.EventSubjects.CONFIGS_CHANGED;
 
 /**
  * The <code>ConfigurationEventHandler</code> class listens to notifications about configuration changes

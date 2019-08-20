@@ -2,8 +2,8 @@ package org.openmrs.module.sms.api.json;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.motechproject.sms.service.TemplateService;
-import org.motechproject.sms.templates.Template;
+import org.openmrs.module.sms.api.service.TemplateService;
+import org.openmrs.module.sms.api.templates.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * This class parses Json into Template objects and invokes suitable methods from <code>TemplateService</code>.
  *
- * @see org.motechproject.sms.service.TemplateService
+ * @see org.openmrs.module.sms.api.service.TemplateService
  */
 @Component
 public class TemplateJsonParser {
