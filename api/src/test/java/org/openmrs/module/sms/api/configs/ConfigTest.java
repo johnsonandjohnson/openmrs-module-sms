@@ -1,8 +1,8 @@
-package org.motechproject.sms.configs;
+package org.openmrs.module.sms.api.configs;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.sms.audit.constants.DeliveryStatuses;
+import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 
 import static org.junit.Assert.assertEquals;
 

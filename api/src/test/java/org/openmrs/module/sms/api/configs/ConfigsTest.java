@@ -1,4 +1,4 @@
-package org.motechproject.sms.configs;
+package org.openmrs.module.sms.api.configs;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -1,11 +1,11 @@
-package org.motechproject.sms.it;
+package org.openmrs.module.sms.api.it;
 
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.sms.audit.*;
+import org.openmrs.module.sms.api.audit.*;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;

@@ -1,4 +1,4 @@
-package org.motechproject.sms.templates;
+package org.openmrs.module.sms.api.templates;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

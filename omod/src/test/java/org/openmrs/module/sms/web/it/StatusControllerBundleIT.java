@@ -1,4 +1,4 @@
-package org.motechproject.sms.it;
+package org.openmrs.module.sms.api.it;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -8,11 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.api.Range;
-import org.motechproject.sms.audit.SmsRecord;
-import org.motechproject.sms.audit.SmsRecordsDataService;
-import org.motechproject.sms.configs.Config;
-import org.motechproject.sms.configs.Configs;
-import org.motechproject.sms.service.ConfigService;
+import org.openmrs.module.sms.api.audit.SmsRecord;
+import org.openmrs.module.sms.api.audit.SmsRecordsDataService;
+import org.openmrs.module.sms.api.configs.Config;
+import org.openmrs.module.sms.api.configs.Configs;
+import org.openmrs.module.sms.api.service.ConfigService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.utils.TestContext;
