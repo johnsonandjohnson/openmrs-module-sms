@@ -33,13 +33,13 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
      * @param timestamp the date-time range the timestamp of the SMS should fall into
      * @param deliveryStatuses the set of delivery status for the messages
      * @param providerStatus
-     * @param id the id by which OpenMRS identifies the message
+     * @param motechId the id by which MOTECH identifies the message
      * @param providerId the provider generated ID for the SMS
      * @param errorMessage the error message for the SMS
      * @return the matching records
      */
     List<SmsRecord> findByCriteria(String config, Set<SmsDirection> directions, String phoneNumber, String messageContent, Range<DateTime> timestamp,
-                                   Set<String> deliveryStatuses, String providerStatus, Integer id, String providerId, String errorMessage);
+                                   Set<String> deliveryStatuses, String providerStatus, String motechId, String providerId, String errorMessage);
 
     /**
      * Retrieves the total count of SMS messages matching the given criteria. All string fields in this lookup are matched
@@ -52,13 +52,13 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
      * @param timestamp the date-time range the timestamp of the SMS should fall into
      * @param deliveryStatuses the set of delivery status for the messages
      * @param providerStatus
-     * @param id the id by which OpenMRS identifies the message
+     * @param motechId the id by which MOTECH identifies the message
      * @param providerId the provider generated ID for the SMS
      * @param errorMessage the error message for the SMS
      * @return the matching records
      */
     long countFindByCriteria(String config, Set<SmsDirection> directions, String phoneNumber, String messageContent, Range<DateTime> timestamp,
-                             Set<String> deliveryStatuses, String providerStatus, Integer id, String providerId, String errorMessage);
+                             Set<String> deliveryStatuses, String providerStatus, String motechId, String providerId, String errorMessage);
 
     /**
      * Retrieves records by the provider ID.
@@ -69,18 +69,18 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
 
     /**
      * Retrieves records by the ID.
-     * @param id the OpenMRS ID
+     * @param motechId the MOTECH ID
      * @return the list of matching records
      */
-    List<SmsRecord> findById(Integer id);
+    List<SmsRecord> findByMotechId(String motechId);
 
     /**
-     * Retrieves records by both provider and OpenMRS IDs.
+     * Retrieves records by both provider and MOTECH IDs.
      * @param providerId the provider ID
-     * @param id the OpenMRS ID
+     * @param motechId the MOTECH ID
      * @return the list of matching records
      */
-    List<SmsRecord> findByProviderAndId(String providerId, Integer id);
+    List<SmsRecord> findByProviderAndMotechId(String providerId, String motechId);
 
     void deleteAll();
 
