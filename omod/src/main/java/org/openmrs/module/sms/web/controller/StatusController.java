@@ -7,6 +7,7 @@ import org.motechproject.mds.util.Order;
 import org.openmrs.module.sms.api.audit.*;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 import org.openmrs.module.sms.api.configs.Config;
+import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Status;
@@ -48,20 +49,20 @@ public class StatusController {
     private SmsAuditService smsAuditService;
     private TemplateService templateService;
     private ConfigService configService;
-    private SmsRecordsDataService smsRecordsDataService;
+    private SmsRecordDao smsRecordDao;
 
     @Autowired
     public StatusController(@Qualifier("templateService") TemplateService templateService,
                             @Qualifier("configService") ConfigService configService,
                             EventRelay eventRelay, StatusMessageService statusMessageService,
-                            SmsAuditService smsAuditService, SmsRecordsDataService smsRecordsDataService
+                            SmsAuditService smsAuditService, SmsRecordDao smsRecordDao
                             ) {
         this.templateService = templateService;
         this.configService = configService;
         this.eventRelay = eventRelay;
         this.statusMessageService = statusMessageService;
         this.smsAuditService = smsAuditService;
-        this.smsRecordsDataService = smsRecordsDataService;
+        this.smsRecordDao = smsRecordDao;
     }
 
     /**
@@ -209,6 +210,6 @@ public class StatusController {
                     smsRecord.getMessageContent(), smsRecord.getMotechId(), providerMessageId, null, null,
                     now(), null));
         }
-        smsRecordsDataService.create(smsRecord);
+        smsRecordDao.create(smsRecord);
     }
 }

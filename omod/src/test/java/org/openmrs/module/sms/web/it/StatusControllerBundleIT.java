@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.api.Range;
 import org.openmrs.module.sms.api.audit.SmsRecord;
-import org.openmrs.module.sms.api.audit.SmsRecordsDataService;
+import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.service.ConfigService;
@@ -45,13 +45,13 @@ public class StatusControllerBundleIT extends BasePaxIT {
     private ConfigService configService;
 
     @Inject
-    private SmsRecordsDataService smsRecordsDataService;
+    private SmsRecordDao smsRecordDao;
 
     @Before
     @After
     public void cleanupDatabase() {
         getLogger().info("cleanupDatabase");
-        smsRecordsDataService.deleteAll();
+        smsRecordDao.deleteAll();
     }
 
     @Before
@@ -107,7 +107,7 @@ public class StatusControllerBundleIT extends BasePaxIT {
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
         //Verify we logged this
-        List<SmsRecord> smsRecords = smsRecordsDataService.findByCriteria(null, new HashSet<>(), null, null,
+        List<SmsRecord> smsRecords = smsRecordDao.findByCriteria(null, new HashSet<>(), null, null,
                 new Range<>(null, null), new HashSet<>(), null,
                 null, messageId, null, null);
         assertEquals(1, smsRecords.size());

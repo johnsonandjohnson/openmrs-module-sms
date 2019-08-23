@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
 import org.openmrs.module.sms.api.audit.SmsRecord;
-import org.openmrs.module.sms.api.audit.SmsRecordsDataService;
+import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.service.ConfigService;
@@ -42,16 +42,16 @@ public class IncomingController {
     private TemplateService templateService;
     private ConfigService configService;
     private EventRelay eventRelay;
-    private SmsRecordsDataService smsRecordsDataService;
+    private SmsRecordDao smsRecordDao;
     private StatusMessageService statusMessageService;
 
 
     @Autowired
-    public IncomingController(SmsRecordsDataService smsRecordsDataService,
+    public IncomingController(SmsRecordDao smsRecordDao,
                               @Qualifier("templateService") TemplateService templateService,
                               @Qualifier("configService") ConfigService configService,
                               StatusMessageService statusMessageService, EventRelay eventRelay) {
-        this.smsRecordsDataService = smsRecordsDataService;
+        this.smsRecordDao = smsRecordDao;
         this.templateService = templateService;
         this.configService = configService;
         this.statusMessageService = statusMessageService;
@@ -89,7 +89,7 @@ public class IncomingController {
                 getMessage(params, template),
                 getMsgId(params, template),
                 getTimestamp(params, template)));
-        smsRecordsDataService.create(new SmsRecord(config.getName(),
+        smsRecordDao.create(new SmsRecord(config.getName(),
                 INBOUND,
                 getSender(params, template),
                 getMessage(params, template),

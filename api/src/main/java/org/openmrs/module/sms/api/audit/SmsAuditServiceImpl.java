@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.commons.api.Range;
 import org.motechproject.mds.query.QueryParams;
+import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +19,12 @@ import static org.motechproject.commons.api.MotechEnumUtils.toEnumSet;
  */
 @Service("smsAuditService")
 public class SmsAuditServiceImpl implements SmsAuditService {
-    private SmsRecordsDataService smsRecordsDataService;
+    private SmsRecordDao smsRecordDao;
 
     @Override
     @Transactional
     public List<SmsRecord> findAllSmsRecords() {
-        return smsRecordsDataService.retrieveAll();
+        return smsRecordDao.retrieveAll();
     }
 
     @Override
@@ -58,10 +59,10 @@ public class SmsAuditServiceImpl implements SmsAuditService {
         QueryParams queryParams = criteria.getQueryParams();
 
         if (count) {
-            return smsRecordsDataService.countFindByCriteria(config, directionsEnum, phoneNumber, messageContent,
+            return smsRecordDao.countFindByCriteria(config, directionsEnum, phoneNumber, messageContent,
                     timestampRange, statuses, providerStatus, motechId, providerId, errorMessage);
         } else {
-            return smsRecordsDataService.findByCriteria(
+            return smsRecordDao.findByCriteria(
                     config, directionsEnum, phoneNumber, messageContent, timestampRange, statuses,
                     providerStatus, motechId, providerId, errorMessage, queryParams);
         }
@@ -72,7 +73,7 @@ public class SmsAuditServiceImpl implements SmsAuditService {
     }
 
     @Autowired
-    public void setSmsRecordsDataService(SmsRecordsDataService smsRecordsDataService) {
-        this.smsRecordsDataService = smsRecordsDataService;
+    public void setSmsRecordDao(SmsRecordDao smsRecordDao) {
+        this.smsRecordDao = smsRecordDao;
     }
 }

@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.openmrs.module.sms.api.audit.*;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -26,7 +27,7 @@ import static junit.framework.Assert.assertEquals;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class SmsAuditServiceBundleIT extends BasePaxIT{
     @Inject
-    private SmsRecordsDataService smsRecordsDataService;
+    private SmsRecordDao smsRecordDao;
 
     @Inject
     private SmsAuditService smsAuditService;
@@ -42,7 +43,7 @@ public class SmsAuditServiceBundleIT extends BasePaxIT{
     @After
     public void cleanupDatabase() {
         getLogger().info("cleanupDatabase");
-        smsRecordsDataService.deleteAll();
+        smsRecordDao.deleteAll();
     }
 
     @Test
@@ -51,7 +52,7 @@ public class SmsAuditServiceBundleIT extends BasePaxIT{
 
         SmsRecord smsRecord = new SmsRecord("config", SmsDirection.INBOUND, "from", "message", DateTime.now(),
                 "PENDING", "status", "mid", "pid", null);
-        smsRecordsDataService.create(smsRecord);
+        smsRecordDao.create(smsRecord);
 
         List<SmsRecord> smsRecords = smsAuditService.findAllSmsRecords();
         assertEquals(1, smsRecords.size());
