@@ -9,6 +9,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
@@ -21,8 +23,6 @@ import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -47,7 +47,7 @@ import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 public class SmsHttpService {
 
     private static final String SMS_MODULE = "motech-sms";
-    private static final Logger LOGGER = LoggerFactory.getLogger(SmsHttpService.class);
+    private static final Log LOGGER = LogFactory.getLog(SmsHttpService.class);
 
     private TemplateService templateService;
     private ConfigService configService;
@@ -192,7 +192,7 @@ public class SmsHttpService {
         //todo: serialize access to configs, ie: one provider may allow 100 sms/min and another may allow 10...
         //This prevents us from sending more messages per second than the provider allows
         Integer milliseconds = template.getOutgoing().getMillisecondsBetweenMessages();
-        LOGGER.debug("Sleeping thread id {} for {}ms", Thread.currentThread().getId(), milliseconds);
+        LOGGER.debug(String.format("Sleeping thread id %d for %d ms", Thread.currentThread().getId(), milliseconds));
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException ex) {
@@ -219,7 +219,7 @@ public class SmsHttpService {
         // ***** WARNING *****
         if (LOGGER.isDebugEnabled()) {
             for (Map.Entry<String, String> entry : props.entrySet()) {
-                LOGGER.debug("PROP {}: {}", entry.getKey(), entry.getValue());
+                LOGGER.debug(String.format("PROP %s: %s", entry.getKey(), entry.getValue()));
             }
         }
 
@@ -242,7 +242,7 @@ public class SmsHttpService {
                         config.getName(), httpResponse), SMS_MODULE);
                 errorMessage = httpResponse;
             }
-            LOGGER.error("Delivery to SMS provider failed with HTTP {}: {}", httpStatus, errorMessage);
+            LOGGER.error(String.format("Delivery to SMS provider failed with HTTP %d: %s", httpStatus, errorMessage));
         }
 
         for (String recipient : sms.getRecipients()) {

@@ -1,6 +1,8 @@
 package org.openmrs.module.sms.web.controller;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.motechproject.config.SettingsFacade;
 import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.json.TemplateJsonParser;
@@ -8,8 +10,6 @@ import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.TemplateForWeb;
 import org.openmrs.module.sms.api.util.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,7 @@ import static org.openmrs.module.sms.api.util.Constants.HAS_MANAGE_SMS_ROLE;
 @PreAuthorize(HAS_MANAGE_SMS_ROLE)
 public class SettingsController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SendController.class);
+    private static final Log LOGGER = LogFactory.getLog(SendController.class);
 
     private TemplateService templateService;
     private ConfigService configService;

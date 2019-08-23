@@ -1,5 +1,7 @@
 package org.openmrs.module.sms.api.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
@@ -12,8 +14,6 @@ import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.SmsEventParams;
 import org.openmrs.module.sms.api.util.SmsEventSubjects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 @Service("smsService")
 public class SmsServiceImpl implements SmsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SmsServiceImpl.class);
+    private static final Log LOGGER = LogFactory.getLog(SmsServiceImpl.class);
 
     private EventRelay eventRelay;
     private MotechSchedulerService schedulerService;
@@ -175,7 +175,8 @@ public class SmsServiceImpl implements SmsService {
                     String motechId = generateMotechId();
                     eventRelay.sendEventMessage(outboundEvent(SmsEventSubjects.PENDING, config.getName(), recipients,
                             part, motechId, null, null, null, null, sms.getCustomParams()));
-                    LOGGER.info("Sending message [{}] to [{}].", part.replace("\n", "\\n"), recipients);
+                    LOGGER.info(String.format("Sending message [%s] to [%s].",
+                            part.replace("\n", "\\n"), recipients));
                     for (String recipient : recipients) {
                         smsRecordsDataService.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
                                 DeliveryStatuses.PENDING, null, motechId, null, null));
