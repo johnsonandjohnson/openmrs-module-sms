@@ -65,7 +65,7 @@ public class MultilineResponseHandler extends ResponseHandler {
                     List<String> recipients = Collections.singletonList(recipient);
                     getEvents().add(outboundEvent(getConfig().retryOrAbortSubject(failureCount), getConfig().getName(),
                             recipients, sms.getMessage(), sms.getMotechId(), null, failureCount, null, null, sms.getCustomParams()));
-                    getLogger().info("Failed to send SMS: {}", failureMessage);
+                    getLogger().info(String.format("Failed to send SMS: %s", failureMessage));
                     getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, recipient, sms.getMessage(),
                             now(), getConfig().retryOrAbortStatus(failureCount), null, sms.getMotechId(), null,
                             failureMessage));

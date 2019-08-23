@@ -1,6 +1,8 @@
 package org.openmrs.module.sms.api.http;
 
 import org.apache.commons.httpclient.Header;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.MotechEvent;
 import org.openmrs.module.sms.api.audit.SmsRecord;
@@ -8,8 +10,6 @@ import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 public abstract class ResponseHandler {
     private static final String SMS_MODULE = "motech-sms";
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResponseHandler.class);
+    private static final Log LOGGER = LogFactory.getLog(ResponseHandler.class);
     private Template template;
     private Config config;
     private Response templateOutgoingResponse;
@@ -113,7 +113,7 @@ public abstract class ResponseHandler {
     /**
      * @return the logger instance for this class
      */
-    protected Logger getLogger() {
+    protected Log getLogger() {
         return LOGGER;
     }
 

@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.motechproject.config.SettingsFacade;
 import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.motechproject.event.MotechEvent;
@@ -12,8 +14,6 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.event.constants.EventSubjects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
@@ -31,7 +31,7 @@ public class ConfigServiceImpl implements ConfigService {
     private static final String SMS_CONFIGS_FILE_NAME = "sms-configs.json";
     private static final String SMS_CONFIGS_FILE_PATH = "/" + ConfigurationConstants.RAW_DIR + "/" +
         SMS_CONFIGS_FILE_NAME;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigServiceImpl.class);
+    private static final Log LOGGER = LogFactory.getLog(ConfigServiceImpl.class);
     private SettingsFacade settingsFacade;
     private Configs configs;
     private EventRelay eventRelay;
@@ -58,7 +58,7 @@ public class ConfigServiceImpl implements ConfigService {
     public void handleFileChanged(MotechEvent event) {
         String filePath = (String) event.getParameters().get(ConfigurationConstants.FILE_PATH);
         if (!StringUtils.isBlank(filePath) && filePath.endsWith(SMS_CONFIGS_FILE_PATH)) {
-            LOGGER.info("{} has changed, reloading configs.", SMS_CONFIGS_FILE_NAME);
+            LOGGER.info(String.format("%s has changed, reloading configs.", SMS_CONFIGS_FILE_NAME));
             loadConfigs();
             eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIGS_CHANGED));
         }
