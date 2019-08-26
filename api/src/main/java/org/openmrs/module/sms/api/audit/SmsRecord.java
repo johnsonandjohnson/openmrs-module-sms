@@ -28,6 +28,8 @@ import static org.openmrs.module.sms.api.util.Constants.VIEW_SMS_LOGS_PERMISSION
 @Table(name = "sms_records")
 public class SmsRecord extends AbstractBaseOpenmrsData {
 
+    private static final String MEDIUMTEXT = "mediumtext";
+
     @Id
     @GeneratedValue
     @Column(name = "sms_records_id")
@@ -54,7 +56,7 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
     /**
      * The content of the SMS message.
      */
-    @Column
+    @Column(columnDefinition = MEDIUMTEXT)
     private String messageContent;
 
     /**
@@ -87,7 +89,7 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
     /**
      * The error message for this SMS, if applicable.
      */
-    @Column
+    @Column(columnDefinition = MEDIUMTEXT)
     private String errorMessage;
 
     /**
