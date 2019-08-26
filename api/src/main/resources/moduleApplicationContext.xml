@@ -33,9 +33,7 @@
             <ref bean="transactionManager" />
         </property>
         <property name="target">
-            <bean class="org.openmrs.module.sms.api.impl.SmsServiceImpl">
-                <property name="dao" ref="sms.SmsDao" />
-            </bean>
+            <bean class="org.openmrs.module.sms.api.service.SmsServiceImpl" />
         </property>
         <property name="preInterceptors">
             <ref bean="serviceInterceptors" />
@@ -50,8 +48,37 @@
     <bean parent="serviceContext">
         <property name="moduleService">
             <list>
-                <value>org.openmrs.module.sms.api.SmsService</value>
+                <value>org.openmrs.module.sms.api.service.SmsService</value>
                 <ref bean="sms.SmsService" />
+            </list>
+        </property>
+    </bean>
+
+    <!-- Wraps SettingsService methods in DB transactions and OpenMRS interceptors,
+    which set audit info like dateCreated, changedBy, etc.-->
+    <bean id="sms.SettingsService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="transactionManager" />
+        </property>
+        <property name="target">
+            <bean class="org.openmrs.module.sms.api.service.SmsSettingsServiceImpl" />
+        </property>
+        <property name="preInterceptors">
+            <ref bean="serviceInterceptors" />
+        </property>
+        <property name="transactionAttributeSource">
+            <ref bean="transactionAttributeSource" />
+        </property>
+    </bean>
+
+    <!-- Adds SettingsService to OpenMRS context so it can be accessed
+    calling Context.getService(SettingsService.class) -->
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list>
+                <value>org.openmrs.module.sms.api.service.SmsSettingsService</value>
+                <ref bean="sms.SettingsService" />
             </list>
         </property>
     </bean>

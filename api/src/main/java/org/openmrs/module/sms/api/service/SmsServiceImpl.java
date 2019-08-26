@@ -7,6 +7,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.audit.SmsRecordsDataService;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
@@ -32,8 +33,7 @@ import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 /**
  * Send an SMS, we really don't send here, but rather pass it on to the SmsHttpService which does
  */
-@Service("smsService")
-public class SmsServiceImpl implements SmsService {
+public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
 
     private static final Log LOGGER = LogFactory.getLog(SmsServiceImpl.class);
 
