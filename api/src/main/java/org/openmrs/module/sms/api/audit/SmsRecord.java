@@ -15,6 +15,8 @@ import org.motechproject.mds.util.SecurityMode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 import static org.openmrs.module.sms.api.util.Constants.VIEW_SMS_LOGS_PERMISSION;
@@ -25,6 +27,11 @@ import static org.openmrs.module.sms.api.util.Constants.VIEW_SMS_LOGS_PERMISSION
 @Entity(name = "sms.smsRecord")
 @Table(name = "sms_records")
 public class SmsRecord extends AbstractBaseOpenmrsData {
+
+    @Id
+    @GeneratedValue
+    @Column(name = "sms_records_id")
+    private Integer id;
 
     /**
      * The name of the configuration to which this SMS should be associated with.
@@ -116,6 +123,17 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
         this.motechId = motechId;
         this.providerId = providerId;
         this.errorMessage = errorMessage;
+    }
+
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
