@@ -3,9 +3,9 @@ package org.openmrs.module.sms.api.audit;
 //todo: motechTimestanp & providerTimestamp instead of just timestamp?
 //todo: 'senderNumber' & 'recipientNumber' instead of 'phoneNumber'?
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.DateTime;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.mds.annotations.Access;
@@ -270,16 +270,6 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
      */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
     }
 
     @Override
