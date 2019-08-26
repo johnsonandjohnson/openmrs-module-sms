@@ -118,7 +118,6 @@ public class StatusController {
         SmsRecord smsRecord;
         SmsRecords smsRecords;
         SmsRecord existingSmsRecord = null;
-        QueryParams queryParams = new QueryParams(new Order("timestamp", Order.Direction.DESC));
 
         // Try to find an existing SMS record using the provider message ID
         // NOTE: Only works if the provider guarantees the message id is unique. So far, all do.
@@ -134,8 +133,7 @@ public class StatusController {
             }
             smsRecords = smsAuditService.findAllSmsRecords(new SmsRecordSearchCriteria()
                     .withConfig(configName)
-                    .withProviderId(providerMessageId)
-                    .withQueryParams(queryParams));
+                    .withProviderId(providerMessageId));
             retry++;
         } while (retry < RECORD_FIND_RETRY_COUNT && CollectionUtils.isEmpty(smsRecords.getRecords()));
 
@@ -143,8 +141,7 @@ public class StatusController {
             // If we couldn't find a record by provider message ID try using the MOTECH ID
             smsRecords = smsAuditService.findAllSmsRecords(new SmsRecordSearchCriteria()
                     .withConfig(configName)
-                    .withMotechId(providerMessageId)
-                    .withQueryParams(queryParams));
+                    .withMotechId(providerMessageId));
             if (!CollectionUtils.isEmpty(smsRecords.getRecords())) {
                 LOGGER.debug("Found log record with matching motechId {}", providerMessageId);
                 existingSmsRecord = smsRecords.getRecords().get(0);

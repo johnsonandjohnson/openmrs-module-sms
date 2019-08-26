@@ -63,7 +63,7 @@ public class SmsAuditServiceImpl implements SmsAuditService {
 
         return smsRecordDao.countFindByCriteria(config, directionsEnum, phoneNumber, messageContent, timestampRange, statuses, providerStatus, motechId, providerId, errorMessage);
     }
-
+/*
     private Object executeQuery(SmsRecordSearchCriteria criteria, boolean count) {
         Set<String> directions = criteria.getSmsDirections();
         Set<SmsDirection> directionsEnum = toEnumSet(SmsDirection.class, directions);
@@ -86,7 +86,7 @@ public class SmsAuditServiceImpl implements SmsAuditService {
                     providerStatus, motechId, providerId, errorMessage);
         }
     }
-
+*/
     private String asQuery(String value) {
         return StringUtils.isNotBlank(value) ? String.format(".*%s.*", value) : value;
     }
