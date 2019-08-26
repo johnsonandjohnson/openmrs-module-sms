@@ -24,7 +24,7 @@ import static org.openmrs.module.sms.api.util.Constants.VIEW_SMS_LOGS_PERMISSION
  */
 @Entity(name = "sms.smsRecord")
 @Table(name = "sms_records")
-public class SmsRecord {
+public class SmsRecord extends AbstractBaseOpenmrsData {
 
     /**
      * The name of the configuration to which this SMS should be associated with.
