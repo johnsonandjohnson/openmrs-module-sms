@@ -1,6 +1,7 @@
 package org.openmrs.module.sms.api.dao.impl;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.db.hibernate.HibernateOpenmrsDataDAO;
 import org.openmrs.module.sms.api.audit.SmsDirection;
@@ -29,6 +30,8 @@ public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> impleme
         crit.add(Restrictions.eq("motechId", motechId));
         crit.add(Restrictions.eq("providerId", providerId));
         crit.add(Restrictions.eq("errorMessage", errorMessage));
+
+        crit.addOrder(Order.desc("timestamp"));
 
         return crit.list();
     }

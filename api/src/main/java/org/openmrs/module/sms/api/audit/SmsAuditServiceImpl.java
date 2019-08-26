@@ -30,24 +30,45 @@ public class SmsAuditServiceImpl implements SmsAuditService {
     @Override
     @Transactional
     public SmsRecords findAllSmsRecords(SmsRecordSearchCriteria criteria) {
-        List<SmsRecord> recordList = (List<SmsRecord>) executeQuery(criteria, false);
+        Set<String> directions = criteria.getSmsDirections();
+        Set<SmsDirection> directionsEnum = toEnumSet(SmsDirection.class, directions);
+        Set<String> statuses = criteria.getDeliveryStatuses();
+        Range<DateTime> timestampRange = criteria.getTimestampRange();
+        String config = criteria.getConfig();
+        String phoneNumber = criteria.getPhoneNumber();
+        String messageContent = criteria.getMessageContent();
+        String providerStatus = criteria.getProviderStatus();
+        String motechId = criteria.getMotechId();
+        String providerId = criteria.getProviderId();
+        String errorMessage = criteria.getErrorMessage();
+
+        List<SmsRecord> recordList = smsRecordDao.findByCriteria(config, directionsEnum, phoneNumber, messageContent, timestampRange, statuses, providerStatus, motechId, providerId, errorMessage);
         return new SmsRecords(recordList.size(), recordList);
     }
 
     @Override
     @Transactional
     public long countAllSmsRecords(SmsRecordSearchCriteria criteria) {
-        return (long) executeQuery(criteria, true);
+        Set<String> directions = criteria.getSmsDirections();
+        Set<SmsDirection> directionsEnum = toEnumSet(SmsDirection.class, directions);
+        Set<String> statuses = criteria.getDeliveryStatuses();
+        Range<DateTime> timestampRange = criteria.getTimestampRange();
+        String config = criteria.getConfig();
+        String phoneNumber = criteria.getPhoneNumber();
+        String messageContent = criteria.getMessageContent();
+        String providerStatus = criteria.getProviderStatus();
+        String motechId = criteria.getMotechId();
+        String providerId = criteria.getProviderId();
+        String errorMessage = criteria.getErrorMessage();
+
+        return smsRecordDao.countFindByCriteria(config, directionsEnum, phoneNumber, messageContent, timestampRange, statuses, providerStatus, motechId, providerId, errorMessage);
     }
 
     private Object executeQuery(SmsRecordSearchCriteria criteria, boolean count) {
         Set<String> directions = criteria.getSmsDirections();
         Set<SmsDirection> directionsEnum = toEnumSet(SmsDirection.class, directions);
-
         Set<String> statuses = criteria.getDeliveryStatuses();
-
         Range<DateTime> timestampRange = criteria.getTimestampRange();
-
         String config = asQuery(criteria.getConfig());
         String phoneNumber = asQuery(criteria.getPhoneNumber());
         String messageContent = asQuery(criteria.getMessageContent());
@@ -56,15 +77,13 @@ public class SmsAuditServiceImpl implements SmsAuditService {
         String providerId = asQuery(criteria.getProviderId());
         String errorMessage = asQuery(criteria.getErrorMessage());
 
-        QueryParams queryParams = criteria.getQueryParams();
-
         if (count) {
             return smsRecordDao.countFindByCriteria(config, directionsEnum, phoneNumber, messageContent,
                     timestampRange, statuses, providerStatus, motechId, providerId, errorMessage);
         } else {
             return smsRecordDao.findByCriteria(
                     config, directionsEnum, phoneNumber, messageContent, timestampRange, statuses,
-                    providerStatus, motechId, providerId, errorMessage, queryParams);
+                    providerStatus, motechId, providerId, errorMessage);
         }
     }
 
