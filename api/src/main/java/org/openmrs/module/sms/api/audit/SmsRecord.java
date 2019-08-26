@@ -4,8 +4,6 @@ package org.openmrs.module.sms.api.audit;
 //todo: 'senderNumber' & 'recipientNumber' instead of 'phoneNumber'?
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.DateTime;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.mds.annotations.Access;
@@ -18,8 +16,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import static org.openmrs.module.sms.api.util.Constants.VIEW_SMS_LOGS_PERMISSION;
 
 /**
  * SMS audit record for the database.
