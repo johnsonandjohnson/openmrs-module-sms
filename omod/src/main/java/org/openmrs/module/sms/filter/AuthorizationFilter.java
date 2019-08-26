@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Filter intended for all /ws/etllite calls that allows the user to authenticate via Basic
+ * Filter intended for all /ws/sms calls that allows the user to authenticate via Basic
  * authentication. (It will not fail on invalid or missing credentials. We count on the API to throw
  * exceptions if an unauthenticated user tries to do something they are not allowed to do.) <br/>
  */
@@ -33,7 +33,7 @@ public class AuthorizationFilter implements Filter {
 	 */
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-		LOGGER.debug("Initializing ETL Authorization filter");
+		LOGGER.debug("Initializing SMS Authorization filter");
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class AuthorizationFilter implements Filter {
 	 */
 	@Override
 	public void destroy() {
-		LOGGER.debug("Destroying ETL Authorization filter");
+		LOGGER.debug("Destroying SMS Authorization filter");
 	}
 
 	/**
