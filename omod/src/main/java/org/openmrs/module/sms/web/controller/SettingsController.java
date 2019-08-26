@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
 
-import static org.openmrs.module.sms.api.util.Constants.HAS_MANAGE_SMS_ROLE;
-
 //todo: find a way to report useful information if encountering malformed templates?
 
 /**

@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-import static org.openmrs.module.sms.api.util.Constants.HAS_MANAGE_SMS_ROLE;
-
 /**
  * handles requests to {server}/motech-platform-server/module/sms/send: how the Send SMS dialog sends a message
  */
