@@ -26,6 +26,16 @@
 		<module>omod</module>
 	</modules>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>${commonsCodecVersion}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<repositories>
 		<repository>
 			<id>openmrs-repo</id>
@@ -68,5 +78,6 @@
 		<openmrsPlatformVersion>1.11.6</openmrsPlatformVersion>
 		<javaCompilerSource>1.8</javaCompilerSource>
 		<javaCompilerTarget>1.8</javaCompilerTarget>
+		<commonsCodecVersion>1.5</commonsCodecVersion>
 	</properties>
 </project>

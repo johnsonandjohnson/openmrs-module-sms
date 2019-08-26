@@ -6,7 +6,6 @@ import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,7 @@ import java.io.IOException;
  * handles requests to {server}/motech-platform-server/module/sms/send: how the Send SMS dialog sends a message
  */
 @Controller
-@PreAuthorize(HAS_MANAGE_SMS_ROLE)
+@RequestMapping(value = "/sms")
 public class SendController {
 
     private static final Log LOGGER = LogFactory.getLog(SendController.class);

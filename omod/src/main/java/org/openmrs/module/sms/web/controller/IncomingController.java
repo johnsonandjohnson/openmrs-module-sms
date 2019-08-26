@@ -32,7 +32,7 @@ import static org.openmrs.module.sms.api.util.SmsEvents.inboundEvent;
  * when they receive an SMS
  */
 @Controller
-@RequestMapping(value = "/incoming")
+@RequestMapping(value = "/sms/incoming")
 public class IncomingController {
 
     private static final String SMS_MODULE = "motech-sms";

@@ -34,7 +34,7 @@ import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
  * {motechserver}/motech-platform-server/module/sms/status{Config}
  */
 @Controller
-@RequestMapping(value = "/status")
+@RequestMapping(value = "/sms/status")
 public class StatusController {
 
     private static final int RECORD_FIND_RETRY_COUNT = 3;
