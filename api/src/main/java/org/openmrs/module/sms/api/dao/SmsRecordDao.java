@@ -1,5 +1,6 @@
 package org.openmrs.module.sms.api.dao;
 
+import org.hibernate.criterion.Order;
 import org.joda.time.DateTime;
 import org.motechproject.commons.api.Range;
 import org.motechproject.mds.annotations.Lookup;
@@ -39,7 +40,7 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
      * @return the matching records
      */
     List<SmsRecord> findByCriteria(String config, Set<SmsDirection> directions, String phoneNumber, String messageContent, Range<DateTime> timestamp,
-                                   Set<String> deliveryStatuses, String providerStatus, String motechId, String providerId, String errorMessage);
+                                   Set<String> deliveryStatuses, String providerStatus, String motechId, String providerId, String errorMessage, Order order);
 
     /**
      * Retrieves the total count of SMS messages matching the given criteria. All string fields in this lookup are matched

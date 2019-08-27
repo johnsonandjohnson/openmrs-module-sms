@@ -20,7 +20,8 @@ public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> impleme
     @Override
     public List<SmsRecord> findByCriteria(String config, Set<SmsDirection> directions, String phoneNumber,
                                           String messageContent, Range<DateTime> timestamp, Set<String> deliveryStatuses,
-                                          String providerStatus, String motechId, String providerId, String errorMessage) {
+                                          String providerStatus, String motechId, String providerId, String errorMessage,
+                                          Order order) {
         Criteria crit = this.sessionFactory.getCurrentSession().createCriteria(this.mappedClass);
         crit.add(Restrictions.eq("config", config));
         crit.add(Restrictions.eq("smsDirection", directions));
@@ -32,8 +33,7 @@ public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> impleme
         crit.add(Restrictions.eq("motechId", motechId));
         crit.add(Restrictions.eq("providerId", providerId));
         crit.add(Restrictions.eq("errorMessage", errorMessage));
-
-        crit.addOrder(Order.desc("timestamp"));
+        crit.addOrder(order);
 
         return crit.list();
     }

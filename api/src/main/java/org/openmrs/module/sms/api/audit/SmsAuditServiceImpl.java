@@ -35,7 +35,8 @@ public class SmsAuditServiceImpl implements SmsAuditService {
         List<SmsRecord> recordList = smsRecordDao.findByCriteria(criteria.getConfig(),
                 toEnumSet(SmsDirection.class, criteria.getSmsDirections()), criteria.getPhoneNumber(),
                 criteria.getMessageContent(), criteria.getTimestampRange(), criteria.getDeliveryStatuses(),
-                criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage());
+                criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage(),
+                criteria.getOrder());
 
         return new SmsRecords(recordList.size(), recordList);
     }
@@ -72,8 +73,9 @@ public class SmsAuditServiceImpl implements SmsAuditService {
         }
     }
 */
+/*
     private String asQuery(String value) {
         return StringUtils.isNotBlank(value) ? String.format(".*%s.*", value) : value;
     }
-
+*/
 }

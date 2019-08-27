@@ -1,5 +1,6 @@
 package org.openmrs.module.sms.api.audit;
 
+import org.hibernate.criterion.Order;
 import org.joda.time.DateTime;
 import org.motechproject.commons.api.Range;
 import org.motechproject.mds.query.QueryParams;
@@ -66,6 +67,8 @@ public class SmsRecordSearchCriteria {
      * The query params controlling the ordering and size of the lookup that will be executed.
      */
     private QueryParams queryParams;
+
+    private Order order;
 
     /**
      * Sets the sms directions which should be included in the query.
@@ -183,6 +186,11 @@ public class SmsRecordSearchCriteria {
         return this;
     }
 
+    public SmsRecordSearchCriteria withOrder(Order order){
+        this.order = order;
+        return this;
+    }
+
     // Getters
 
     /**
@@ -257,6 +265,10 @@ public class SmsRecordSearchCriteria {
      */
     public QueryParams getQueryParams() {
         return queryParams;
+    }
+
+    public Order getOrder() {
+        return order;
     }
 
     @Override

@@ -290,8 +290,9 @@ public class GridSettings {
      * contains type safe information and should be used for building database lookups.
      * @return the newly created search crtieria
      */
-    /*
 
+    //
+    /*
     public SmsRecordSearchCriteria toSmsRecordSearchCriteria() {
         boolean reverse = "desc".equalsIgnoreCase(sortDirection);
 

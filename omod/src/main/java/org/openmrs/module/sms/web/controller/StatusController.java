@@ -1,5 +1,6 @@
 package org.openmrs.module.sms.web.controller;
 
+import org.hibernate.criterion.Order;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.mds.query.QueryParams;
@@ -118,6 +119,7 @@ public class StatusController {
         SmsRecord smsRecord;
         SmsRecords smsRecords;
         SmsRecord existingSmsRecord = null;
+        Order order = Order.desc("timestamp");
 
         // Try to find an existing SMS record using the provider message ID
         // NOTE: Only works if the provider guarantees the message id is unique. So far, all do.
@@ -133,7 +135,8 @@ public class StatusController {
             }
             smsRecords = smsAuditService.findAllSmsRecords(new SmsRecordSearchCriteria()
                     .withConfig(configName)
-                    .withProviderId(providerMessageId));
+                    .withProviderId(providerMessageId)
+                    .withOrder(order));
             retry++;
         } while (retry < RECORD_FIND_RETRY_COUNT && CollectionUtils.isEmpty(smsRecords.getRecords()));
 
@@ -141,7 +144,8 @@ public class StatusController {
             // If we couldn't find a record by provider message ID try using the MOTECH ID
             smsRecords = smsAuditService.findAllSmsRecords(new SmsRecordSearchCriteria()
                     .withConfig(configName)
-                    .withMotechId(providerMessageId));
+                    .withMotechId(providerMessageId)
+                    .withOrder(order));
             if (!CollectionUtils.isEmpty(smsRecords.getRecords())) {
                 LOGGER.debug("Found log record with matching motechId {}", providerMessageId);
                 existingSmsRecord = smsRecords.getRecords().get(0);
