@@ -291,7 +291,9 @@ public class GridSettings {
      * @return the newly created search crtieria
      */
 
-    //
+    // Method below has been commented because it is not used and contains Order and QueryParams from MDS which
+    // should be dropped for properly compilation so for now there is no need to refactor it now. It is possible that
+    // the method will be removed
     /*
     public SmsRecordSearchCriteria toSmsRecordSearchCriteria() {
         boolean reverse = "desc".equalsIgnoreCase(sortDirection);

@@ -49,7 +49,12 @@ public class SmsAuditServiceImpl implements SmsAuditService {
                 criteria.getMessageContent(), criteria.getTimestampRange(), criteria.getDeliveryStatuses(),
                 criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage());
     }
-/*
+
+    // Method below has been commented because it was used in the above two methods (findAllSmsRecords and
+    // countAllSmsRecords) and now it has been replaced by another call. Method below also contains MDS usages which
+    // should be dropped for properly compilation so for now there is no need to refactor it now. It is possible that
+    // the method will be removed
+    /*
     private Object executeQuery(SmsRecordSearchCriteria criteria, boolean count) {
         Set<String> directions = criteria.getSmsDirections();
         Set<SmsDirection> directionsEnum = toEnumSet(SmsDirection.class, directions);
@@ -73,6 +78,10 @@ public class SmsAuditServiceImpl implements SmsAuditService {
         }
     }
 */
+
+
+    // Method below has been commented because it is only used in above method (which is also unnecessary).
+    // It is possible that the method will be removed
 /*
     private String asQuery(String value) {
         return StringUtils.isNotBlank(value) ? String.format(".*%s.*", value) : value;
