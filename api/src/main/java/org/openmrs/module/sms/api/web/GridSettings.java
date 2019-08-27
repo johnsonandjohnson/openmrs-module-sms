@@ -5,8 +5,6 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.commons.api.Range;
-import org.motechproject.mds.query.QueryParams;
-import org.motechproject.mds.util.Order;
 import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecordSearchCriteria;
 

@@ -3,8 +3,6 @@ package org.openmrs.module.sms.web.controller;
 import org.hibernate.criterion.Order;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.mds.query.QueryParams;
-import org.motechproject.mds.util.Order;
 import org.openmrs.module.sms.api.audit.*;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 import org.openmrs.module.sms.api.configs.Config;
