@@ -1,6 +1,8 @@
 package org.openmrs.module.sms.web.controller;
 
 import org.hibernate.criterion.Order;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
 import org.openmrs.module.sms.api.audit.*;
@@ -12,8 +14,6 @@ import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Status;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.SmsEventSubjects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -34,14 +34,14 @@ import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
  * {motechserver}/motech-platform-server/module/sms/status{Config}
  */
 @Controller
-@RequestMapping(value = "/status")
+@RequestMapping(value = "/sms/status")
 public class StatusController {
 
     private static final int RECORD_FIND_RETRY_COUNT = 3;
     private static final int RECORD_FIND_TIMEOUT = 500;
     private static final String SMS_MODULE = "motech-sms";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StatusController.class);
+    private static final Log LOGGER = LogFactory.getLog(StatusController.class);
 
     private StatusMessageService statusMessageService;
     private EventRelay eventRelay;
@@ -74,7 +74,7 @@ public class StatusController {
     @ResponseBody
     @RequestMapping(value = "/{configName}")
     public void handle(@PathVariable String configName, @RequestParam Map<String, String> params) {
-        LOGGER.info("SMS Status - configName = {}, params = {}", configName, params);
+        LOGGER.info(String.format("SMS Status - configName = %s, params = %s", configName, params));
 
         if (!configService.hasConfig(configName)) {
             String msg = String.format("Received SMS Status for '%s' config but no matching config: %s, " +
@@ -124,7 +124,8 @@ public class StatusController {
         do {
             //seems that lucene takes a while to index, so try a couple of times and delay in between
             if (retry > 0) {
-                LOGGER.debug("Trying again to find log record with motechId {}, try {}", providerMessageId, retry + 1);
+                LOGGER.debug(String.format("Trying again to find log record with motechId %s, try %d",
+                        providerMessageId, retry + 1));
                 try {
                     Thread.sleep(RECORD_FIND_TIMEOUT);
                 } catch (InterruptedException e) {
@@ -145,7 +146,7 @@ public class StatusController {
                     .withMotechId(providerMessageId)
                     .withOrder(order));
             if (!CollectionUtils.isEmpty(smsRecords.getRecords())) {
-                LOGGER.debug("Found log record with matching motechId {}", providerMessageId);
+                LOGGER.debug(String.format("Found log record with matching motechId %s", providerMessageId));
                 existingSmsRecord = smsRecords.getRecords().get(0);
             }
         } else {
@@ -153,7 +154,7 @@ public class StatusController {
             //todo: an exact match. Remove when we switch to SEUSS.
             existingSmsRecord = findFirstByProviderMessageId(smsRecords, providerMessageId);
             if (existingSmsRecord != null) {
-                LOGGER.debug("Found log record with matching providerId {}", providerMessageId);
+                LOGGER.debug(String.format("Found log record with matching providerId %s", providerMessageId));
             }
         }
 

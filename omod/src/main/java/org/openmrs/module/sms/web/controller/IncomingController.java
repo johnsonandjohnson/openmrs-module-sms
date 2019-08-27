@@ -1,5 +1,7 @@
 package org.openmrs.module.sms.web.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
@@ -10,8 +12,6 @@ import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Template;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -32,12 +32,12 @@ import static org.openmrs.module.sms.api.util.SmsEvents.inboundEvent;
  * when they receive an SMS
  */
 @Controller
-@RequestMapping(value = "/incoming")
+@RequestMapping(value = "/sms/incoming")
 public class IncomingController {
 
     private static final String SMS_MODULE = "motech-sms";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IncomingController.class);
+    private static final Log LOGGER = LogFactory.getLog(IncomingController.class);
 
     private TemplateService templateService;
     private ConfigService configService;
@@ -70,7 +70,7 @@ public class IncomingController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/{configName}")
     public void handleIncoming(@PathVariable String configName, @RequestParam Map<String, String> params) {
-        LOGGER.info("Incoming SMS - configName = {}, params = {}", configName, params);
+        LOGGER.info(String.format("Incoming SMS - configName = %s, params = %s", configName, params));
 
         Config config;
         if (configService.hasConfig(configName)) {

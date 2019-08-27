@@ -1,10 +1,13 @@
 package org.openmrs.module.sms.api.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
@@ -12,8 +15,6 @@ import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.SmsEventParams;
 import org.openmrs.module.sms.api.util.SmsEventSubjects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -32,10 +33,9 @@ import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 /**
  * Send an SMS, we really don't send here, but rather pass it on to the SmsHttpService which does
  */
-@Service("smsService")
-public class SmsServiceImpl implements SmsService {
+public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SmsServiceImpl.class);
+    private static final Log LOGGER = LogFactory.getLog(SmsServiceImpl.class);
 
     private EventRelay eventRelay;
     private MotechSchedulerService schedulerService;
@@ -175,7 +175,8 @@ public class SmsServiceImpl implements SmsService {
                     String motechId = generateMotechId();
                     eventRelay.sendEventMessage(outboundEvent(SmsEventSubjects.PENDING, config.getName(), recipients,
                             part, motechId, null, null, null, null, sms.getCustomParams()));
-                    LOGGER.info("Sending message [{}] to [{}].", part.replace("\n", "\\n"), recipients);
+                    LOGGER.info(String.format("Sending message [%s] to [%s].",
+                            part.replace("\n", "\\n"), recipients));
                     for (String recipient : recipients) {
                         smsRecordDao.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
                                 DeliveryStatuses.PENDING, null, motechId, null, null));

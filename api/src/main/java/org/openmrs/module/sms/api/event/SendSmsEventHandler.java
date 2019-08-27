@@ -1,13 +1,13 @@
 package org.openmrs.module.sms.api.event;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.openmrs.module.sms.api.http.SmsHttpService;
 import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.service.SmsService;
 import org.openmrs.module.sms.api.util.SmsEventSubjects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SendSmsEventHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SendSmsEventHandler.class);
+    private static final Log LOGGER = LogFactory.getLog(SendSmsEventHandler.class);
 
     private SmsHttpService smsHttpService;
     private SmsService smsService;
@@ -31,15 +31,15 @@ public class SendSmsEventHandler {
 
     @MotechListener (subjects = { SmsEventSubjects.SEND_SMS })
     public void handleExternal(MotechEvent event) {
-        LOGGER.info("Handling external event {}: {}", event.getSubject(),
-                event.getParameters().get("message").toString().replace("\n", "\\n"));
+        LOGGER.info(String.format("Handling external event %s: %s", event.getSubject(),
+                event.getParameters().get("message").toString().replace("\n", "\\n")));
         smsService.send(new OutgoingSms(event));
     }
 
     @MotechListener (subjects = { SmsEventSubjects.PENDING, SmsEventSubjects.SCHEDULED, SmsEventSubjects.RETRYING })
     public void handleInternal(MotechEvent event) {
-        LOGGER.info("Handling internal event {}: {}", event.getSubject(),
-                event.getParameters().get("message").toString().replace("\n", "\\n"));
+        LOGGER.info(String.format("Handling internal event %s: %s", event.getSubject(),
+                event.getParameters().get("message").toString().replace("\n", "\\n")));
         smsHttpService.send(new OutgoingSms(event));
     }
 }
