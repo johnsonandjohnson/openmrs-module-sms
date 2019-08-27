@@ -18,7 +18,9 @@ public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> impleme
     }
 
     @Override
-    public List<SmsRecord> findByCriteria(String config, Set<SmsDirection> directions, String phoneNumber, String messageContent, Range<DateTime> timestamp, Set<String> deliveryStatuses, String providerStatus, String motechId, String providerId, String errorMessage) {
+    public List<SmsRecord> findByCriteria(String config, Set<SmsDirection> directions, String phoneNumber,
+                                          String messageContent, Range<DateTime> timestamp, Set<String> deliveryStatuses,
+                                          String providerStatus, String motechId, String providerId, String errorMessage) {
         Criteria crit = this.sessionFactory.getCurrentSession().createCriteria(this.mappedClass);
         crit.add(Restrictions.eq("config", config));
         crit.add(Restrictions.eq("smsDirection", directions));
@@ -37,7 +39,9 @@ public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> impleme
     }
 
     @Override
-    public long countFindByCriteria(String config, Set<SmsDirection> directions, String phoneNumber, String messageContent, Range<DateTime> timestamp, Set<String> deliveryStatuses, String providerStatus, String motechId, String providerId, String errorMessage) {
+    public long countFindByCriteria(String config, Set<SmsDirection> directions, String phoneNumber, String messageContent,
+                                    Range<DateTime> timestamp, Set<String> deliveryStatuses, String providerStatus,
+                                    String motechId, String providerId, String errorMessage) {
         Criteria crit = this.sessionFactory.getCurrentSession().createCriteria(this.mappedClass);
         crit.add(Restrictions.eq("config", config));
         crit.add(Restrictions.eq("smsDirection", directions));
