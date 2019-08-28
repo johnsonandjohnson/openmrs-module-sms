@@ -43,7 +43,7 @@ import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 /**
  * This is the main meat - here we talk to the providers using HTTP.
  */
-@Service
+@Service("sms.SmsHttpService")
 public class SmsHttpService {
 
     private static final String SMS_MODULE = "motech-sms";
