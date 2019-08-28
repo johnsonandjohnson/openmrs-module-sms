@@ -25,7 +25,6 @@ import java.util.Map;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.INBOUND;
-import static org.openmrs.module.sms.api.util.SmsEvents.inboundEvent;
 
 /**
  * Handles http requests to {motechserver}/motech-platform-server/module/sms/incoming{Config} sent by sms providers
@@ -83,12 +82,6 @@ public class IncomingController {
         }
         Template template = templateService.getTemplate(config.getTemplateName());
 
-        eventRelay.sendEventMessage(inboundEvent(config.getName(),
-                getSender(params, template),
-                getRecipient(params, template),
-                getMessage(params, template),
-                getMsgId(params, template),
-                getTimestamp(params, template)));
         smsRecordDao.create(new SmsRecord(config.getName(),
                 INBOUND,
                 getSender(params, template),

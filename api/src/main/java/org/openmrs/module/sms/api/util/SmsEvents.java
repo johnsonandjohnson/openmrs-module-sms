@@ -18,33 +18,6 @@ import static org.motechproject.commons.date.util.DateUtil.now;
 public final class SmsEvents {
 
     /**
-     * Creates an event which should be published after receiving an inbound SMS.
-     * @param config the configuration which received the SMS
-     * @param sender the sender number
-     * @param recipient the recipient number
-     * @param message the content of the SMS messages
-     * @param providerMessageId the provider ID of the message
-     * @param timestamp the message timestamp
-     * @return a {@link MotechEvent} that will indicate an inbound SMS
-     */
-    public static MotechEvent inboundEvent(String config, String sender, String recipient, String message,
-                                           String providerMessageId, DateTime timestamp) {
-        Map<String, Object> params = new HashMap<>();
-        params.put(SmsEventParams.CONFIG, config);
-        params.put(SmsEventParams.SENDER, sender);
-        params.put(SmsEventParams.RECIPIENT, recipient);
-        params.put(SmsEventParams.MESSAGE, message);
-        params.put(SmsEventParams.PROVIDER_MESSAGE_ID, providerMessageId);
-        params.put(SmsEventParams.TIMESTAMP_DATETIME, timestamp);
-
-        DateTime dtUTC = new DateTime(timestamp, DateTimeZone.forTimeZone(TimeZone.getTimeZone("UTC")));
-        String time = String.format("%02d:%02d Z", dtUTC.getHourOfDay(), dtUTC.getMinuteOfHour());
-        params.put(SmsEventParams.TIMESTAMP_TIME, time);
-
-        return new MotechEvent(SmsEventSubjects.INBOUND_SMS, params);
-    }
-
-    /**
      * Creates an MOTECH event which will describe an outbound SMS (already sent or to be sent).
      * @param subject the subject of the evnet
      * @param config the configuration which

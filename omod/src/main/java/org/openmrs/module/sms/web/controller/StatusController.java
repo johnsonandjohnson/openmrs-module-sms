@@ -185,30 +185,20 @@ public class StatusController {
         List<String> recipients = Collections.singletonList(smsRecord.getPhoneNumber());
 
         if (statusString != null) {
-            String eventSubject;
             if (statusString.matches(status.getStatusSuccess())) {
                 smsRecord.setDeliveryStatus(statusString);
-                eventSubject = SmsEventSubjects.DELIVERY_CONFIRMED;
             } else if (status.hasStatusFailure() && statusString.matches(status.getStatusFailure())) {
                 smsRecord.setDeliveryStatus(statusString);
-                eventSubject = SmsEventSubjects.FAILURE_CONFIRMED;
             } else {
                 // If we're not certain the message was delivered or failed, then it's in the DISPATCHED gray area
                 smsRecord.setDeliveryStatus(statusString);
-                eventSubject = SmsEventSubjects.DISPATCHED;
             }
-            eventRelay.sendEventMessage(outboundEvent(eventSubject, configName, recipients,
-                    smsRecord.getMessageContent(), smsRecord.getMotechId(), providerMessageId, null, statusString,
-                    now(), null));
         } else {
             String msg = String.format("Likely template error, unable to extract status string. Config: %s, Parameters: %s",
                     configName, params);
             LOGGER.error(msg);
             statusMessageService.warn(msg, SMS_MODULE);
             smsRecord.setDeliveryStatus(DeliveryStatuses.FAILURE_CONFIRMED);
-            eventRelay.sendEventMessage(outboundEvent(SmsEventSubjects.FAILURE_CONFIRMED, configName, recipients,
-                    smsRecord.getMessageContent(), smsRecord.getMotechId(), providerMessageId, null, null,
-                    now(), null));
         }
         smsRecordDao.create(smsRecord);
     }

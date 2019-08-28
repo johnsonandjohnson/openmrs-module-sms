@@ -51,8 +51,6 @@ public class MultilineSingleResponseHandler extends ResponseHandler {
                     sms.getRecipients().get(0)));
             getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, sms.getRecipients().get(0),
                     sms.getMessage(), now(), DeliveryStatuses.DISPATCHED, null, sms.getMotechId(), messageId, null));
-            getEvents().add(outboundEvent(SmsEventSubjects.DISPATCHED, getConfig().getName(), sms.getRecipients(),
-                    sms.getMessage(), sms.getMotechId(), messageId, null, null, null, sms.getCustomParams()));
         }
     }
 }
