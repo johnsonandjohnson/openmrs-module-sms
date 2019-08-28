@@ -2,7 +2,7 @@ package org.openmrs.module.sms.api.util;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.motechproject.event.MotechEvent;
+import org.openmrs.module.sms.api.event.SmsEvent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +13,7 @@ import static org.motechproject.commons.date.util.DateUtil.now;
 
 
 /**
- * MotechEvent Helper class, builds events from provided parameters.
+ * SmsEvent Helper class, builds events from provided parameters.
  */
 public final class SmsEvents {
 
@@ -29,9 +29,9 @@ public final class SmsEvents {
      * @param providerStatus the SMS status coming from the provider
      * @param timestamp the timestamp of the message
      * @param customParams custom parameters for the provider
-     * @return a {@link MotechEvent} describing the outbound SMS
+     * @return a {@link SmsEvent} describing the outbound SMS
      */
-    public static MotechEvent outboundEvent(String subject, String config, //NO CHECKSTYLE ParameterNumber
+    public static SmsEvent outboundEvent(String subject, String config, //NO CHECKSTYLE ParameterNumber
                                             List<String> recipients, String message, String motechId,
                                             String providerMessageId, Integer failureCount, String providerStatus,
                                             DateTime timestamp, Map<String, String> customParams) {
@@ -59,7 +59,7 @@ public final class SmsEvents {
         if (customParams != null && !customParams.isEmpty()) {
             params.put(SmsEventParams.CUSTOM_PARAMS, customParams);
         }
-        return new MotechEvent(subject, params);
+        return new SmsEvent(subject, params);
     }
 
     private SmsEvents() { }

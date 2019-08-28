@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.motechproject.admin.service.StatusMessageService;
-import org.motechproject.event.listener.EventRelay;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
@@ -40,7 +39,6 @@ public class IncomingController {
 
     private TemplateService templateService;
     private ConfigService configService;
-    private EventRelay eventRelay;
     private SmsRecordDao smsRecordDao;
     private StatusMessageService statusMessageService;
 
@@ -49,12 +47,11 @@ public class IncomingController {
     public IncomingController(SmsRecordDao smsRecordDao,
                               @Qualifier("templateService") TemplateService templateService,
                               @Qualifier("configService") ConfigService configService,
-                              StatusMessageService statusMessageService, EventRelay eventRelay) {
+                              StatusMessageService statusMessageService) {
         this.smsRecordDao = smsRecordDao;
         this.templateService = templateService;
         this.configService = configService;
         this.statusMessageService = statusMessageService;
-        this.eventRelay = eventRelay;
     }
 
 

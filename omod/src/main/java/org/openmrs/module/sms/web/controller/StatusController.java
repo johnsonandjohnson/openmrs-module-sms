@@ -4,7 +4,6 @@ import org.hibernate.criterion.Order;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.motechproject.admin.service.StatusMessageService;
-import org.motechproject.event.listener.EventRelay;
 import org.openmrs.module.sms.api.audit.*;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 import org.openmrs.module.sms.api.configs.Config;
@@ -44,7 +43,6 @@ public class StatusController {
     private static final Log LOGGER = LogFactory.getLog(StatusController.class);
 
     private StatusMessageService statusMessageService;
-    private EventRelay eventRelay;
     private SmsAuditService smsAuditService;
     private TemplateService templateService;
     private ConfigService configService;
@@ -53,12 +51,11 @@ public class StatusController {
     @Autowired
     public StatusController(@Qualifier("templateService") TemplateService templateService,
                             @Qualifier("configService") ConfigService configService,
-                            EventRelay eventRelay, StatusMessageService statusMessageService,
+                            StatusMessageService statusMessageService,
                             SmsAuditService smsAuditService, SmsRecordDao smsRecordDao
                             ) {
         this.templateService = templateService;
         this.configService = configService;
-        this.eventRelay = eventRelay;
         this.statusMessageService = statusMessageService;
         this.smsAuditService = smsAuditService;
         this.smsRecordDao = smsRecordDao;

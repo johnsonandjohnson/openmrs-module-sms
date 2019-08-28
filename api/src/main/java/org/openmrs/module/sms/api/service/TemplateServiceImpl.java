@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 import org.motechproject.commons.api.MotechException;
 import org.motechproject.config.SettingsFacade;
 import org.motechproject.config.core.constants.ConfigurationConstants;
-import org.motechproject.event.MotechEvent;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.templates.TemplateForWeb;
 import org.springframework.beans.factory.annotation.Autowired;

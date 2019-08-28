@@ -4,9 +4,9 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.motechproject.admin.service.StatusMessageService;
-import org.motechproject.event.MotechEvent;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.configs.Config;
+import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
@@ -25,7 +25,7 @@ public abstract class ResponseHandler {
     private Template template;
     private Config config;
     private Response templateOutgoingResponse;
-    private List<MotechEvent> events = new ArrayList<>();
+    private List<SmsEvent> events = new ArrayList<>();
     private List<SmsRecord> auditRecords = new ArrayList<>();
 
     @Autowired
@@ -60,10 +60,10 @@ public abstract class ResponseHandler {
     }
 
     /**
-     * Returns MotechEvents to be sent. These events are created during parsing of responses.
+     * Returns SmsEvents to be sent. These events are created during parsing of responses.
      * @return the list of events to publish
      */
-    public List<MotechEvent> getEvents() {
+    public List<SmsEvent> getEvents() {
         return events;
     }
 

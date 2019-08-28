@@ -8,8 +8,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.motechproject.config.SettingsFacade;
 import org.motechproject.config.core.constants.ConfigurationConstants;
-import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.EventRelay;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.event.constants.EventSubjects;
@@ -33,7 +31,6 @@ public class ConfigServiceImpl implements ConfigService {
     private static final Log LOGGER = LogFactory.getLog(ConfigServiceImpl.class);
     private SettingsFacade settingsFacade;
     private Configs configs;
-    private EventRelay eventRelay;
 
     private synchronized void loadConfigs() {
         try (InputStream is = settingsFacade.getRawConfig(SMS_CONFIGS_FILE_NAME)) {
@@ -47,9 +44,8 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Autowired
-    public ConfigServiceImpl(@Qualifier("smsSettings") SettingsFacade settingsFacade, EventRelay eventRelay) {
+    public ConfigServiceImpl(@Qualifier("smsSettings") SettingsFacade settingsFacade) {
         this.settingsFacade = settingsFacade;
-        this.eventRelay = eventRelay;
         loadConfigs();
     }
 
