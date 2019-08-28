@@ -289,50 +289,6 @@ public class GridSettings {
      * @return the newly created search crtieria
      */
 
-    // Method below has been commented because it is not used and contains Order and QueryParams from MDS which
-    // should be dropped for properly compilation so for now there is no need to refactor it now. It is possible that
-    // the method will be removed
-    /*
-    public SmsRecordSearchCriteria toSmsRecordSearchCriteria() {
-        boolean reverse = "desc".equalsIgnoreCase(sortDirection);
-
-        Order order = new Order(sortColumn, (reverse) ? Order.Direction.ASC : Order.Direction.DESC);
-        QueryParams queryParam = new QueryParams(page, rows, order);
-
-        Set<SmsDirection> types = getSmsDirectionFromSettings();
-        Set<String> deliveryStatusList = getDeliveryStatusFromSettings();
-        Range<DateTime> range = createRangeFromSettings();
-        SmsRecordSearchCriteria criteria = new SmsRecordSearchCriteria();
-        if (!types.isEmpty()) {
-            criteria.withSmsDirections(types);
-        }
-        if (!deliveryStatusList.isEmpty()) {
-            criteria.withDeliverystatuses(deliveryStatusList);
-        }
-        if (StringUtils.isNotBlank(config)) {
-            criteria.withConfig(config);
-        }
-        if (StringUtils.isNotBlank(phoneNumber)) {
-            criteria.withPhoneNumber(phoneNumber);
-        }
-        if (StringUtils.isNotBlank(messageContent)) {
-            criteria.withMessageContent(messageContent);
-        }
-        if (StringUtils.isNotBlank(motechId)) {
-            criteria.withMotechId(motechId);
-        }
-        if (StringUtils.isNotBlank(providerId)) {
-            criteria.withProviderId(providerId);
-        }
-        if (StringUtils.isNotBlank(providerStatus)) {
-            criteria.withProviderStatus(providerStatus);
-        }
-        criteria.withTimestampRange(range);
-        criteria.withQueryParams(queryParam);
-        return criteria;
-    }
-*/
-
     private Set<SmsDirection> getSmsDirectionFromSettings() {
         Set<SmsDirection> smsDirections = new HashSet<>();
         String[] smsDirectionList = smsDirection.split(",");

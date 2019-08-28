@@ -85,7 +85,7 @@ public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> impleme
 
     @Override
     public void deleteAll() {
-        this.sessionFactory.getCurrentSession().createQuery("delete from " + this.mappedClass).executeUpdate();
+        this.sessionFactory.getCurrentSession().createQuery("delete from sms.smsRecord").executeUpdate();
     }
 
     @Override

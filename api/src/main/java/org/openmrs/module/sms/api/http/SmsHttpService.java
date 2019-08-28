@@ -54,6 +54,7 @@ public class SmsHttpService {
     private EventRelay eventRelay;
     private HttpClient commonsHttpClient;
     private StatusMessageService statusMessageService;
+    @Autowired
     private SmsRecordDao smsRecordDao;
 
     /**
@@ -307,10 +308,5 @@ public class SmsHttpService {
     @Autowired
     public void setStatusMessageService(StatusMessageService statusMessageService) {
         this.statusMessageService = statusMessageService;
-    }
-
-    @Autowired
-    public void setSmsRecordDao(SmsRecordDao smsRecordDao) {
-        this.smsRecordDao = smsRecordDao;
     }
 }
