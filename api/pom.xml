@@ -11,4 +11,11 @@
 	<packaging>jar</packaging>
 	<name>Sms API</name>
 	<description>API project for Sms</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
+	</dependencies>
 </project>
