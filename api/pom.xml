@@ -11,4 +11,11 @@
 	<packaging>jar</packaging>
 	<name>Sms API</name>
 	<description>API project for Sms</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.openmrs</groupId>
+			<artifactId>event-api</artifactId>
+		</dependency>
+	</dependencies>
 </project>
