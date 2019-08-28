@@ -1,14 +1,14 @@
 package org.openmrs.module.sms.web.controller;
 
+import org.hibernate.criterion.Order;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.mds.query.QueryParams;
-import org.motechproject.mds.util.Order;
 import org.openmrs.module.sms.api.audit.*;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 import org.openmrs.module.sms.api.configs.Config;
+import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Status;
@@ -48,20 +48,20 @@ public class StatusController {
     private SmsAuditService smsAuditService;
     private TemplateService templateService;
     private ConfigService configService;
-    private SmsRecordsDataService smsRecordsDataService;
+    private SmsRecordDao smsRecordDao;
 
     @Autowired
     public StatusController(@Qualifier("templateService") TemplateService templateService,
                             @Qualifier("configService") ConfigService configService,
                             EventRelay eventRelay, StatusMessageService statusMessageService,
-                            SmsAuditService smsAuditService, SmsRecordsDataService smsRecordsDataService
+                            SmsAuditService smsAuditService, SmsRecordDao smsRecordDao
                             ) {
         this.templateService = templateService;
         this.configService = configService;
         this.eventRelay = eventRelay;
         this.statusMessageService = statusMessageService;
         this.smsAuditService = smsAuditService;
-        this.smsRecordsDataService = smsRecordsDataService;
+        this.smsRecordDao = smsRecordDao;
     }
 
     /**
@@ -117,7 +117,7 @@ public class StatusController {
         SmsRecord smsRecord;
         SmsRecords smsRecords;
         SmsRecord existingSmsRecord = null;
-        QueryParams queryParams = new QueryParams(new Order("timestamp", Order.Direction.DESC));
+        Order order = Order.desc("timestamp");
 
         // Try to find an existing SMS record using the provider message ID
         // NOTE: Only works if the provider guarantees the message id is unique. So far, all do.
@@ -135,7 +135,7 @@ public class StatusController {
             smsRecords = smsAuditService.findAllSmsRecords(new SmsRecordSearchCriteria()
                     .withConfig(configName)
                     .withProviderId(providerMessageId)
-                    .withQueryParams(queryParams));
+                    .withOrder(order));
             retry++;
         } while (retry < RECORD_FIND_RETRY_COUNT && CollectionUtils.isEmpty(smsRecords.getRecords()));
 
@@ -144,7 +144,7 @@ public class StatusController {
             smsRecords = smsAuditService.findAllSmsRecords(new SmsRecordSearchCriteria()
                     .withConfig(configName)
                     .withMotechId(providerMessageId)
-                    .withQueryParams(queryParams));
+                    .withOrder(order));
             if (!CollectionUtils.isEmpty(smsRecords.getRecords())) {
                 LOGGER.debug(String.format("Found log record with matching motechId %s", providerMessageId));
                 existingSmsRecord = smsRecords.getRecords().get(0);
@@ -210,6 +210,6 @@ public class StatusController {
                     smsRecord.getMessageContent(), smsRecord.getMotechId(), providerMessageId, null, null,
                     now(), null));
         }
-        smsRecordsDataService.create(smsRecord);
+        smsRecordDao.create(smsRecord);
     }
 }

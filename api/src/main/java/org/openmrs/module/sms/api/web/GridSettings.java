@@ -5,8 +5,6 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.commons.api.Range;
-import org.motechproject.mds.query.QueryParams;
-import org.motechproject.mds.util.Order;
 import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecordSearchCriteria;
 
@@ -290,44 +288,6 @@ public class GridSettings {
      * contains type safe information and should be used for building database lookups.
      * @return the newly created search crtieria
      */
-    public SmsRecordSearchCriteria toSmsRecordSearchCriteria() {
-        boolean reverse = "desc".equalsIgnoreCase(sortDirection);
-
-        Order order = new Order(sortColumn, (reverse) ? Order.Direction.ASC : Order.Direction.DESC);
-        QueryParams queryParam = new QueryParams(page, rows, order);
-
-        Set<SmsDirection> types = getSmsDirectionFromSettings();
-        Set<String> deliveryStatusList = getDeliveryStatusFromSettings();
-        Range<DateTime> range = createRangeFromSettings();
-        SmsRecordSearchCriteria criteria = new SmsRecordSearchCriteria();
-        if (!types.isEmpty()) {
-            criteria.withSmsDirections(types);
-        }
-        if (!deliveryStatusList.isEmpty()) {
-            criteria.withDeliverystatuses(deliveryStatusList);
-        }
-        if (StringUtils.isNotBlank(config)) {
-            criteria.withConfig(config);
-        }
-        if (StringUtils.isNotBlank(phoneNumber)) {
-            criteria.withPhoneNumber(phoneNumber);
-        }
-        if (StringUtils.isNotBlank(messageContent)) {
-            criteria.withMessageContent(messageContent);
-        }
-        if (StringUtils.isNotBlank(motechId)) {
-            criteria.withMotechId(motechId);
-        }
-        if (StringUtils.isNotBlank(providerId)) {
-            criteria.withProviderId(providerId);
-        }
-        if (StringUtils.isNotBlank(providerStatus)) {
-            criteria.withProviderStatus(providerStatus);
-        }
-        criteria.withTimestampRange(range);
-        criteria.withQueryParams(queryParam);
-        return criteria;
-    }
 
     private Set<SmsDirection> getSmsDirectionFromSettings() {
         Set<SmsDirection> smsDirections = new HashSet<>();

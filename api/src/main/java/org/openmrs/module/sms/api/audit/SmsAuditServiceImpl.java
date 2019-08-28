@@ -3,7 +3,7 @@ package org.openmrs.module.sms.api.audit;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.commons.api.Range;
-import org.motechproject.mds.query.QueryParams;
+import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,61 +18,34 @@ import static org.motechproject.commons.api.MotechEnumUtils.toEnumSet;
  */
 @Service("smsAuditService")
 public class SmsAuditServiceImpl implements SmsAuditService {
-    private SmsRecordsDataService smsRecordsDataService;
+
+    @Autowired
+    private SmsRecordDao smsRecordDao;
 
     @Override
     @Transactional
     public List<SmsRecord> findAllSmsRecords() {
-        return smsRecordsDataService.retrieveAll();
+        return smsRecordDao.retrieveAll();
     }
 
     @Override
     @Transactional
     public SmsRecords findAllSmsRecords(SmsRecordSearchCriteria criteria) {
-        List<SmsRecord> recordList = (List<SmsRecord>) executeQuery(criteria, false);
+        List<SmsRecord> recordList = smsRecordDao.findByCriteria(criteria.getConfig(),
+                toEnumSet(SmsDirection.class, criteria.getSmsDirections()), criteria.getPhoneNumber(),
+                criteria.getMessageContent(), criteria.getTimestampRange(), criteria.getDeliveryStatuses(),
+                criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage(),
+                criteria.getOrder());
+
         return new SmsRecords(recordList.size(), recordList);
     }
 
     @Override
     @Transactional
     public long countAllSmsRecords(SmsRecordSearchCriteria criteria) {
-        return (long) executeQuery(criteria, true);
-    }
-
-    private Object executeQuery(SmsRecordSearchCriteria criteria, boolean count) {
-        Set<String> directions = criteria.getSmsDirections();
-        Set<SmsDirection> directionsEnum = toEnumSet(SmsDirection.class, directions);
-
-        Set<String> statuses = criteria.getDeliveryStatuses();
-
-        Range<DateTime> timestampRange = criteria.getTimestampRange();
-
-        String config = asQuery(criteria.getConfig());
-        String phoneNumber = asQuery(criteria.getPhoneNumber());
-        String messageContent = asQuery(criteria.getMessageContent());
-        String providerStatus = asQuery(criteria.getProviderStatus());
-        String motechId = asQuery(criteria.getMotechId());
-        String providerId = asQuery(criteria.getProviderId());
-        String errorMessage = asQuery(criteria.getErrorMessage());
-
-        QueryParams queryParams = criteria.getQueryParams();
-
-        if (count) {
-            return smsRecordsDataService.countFindByCriteria(config, directionsEnum, phoneNumber, messageContent,
-                    timestampRange, statuses, providerStatus, motechId, providerId, errorMessage);
-        } else {
-            return smsRecordsDataService.findByCriteria(
-                    config, directionsEnum, phoneNumber, messageContent, timestampRange, statuses,
-                    providerStatus, motechId, providerId, errorMessage, queryParams);
-        }
-    }
-
-    private String asQuery(String value) {
-        return StringUtils.isNotBlank(value) ? String.format(".*%s.*", value) : value;
-    }
-
-    @Autowired
-    public void setSmsRecordsDataService(SmsRecordsDataService smsRecordsDataService) {
-        this.smsRecordsDataService = smsRecordsDataService;
+        return smsRecordDao.countFindByCriteria(criteria.getConfig(),
+                toEnumSet(SmsDirection.class, criteria.getSmsDirections()), criteria.getPhoneNumber(),
+                criteria.getMessageContent(), criteria.getTimestampRange(), criteria.getDeliveryStatuses(),
+                criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage());
     }
 }

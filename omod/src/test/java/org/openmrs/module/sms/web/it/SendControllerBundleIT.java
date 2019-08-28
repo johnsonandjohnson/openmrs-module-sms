@@ -11,7 +11,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openmrs.module.sms.api.audit.SmsRecordsDataService;
+import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -36,7 +36,7 @@ import static org.junit.Assert.assertNotNull;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class SendControllerBundleIT extends BasePaxIT {
     @Inject
-    private SmsRecordsDataService smsRecordsDataService;
+    private SmsRecordDao smsRecordDao;
 
 
     @Before

@@ -1,8 +1,8 @@
 package org.openmrs.module.sms.api.audit;
 
+import org.hibernate.criterion.Order;
 import org.joda.time.DateTime;
 import org.motechproject.commons.api.Range;
-import org.motechproject.mds.query.QueryParams;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -62,10 +62,7 @@ public class SmsRecordSearchCriteria {
      */
     private String errorMessage;
 
-    /**
-     * The query params controlling the ordering and size of the lookup that will be executed.
-     */
-    private QueryParams queryParams;
+    private Order order;
 
     /**
      * Sets the sms directions which should be included in the query.
@@ -172,14 +169,8 @@ public class SmsRecordSearchCriteria {
         return this;
     }
 
-    /**
-     * Sets the query params that will be used when performing the lookup. This params will control the ordering
-     * and size of the result set.
-     * @param queryParam the params that will be passed to the lookup
-     * @return this instance of the search criteria
-     */
-    public SmsRecordSearchCriteria withQueryParams(QueryParams queryParam) {
-        this.queryParams = queryParam;
+    public SmsRecordSearchCriteria withOrder(Order order){
+        this.order = order;
         return this;
     }
 
@@ -252,11 +243,8 @@ public class SmsRecordSearchCriteria {
         return errorMessage;
     }
 
-    /**
-     * @return the query params that will control the result set for the lookup
-     */
-    public QueryParams getQueryParams() {
-        return queryParams;
+    public Order getOrder() {
+        return order;
     }
 
     @Override
@@ -272,7 +260,6 @@ public class SmsRecordSearchCriteria {
                 ", motechId='" + motechId + '\'' +
                 ", providerId='" + providerId + '\'' +
                 ", errorMessage='" + errorMessage + '\'' +
-                ", queryParams=" + queryParams +
                 '}';
     }
 }

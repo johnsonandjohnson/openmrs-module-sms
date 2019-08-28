@@ -15,7 +15,7 @@ import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.openmrs.module.sms.api.audit.SmsRecord;
-import org.openmrs.module.sms.api.audit.SmsRecordsDataService;
+import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.ConfigProp;
 import org.openmrs.module.sms.api.service.ConfigService;
@@ -54,7 +54,8 @@ public class SmsHttpService {
     private EventRelay eventRelay;
     private HttpClient commonsHttpClient;
     private StatusMessageService statusMessageService;
-    private SmsRecordsDataService smsRecordsDataService;
+    @Autowired
+    private SmsRecordDao smsRecordDao;
 
     /**
      * This method allows sending outgoing sms messages through HTTP. The configuration specified in the {@link OutgoingSms}
@@ -138,7 +139,7 @@ public class SmsHttpService {
         // ...and audit all the records that need auditing
         //
         for (SmsRecord smsRecord : auditRecords) {
-            smsRecordsDataService.create(smsRecord);
+            smsRecordDao.create(smsRecord);
         }
     }
 
@@ -307,10 +308,5 @@ public class SmsHttpService {
     @Autowired
     public void setStatusMessageService(StatusMessageService statusMessageService) {
         this.statusMessageService = statusMessageService;
-    }
-
-    @Autowired
-    public void setSmsRecordsDataService(SmsRecordsDataService smsRecordsDataService) {
-        this.smsRecordsDataService = smsRecordsDataService;
     }
 }
