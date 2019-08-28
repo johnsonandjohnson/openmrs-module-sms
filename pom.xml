@@ -40,7 +40,11 @@
 				<artifactId>joda-time</artifactId>
 				<version>${jodaTime.version}</version>
 			</dependency>
-
+			<dependency>
+				<groupId>com.google.code.gson</groupId>
+				<artifactId>gson</artifactId>
+				<version>${gsonVersion}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -88,5 +92,6 @@
 		<javaCompilerTarget>1.8</javaCompilerTarget>
 		<commonsCodecVersion>1.5</commonsCodecVersion>
 		<jodaTime.version>2.9.1</jodaTime.version>
+		<gsonVersion>1.7.1</gsonVersion>
 	</properties>
 </project>
