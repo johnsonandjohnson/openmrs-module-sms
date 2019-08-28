@@ -10,9 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
-import static org.motechproject.commons.api.MotechEnumUtils.toEnumSet;
 
 /**
  * Service that does the reading and writing to the SMS audit log.

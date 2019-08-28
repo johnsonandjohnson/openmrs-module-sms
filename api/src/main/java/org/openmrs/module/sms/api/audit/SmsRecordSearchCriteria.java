@@ -7,7 +7,6 @@ import org.motechproject.commons.api.Range;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.motechproject.commons.api.MotechEnumUtils.toStringSet;
 
 
 /**
@@ -175,13 +174,6 @@ public class SmsRecordSearchCriteria {
     }
 
     // Getters
-
-    /**
-     * @return the set of expected SMS directions (inbound, outbound)
-     */
-    public Set<String> getSmsDirections() {
-        return toStringSet(smsDirections);
-    }
 
     /**
      * @return the configuration name which with the SMS should be associated with
