@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +33,7 @@ public class SmsAuditServiceImpl implements SmsAuditService {
     @Transactional
     public SmsRecords findAllSmsRecords(SmsRecordSearchCriteria criteria) {
         List<SmsRecord> recordList = smsRecordDao.findByCriteria(criteria.getConfig(),
-                toEnumSet(SmsDirection.class, criteria.getSmsDirections()), criteria.getPhoneNumber(),
+                EnumSet.allOf(SmsDirection.class), criteria.getPhoneNumber(),
                 criteria.getMessageContent(), criteria.getTimestampRange(), criteria.getDeliveryStatuses(),
                 criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage(),
                 criteria.getOrder());
@@ -44,7 +45,7 @@ public class SmsAuditServiceImpl implements SmsAuditService {
     @Transactional
     public long countAllSmsRecords(SmsRecordSearchCriteria criteria) {
         return smsRecordDao.countFindByCriteria(criteria.getConfig(),
-                toEnumSet(SmsDirection.class, criteria.getSmsDirections()), criteria.getPhoneNumber(),
+                EnumSet.allOf(SmsDirection.class), criteria.getPhoneNumber(),
                 criteria.getMessageContent(), criteria.getTimestampRange(), criteria.getDeliveryStatuses(),
                 criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage());
     }
