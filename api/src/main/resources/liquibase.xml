@@ -13,27 +13,81 @@
         for a list of supported elements and attributes
     -->
  
- 	<!-- Uncomment the changeset below if you want to make the Item class persistable, see also Item and SmsDaoTest -->
- 	<!--
-	<changeSet id="sms-2016-08-02-12-21" author="raff">
-		<preConditions onFail="MARK_RAN">
-			<not><tableExists tableName="sms_item"/></not>
-		</preConditions>
-		<comment>
-			Creating the sms_item table
-		</comment>
-		<createTable tableName="sms_item">
-			<column name="sms_item_id" type="int" autoIncrement="true">
-				<constraints primaryKey="true" nullable="false"/>
-			</column>
-			<column name="uuid" type="char(38)">
-				<constraints nullable="false" unique="true"></constraints>
-			</column>
-			<column name="owner" type="int" />
-			<column name="description" type="varchar(255)" />
-		</createTable>
-        <addForeignKeyConstraint constraintName="sms_item_owner_fk" baseTableName="sms_item" baseColumnNames="owner"  referencedTableName="users"
-                                 referencedColumnNames="user_id" />
-    </changeSet> -->
- 
+    <changeSet id="cfl-2019-08-27-9:45" author="Dawid Ruchniewicz">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="sms_records"/></not>
+        </preConditions>
+        <comment>
+            Created the sms_records table
+        </comment>
+        <createTable tableName="sms_records">
+            <column name="sms_records_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" unique="true"/>
+            </column>
+            <column name="config" type="varchar(255)"></column>
+            <column name="smsDirection" type="varchar(50)"></column>
+            <column name="phoneNumber" type="varchar(255)"></column>
+            <column name="messageContent" type="MEDIUMTEXT"></column>
+            <column name="timestamp" type="date"></column>
+            <column name="deliveryStatus" type="varchar(255)"></column>
+            <column name="providerStatus" type="varchar(255)"></column>
+            <column name="motechId" type="varchar(255)"></column>
+            <column name="providerId" type="varchar(255)"></column>
+            <column name="errorMessage" type="MEDIUMTEXT"></column>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="creator" type="int"/>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_voided" type="datetime"/>
+            <column name="void_reason" type="varchar(255)"/>
+            <column name="voided" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="voided_by" type="int"/>
+        </createTable>
+        <addForeignKeyConstraint constraintName="sms_records_creator_fk"
+                                 baseTableName="sms_records" baseColumnNames="creator"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="sms_records_changed_by_fk"
+                                 baseTableName="sms_records" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="sms_records_voided_by_fk"
+                                 baseTableName="sms_records" baseColumnNames="voided_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <createIndex tableName="sms_records" indexName="sms_records_index_messageContent">
+            <column name="messageContent"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_deliveryStatus">
+            <column name="deliveryStatus"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_smsDirection">
+            <column name="smsDirection"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_errorMessage">
+            <column name="errorMessage"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_providerStatus">
+            <column name="providerStatus"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_motechId">
+            <column name="motechId"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_timestamp">
+            <column name="timestamp"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_config">
+            <column name="config"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_phoneNumber">
+            <column name="phoneNumber"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_providerId">
+            <column name="providerId"></column>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
