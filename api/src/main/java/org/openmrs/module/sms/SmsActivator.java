@@ -14,6 +14,7 @@ public class SmsActivator extends BaseModuleActivator {
 	/**
 	 * @see #started()
 	 */
+	@Override
 	public void started() {
 		LOGGER.info("Started Sms");
 	}
@@ -23,6 +24,14 @@ public class SmsActivator extends BaseModuleActivator {
 	 */
 	public void shutdown() {
 		LOGGER.info("Shutdown Sms");
+	}
+
+	/**
+	 * @see #stopped()
+	 */
+	@Override
+	public void stopped() {
+		LOGGER.info("Stopped Sms");
 	}
 
 }
