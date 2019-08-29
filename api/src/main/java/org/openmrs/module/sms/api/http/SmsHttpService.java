@@ -11,7 +11,6 @@ import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.openmrs.module.sms.api.audit.SmsRecord;
@@ -23,6 +22,7 @@ import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.notification.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -53,7 +53,7 @@ public class SmsHttpService {
     private ConfigService configService;
     private EventRelay eventRelay;
     private HttpClient commonsHttpClient;
-    private StatusMessageService statusMessageService;
+    private AlertService alertService;
     @Autowired
     private SmsRecordDao smsRecordDao;
 
@@ -121,7 +121,7 @@ public class SmsHttpService {
             } catch (IllegalStateException | IllegalArgumentException e) {
                 // exceptions generated above should only come from config/template issues, try to display something
                 // useful in the motech messages and tomcat log
-                statusMessageService.warn(e.getMessage(), SMS_MODULE);
+                alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, e.getMessage()), e);
                 throw e;
             }
             events = handler.getEvents();
@@ -184,7 +184,7 @@ public class SmsHttpService {
             } else {
                 message = String.format("Config %s: missing username and password", config.getName());
             }
-            statusMessageService.warn(message, SMS_MODULE);
+            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, message), null);
             throw new IllegalStateException(message);
         }
     }
@@ -235,12 +235,12 @@ public class SmsHttpService {
         if (httpStatus == null) {
             String msg = String.format("Delivery to SMS provider failed: %s", errorMessage);
             LOGGER.error(msg);
-            statusMessageService.warn(msg, SMS_MODULE);
+            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
         } else {
             errorMessage = templateResponse.extractGeneralFailureMessage(httpResponse);
             if (errorMessage == null) {
-                statusMessageService.warn(String.format("Unable to extract failure message for '%s' config: %s",
-                        config.getName(), httpResponse), SMS_MODULE);
+                alertService.notifySuperUsers(String.format("%s - Unable to extract failure message for '%s' config: %s",
+                        config.getName(), httpResponse, SMS_MODULE), null);
                 errorMessage = httpResponse;
             }
             LOGGER.error(String.format("Delivery to SMS provider failed with HTTP %d: %s", httpStatus, errorMessage));
@@ -306,7 +306,7 @@ public class SmsHttpService {
     }
 
     @Autowired
-    public void setStatusMessageService(StatusMessageService statusMessageService) {
-        this.statusMessageService = statusMessageService;
+    public void setAlertService(AlertService alertService) {
+        this.alertService = alertService;
     }
 }
