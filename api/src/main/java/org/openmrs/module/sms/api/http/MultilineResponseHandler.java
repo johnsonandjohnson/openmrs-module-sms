@@ -11,7 +11,7 @@ import org.openmrs.module.sms.api.util.SmsEventSubjects;
 import java.util.Collections;
 import java.util.List;
 
-import static org.motechproject.commons.date.util.DateUtil.now;
+import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
 import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 

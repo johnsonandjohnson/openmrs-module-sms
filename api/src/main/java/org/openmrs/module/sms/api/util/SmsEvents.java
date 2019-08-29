@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import static org.motechproject.commons.date.util.DateUtil.now;
+import static org.joda.time.DateTime.now;
 
 
 /**

@@ -28,4 +28,12 @@ public class SmsActivator extends BaseModuleActivator {
 		LOGGER.info("Shutdown Sms");
 	}
 
+	/**
+	 * @see #stopped()
+	 */
+	@Override
+	public void stopped() {
+		LOGGER.info("Stopped Sms");
+	}
+
 }

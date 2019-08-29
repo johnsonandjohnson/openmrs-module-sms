@@ -3,7 +3,6 @@ package org.openmrs.module.sms.web.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
-import org.motechproject.admin.service.StatusMessageService;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
@@ -11,6 +10,7 @@ import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.notification.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Map;
 
-import static org.motechproject.commons.date.util.DateUtil.now;
+import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.INBOUND;
 
 /**
@@ -40,18 +40,18 @@ public class IncomingController {
     private TemplateService templateService;
     private ConfigService configService;
     private SmsRecordDao smsRecordDao;
-    private StatusMessageService statusMessageService;
+    private AlertService alertService;
 
 
     @Autowired
     public IncomingController(SmsRecordDao smsRecordDao,
                               @Qualifier("templateService") TemplateService templateService,
                               @Qualifier("configService") ConfigService configService,
-                              StatusMessageService statusMessageService) {
+                              AlertService alertService) {
         this.smsRecordDao = smsRecordDao;
         this.templateService = templateService;
         this.configService = configService;
-        this.statusMessageService = statusMessageService;
+        this.alertService = alertService;
     }
 
 
@@ -74,7 +74,7 @@ public class IncomingController {
         } else {
             String msg = String.format("Invalid config in incoming request: %s, params: %s", configName, params);
             LOGGER.error(msg);
-            statusMessageService.warn(msg, SMS_MODULE);
+            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
             return;
         }
         Template template = templateService.getTemplate(config.getTemplateName());
