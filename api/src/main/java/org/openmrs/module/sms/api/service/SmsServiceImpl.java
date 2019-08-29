@@ -3,28 +3,26 @@ package org.openmrs.module.sms.api.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
-import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.EventRelay;
-import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
-import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 import org.openmrs.module.sms.api.configs.Config;
+import org.openmrs.module.sms.api.event.SmsEvent;
+import org.openmrs.module.sms.api.task.SmsScheduledTask;
 import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.module.sms.api.util.Constants;
 import org.openmrs.module.sms.api.util.SmsEventParams;
 import org.openmrs.module.sms.api.util.SmsEventSubjects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.motechproject.commons.date.util.DateUtil.now;
+import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
 import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 
@@ -37,18 +35,18 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
 
     private static final Log LOGGER = LogFactory.getLog(SmsServiceImpl.class);
 
-    private EventRelay eventRelay;
-    private MotechSchedulerService schedulerService;
+    private SmsEventService smsEventService;
+    private SmsSchedulerService schedulerService;
     private TemplateService templateService;
     private ConfigService configService;
     private SmsRecordDao smsRecordDao;
 
     @Autowired
-    public SmsServiceImpl(EventRelay eventRelay, MotechSchedulerService schedulerService,
+    public SmsServiceImpl(SmsEventService smsEventService, SmsSchedulerService schedulerService,
                           @Qualifier("templateService") TemplateService templateService,
                           @Qualifier("configService") ConfigService configService,
                           SmsRecordDao smsRecordDao) {
-        this.eventRelay = eventRelay;
+        this.smsEventService = smsEventService;
         this.schedulerService = schedulerService;
         this.templateService = templateService;
         this.configService = configService;
@@ -154,12 +152,12 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
                 DateTime dt = sms.getDeliveryTime();
                 for (String part : messageParts) {
                     String motechId = generateMotechId();
-                    MotechEvent event = outboundEvent(SmsEventSubjects.SCHEDULED, config.getName(), recipients, part,
+                    SmsEvent event = outboundEvent(SmsEventSubjects.SCHEDULED, config.getName(), recipients, part,
                             motechId, null, null, null, null, sms.getCustomParams());
                     //MOTECH scheduler needs unique job ids, so adding motechId as job_id_key will do that
-                    event.getParameters().put(MotechSchedulerService.JOB_ID_KEY, motechId);
+                    event.getParameters().put(Constants.PARAM_JOB_ID, motechId);
                     event.getParameters().put(SmsEventParams.DELIVERY_TIME, dt);
-                    schedulerService.safeScheduleRunOnceJob(new RunOnceSchedulableJob(event, dt));
+                    schedulerService.safeScheduleRunOnceJob(event, dt, new SmsScheduledTask());
                     LOGGER.info(String.format("Scheduling message [%s] to [%s] at %s.",
                             part.replace("\n", "\\n"), recipients, sms.getDeliveryTime()));
                     //add one millisecond to the next sms part so they will be delivered in order
@@ -173,7 +171,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
             } else {
                 for (String part : messageParts) {
                     String motechId = generateMotechId();
-                    eventRelay.sendEventMessage(outboundEvent(SmsEventSubjects.PENDING, config.getName(), recipients,
+                    smsEventService.sendEventMessage(outboundEvent(SmsEventSubjects.PENDING, config.getName(), recipients,
                             part, motechId, null, null, null, null, sms.getCustomParams()));
                     LOGGER.info(String.format("Sending message [%s] to [%s].",
                             part.replace("\n", "\\n"), recipients));

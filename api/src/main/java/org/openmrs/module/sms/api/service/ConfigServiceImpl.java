@@ -2,16 +2,10 @@ package org.openmrs.module.sms.api.service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.motechproject.config.SettingsFacade;
-import org.motechproject.config.core.constants.ConfigurationConstants;
-import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.EventRelay;
-import org.motechproject.event.listener.annotations.MotechListener;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.configs.Config;
@@ -39,7 +33,6 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
     @Autowired
     private SettingsManagerService settingsManagerService;
     private Configs configs;
-    private EventRelay eventRelay;
 
     private synchronized void loadConfigs() {
 
@@ -68,22 +61,10 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
     }
 
     @Autowired
-    public ConfigServiceImpl(@Qualifier("smsSettings") SettingsManagerService settingsManagerService, EventRelay eventRelay) {
+    public ConfigServiceImpl(@Qualifier("smsSettings") SettingsManagerService settingsManagerService) {
         this.settingsManagerService = settingsManagerService;
-        this.eventRelay = eventRelay;
         loadConfigs();
     }
-
-    @MotechListener(subjects = { ConfigurationConstants.FILE_CHANGED_EVENT_SUBJECT })
-    public void handleFileChanged(MotechEvent event) {
-        String filePath = (String) event.getParameters().get(Constants.FILE_PATH);
-        if (!StringUtils.isBlank(filePath) && filePath.endsWith(Constants.CONFIG_FILE_PATH)) {
-            LOGGER.info(String.format("%s has changed, reloading configs.", Constants.SMS_CONFIGS_FILE_NAME));
-            loadConfigs();
-            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIGS_CHANGED));
-        }
-    }
-
 
     public Config getDefaultConfig() {
         return configs.getDefaultConfig();
@@ -115,7 +96,6 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
         ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes());
         settingsManagerService.saveRawConfig(Constants.SMS_CONFIGS_FILE_NAME, resource);
         loadConfigs();
-        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIGS_CHANGED));
     }
 
     public boolean hasConfigs() {

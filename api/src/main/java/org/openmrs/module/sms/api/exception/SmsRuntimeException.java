@@ -15,4 +15,5 @@ public class SmsRuntimeException extends RuntimeException {
 	public SmsRuntimeException(String message, Throwable throwable) {
 		super(message, throwable);
 	}
+
 }

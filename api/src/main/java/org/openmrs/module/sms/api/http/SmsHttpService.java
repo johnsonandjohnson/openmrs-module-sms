@@ -11,24 +11,24 @@ import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.motechproject.admin.service.StatusMessageService;
-import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.EventRelay;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.ConfigProp;
+import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.OutgoingSms;
+import org.openmrs.module.sms.api.service.SmsEventService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.notification.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -36,14 +36,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.motechproject.commons.date.util.DateUtil.now;
+import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
 import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 
 /**
  * This is the main meat - here we talk to the providers using HTTP.
  */
-@Service
+@Service("sms.SmsHttpService")
 public class SmsHttpService {
 
     private static final String SMS_MODULE = "motech-sms";
@@ -51,9 +51,9 @@ public class SmsHttpService {
 
     private TemplateService templateService;
     private ConfigService configService;
-    private EventRelay eventRelay;
+    private SmsEventService smsEventService;
     private HttpClient commonsHttpClient;
-    private StatusMessageService statusMessageService;
+    private AlertService alertService;
     @Autowired
     private SmsRecordDao smsRecordDao;
 
@@ -73,7 +73,7 @@ public class SmsHttpService {
         String httpResponse = null;
         String errorMessage = null;
         Map<String, String> props = generateProps(sms, template, config);
-        List<MotechEvent> events = new ArrayList<>();
+        List<SmsEvent> events = new ArrayList<>();
         List<SmsRecord> auditRecords = new ArrayList<>();
 
         //
@@ -121,7 +121,7 @@ public class SmsHttpService {
             } catch (IllegalStateException | IllegalArgumentException e) {
                 // exceptions generated above should only come from config/template issues, try to display something
                 // useful in the motech messages and tomcat log
-                statusMessageService.warn(e.getMessage(), SMS_MODULE);
+                alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, e.getMessage()), e);
                 throw e;
             }
             events = handler.getEvents();
@@ -131,8 +131,8 @@ public class SmsHttpService {
         //
         // Finally send all the events that need sending...
         //
-        for (MotechEvent event : events) {
-            eventRelay.sendEventMessage(event);
+        for (SmsEvent event : events) {
+            smsEventService.sendEventMessage(event);
         }
 
         //
@@ -147,7 +147,7 @@ public class SmsHttpService {
         if (method.getClass().equals(PostMethod.class)) {
             PostMethod postMethod = (PostMethod) method;
             RequestEntity requestEntity = postMethod.getRequestEntity();
-            if (MediaType.APPLICATION_FORM_URLENCODED_VALUE.equals(requestEntity.getContentType())) {
+            if (MediaType.APPLICATION_FORM_URLENCODED.equals(requestEntity.getContentType())) {
                 StringBuilder sb = new StringBuilder();
                 NameValuePair[] params = postMethod.getParameters();
                 for (NameValuePair param : params) {
@@ -184,7 +184,7 @@ public class SmsHttpService {
             } else {
                 message = String.format("Config %s: missing username and password", config.getName());
             }
-            statusMessageService.warn(message, SMS_MODULE);
+            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, message), null);
             throw new IllegalStateException(message);
         }
     }
@@ -229,18 +229,18 @@ public class SmsHttpService {
 
     private void handleFailure(Integer httpStatus, String priorErrorMessage, //NO CHECKSTYLE ParameterNumber
                                Integer failureCount, Response templateResponse, String httpResponse, Config config,
-                               OutgoingSms sms, List<SmsRecord> auditRecords, List<MotechEvent> events) {
+                               OutgoingSms sms, List<SmsRecord> auditRecords, List<SmsEvent> events) {
         String errorMessage = priorErrorMessage;
 
         if (httpStatus == null) {
             String msg = String.format("Delivery to SMS provider failed: %s", errorMessage);
             LOGGER.error(msg);
-            statusMessageService.warn(msg, SMS_MODULE);
+            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
         } else {
             errorMessage = templateResponse.extractGeneralFailureMessage(httpResponse);
             if (errorMessage == null) {
-                statusMessageService.warn(String.format("Unable to extract failure message for '%s' config: %s",
-                        config.getName(), httpResponse), SMS_MODULE);
+                alertService.notifySuperUsers(String.format("%s - Unable to extract failure message for '%s' config: %s",
+                        config.getName(), httpResponse, SMS_MODULE), null);
                 errorMessage = httpResponse;
             }
             LOGGER.error(String.format("Delivery to SMS provider failed with HTTP %d: %s", httpStatus, errorMessage));
@@ -290,8 +290,8 @@ public class SmsHttpService {
     }
 
     @Autowired
-    public void setEventRelay(EventRelay eventRelay) {
-        this.eventRelay = eventRelay;
+    public void setSmsEventService(SmsEventService smsEventService) {
+        this.smsEventService = smsEventService;
     }
 
     @Autowired
@@ -306,7 +306,7 @@ public class SmsHttpService {
     }
 
     @Autowired
-    public void setStatusMessageService(StatusMessageService statusMessageService) {
-        this.statusMessageService = statusMessageService;
+    public void setAlertService(AlertService alertService) {
+        this.alertService = alertService;
     }
 }

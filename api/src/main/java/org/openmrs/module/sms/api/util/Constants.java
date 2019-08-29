@@ -1,8 +1,5 @@
 package org.openmrs.module.sms.api.util;
 
-/**
- * Class holding constant String values related to permissions and roles.
- */
 public final class Constants {
 
     public static final String VIEW_SMS_LOGS_PERMISSION = "viewSMSLogs";
@@ -20,6 +17,8 @@ public final class Constants {
     public static final String SMS_SERVER_URL = "sms_server_url";
 
     public static final String DEFAULT_SMS_SERVER_URL = "";
+
+    public static final String PARAM_JOB_ID = "JobID";
 
     private Constants() {
     }

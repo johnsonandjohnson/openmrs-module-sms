@@ -8,7 +8,7 @@ import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.SmsEventSubjects;
 
-import static org.motechproject.commons.date.util.DateUtil.now;
+import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
 import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 
@@ -51,8 +51,6 @@ public class MultilineSingleResponseHandler extends ResponseHandler {
                     sms.getRecipients().get(0)));
             getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, sms.getRecipients().get(0),
                     sms.getMessage(), now(), DeliveryStatuses.DISPATCHED, null, sms.getMotechId(), messageId, null));
-            getEvents().add(outboundEvent(SmsEventSubjects.DISPATCHED, getConfig().getName(), sms.getRecipients(),
-                    sms.getMessage(), sms.getMotechId(), messageId, null, null, null, sms.getCustomParams()));
         }
     }
 }
