@@ -2,6 +2,7 @@ package org.openmrs.module.sms.api.service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -11,10 +12,14 @@ import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.event.constants.EventSubjects;
+import org.openmrs.module.sms.api.exception.SmsRuntimeException;
+import org.openmrs.module.sms.api.util.Constants;
+import org.openmrs.module.sms.api.util.ResourceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
@@ -28,10 +33,7 @@ import java.util.List;
  */
 @Service("configService")
 public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigService {
-
-    private static final String SMS_CONFIGS_FILE_NAME = "sms-configs.json";
-    private static final String SMS_CONFIGS_FILE_PATH = "/" + ConfigurationConstants.RAW_DIR + "/" +
-        SMS_CONFIGS_FILE_NAME;
+    
     private static final Log LOGGER = LogFactory.getLog(ConfigServiceImpl.class);
 
     @Autowired
@@ -40,28 +42,43 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
     private EventRelay eventRelay;
 
     private synchronized void loadConfigs() {
-        try (InputStream is = settingsManagerService.getRawConfig(SMS_CONFIGS_FILE_NAME)) {
+
+        if (configurationNotExist()){
+            loadDefaultETLConfiguration();
+        }
+
+        try (InputStream is = settingsManagerService.getRawConfig(Constants.SMS_CONFIGS_FILE_NAME)) {
             String jsonText = IOUtils.toString(is);
             Gson gson = new Gson();
             configs = gson.fromJson(jsonText, Configs.class);
         }
         catch (Exception e) {
-            throw new JsonIOException("Malformed " + SMS_CONFIGS_FILE_NAME + " file? " + e.toString(), e);
+            throw new JsonIOException("Malformed " + Constants.SMS_CONFIGS_FILE_NAME + " file? " + e.toString(), e);
         }
     }
 
+    private boolean configurationNotExist() {
+        return !settingsManagerService.configurationExist(Constants.SMS_CONFIGS_FILE_NAME);
+    }
+
+    private void loadDefaultETLConfiguration() {
+        String defaultConfiguration = ResourceUtil.readResourceFile(Constants.SMS_CONFIGS_FILE_NAME);
+        ByteArrayResource resource = new ByteArrayResource(defaultConfiguration.getBytes());
+        settingsManagerService.saveRawConfig(Constants.SMS_CONFIGS_FILE_NAME, resource);
+    }
+
     @Autowired
-    public ConfigServiceImpl(@Qualifier("smsSettings") SettingsFacade settingsFacade, EventRelay eventRelay) {
-        this.settingsFacade = settingsFacade;
+    public ConfigServiceImpl(@Qualifier("smsSettings") SettingsManagerService settingsManagerService, EventRelay eventRelay) {
+        this.settingsManagerService = settingsManagerService;
         this.eventRelay = eventRelay;
         loadConfigs();
     }
 
     @MotechListener(subjects = { ConfigurationConstants.FILE_CHANGED_EVENT_SUBJECT })
     public void handleFileChanged(MotechEvent event) {
-        String filePath = (String) event.getParameters().get(ConfigurationConstants.FILE_PATH);
-        if (!StringUtils.isBlank(filePath) && filePath.endsWith(SMS_CONFIGS_FILE_PATH)) {
-            LOGGER.info(String.format("%s has changed, reloading configs.", SMS_CONFIGS_FILE_NAME));
+        String filePath = (String) event.getParameters().get(Constants.FILE_PATH);
+        if (!StringUtils.isBlank(filePath) && filePath.endsWith(Constants.CONFIG_FILE_PATH)) {
+            LOGGER.info(String.format("%s has changed, reloading configs.", Constants.SMS_CONFIGS_FILE_NAME));
             loadConfigs();
             eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIGS_CHANGED));
         }
@@ -96,7 +113,7 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
         Gson gson = new Gson();
         String jsonText = gson.toJson(configs, Configs.class);
         ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes());
-        settingsFacade.saveRawConfig(SMS_CONFIGS_FILE_NAME, resource);
+        settingsManagerService.saveRawConfig(Constants.SMS_CONFIGS_FILE_NAME, resource);
         loadConfigs();
         eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIGS_CHANGED));
     }
@@ -107,6 +124,20 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
 
     @Override
     public String getServerUrl() {
-        return settingsFacade.getPlatformSettings().getServerUrl();
+        String serverUrl = Context.getAdministrationService().getGlobalProperty(Constants.SMS_SERVER_URL);
+
+        if (StringUtils.isEmpty(serverUrl)) {
+            String message = String.format("The %s global setting need to be set.", Constants.SMS_SERVER_URL);
+            LOGGER.warn(message);
+            SmsRuntimeException exception = new SmsRuntimeException(message);
+            Context.getAlertService().notifySuperUsers(message, exception)
+
+            Context.getAdministrationService().setGlobalProperty(Constants.SMS_SERVER_URL, Constants.DEFAULT_SMS_SERVER_URL);
+            serverUrl = Context.getAdministrationService().getGlobalProperty(Constants.SMS_SERVER_URL);
+            String message2 = String.format("Default sms server url has been used");
+            LOGGER.warn(message2);
+            return serverUrl;
+        }
+        return serverUrl;
     }
 }

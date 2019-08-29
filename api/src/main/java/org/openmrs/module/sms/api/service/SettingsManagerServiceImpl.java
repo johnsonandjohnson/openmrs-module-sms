@@ -1,8 +1,10 @@
 package org.openmrs.module.sms.api.service;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.sms.api.exception.ETLRuntimeException;
+import org.openmrs.module.sms.api.exception.SmsRuntimeException;
 import org.openmrs.module.sms.api.util.Constants;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.core.io.ByteArrayResource;
@@ -14,7 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-@Service("etl.settings.manager")
+@Service("sms.settings.manager")
 public class SettingsManagerServiceImpl extends BaseOpenmrsService implements SettingsManagerService {
 
 	@Override
@@ -23,7 +25,7 @@ public class SettingsManagerServiceImpl extends BaseOpenmrsService implements Se
 		try (InputStream is = resource.getInputStream(); FileOutputStream fos = new FileOutputStream(destinationFile)) {
 			IOUtils.copy(is, fos);
 		} catch (IOException e) {
-			throw new ETLRuntimeException("Error saving file " + configFileName, e);
+			throw new SmsRuntimeException("Error saving file " + configFileName, e);
 		}
 	}
 
@@ -36,7 +38,7 @@ public class SettingsManagerServiceImpl extends BaseOpenmrsService implements Se
 				is = new FileInputStream(configurationFile);
 			}
 		} catch (IOException e) {
-			throw new ETLRuntimeException("Error loading file " + configFileName, e);
+			throw new SmsRuntimeException("Error loading file " + configFileName, e);
 		}
 		return is;
 	}
@@ -44,6 +46,14 @@ public class SettingsManagerServiceImpl extends BaseOpenmrsService implements Se
 	@Override
 	public boolean configurationExist(String configurationFileName) {
 		return getDestinationFile(configurationFileName).exists();
+	}
+
+	@Override
+	public String getServerUrl() {
+		String serverUrl = Context.getAdministrationService().getGlobalProperty(SMS_SERVER_URL);
+		if (StringUtils.isEmpty(serverUrl)) {
+			String message = String.format("The %s global setting need to be set.", SMS_SERVER_URL)
+		}
 	}
 
 	private File getDestinationFile(String filename) {
