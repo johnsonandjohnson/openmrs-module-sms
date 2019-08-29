@@ -61,6 +61,11 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+			<dependency>
+				<groupId>javax.ws.rs</groupId>
+				<artifactId>jsr311-api</artifactId>
+				<version>${jsr311ApiVersion}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -111,5 +116,6 @@
 		<gsonVersion>1.7.1</gsonVersion>
 		<httpClientVersion>3.1.0</httpClientVersion>
 		<jodaUsertype.version>3.2.0.GA</jodaUsertype.version>
+		<jsr311ApiVersion>1.1</jsr311ApiVersion>
 	</properties>
 </project>

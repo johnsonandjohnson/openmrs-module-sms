@@ -1,6 +1,11 @@
 package org.openmrs.module.sms.api.templates;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -9,6 +14,7 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.config.SettingsFacade;
 
+import javax.ws.rs.core.MediaType;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +29,6 @@ import java.util.regex.Pattern;
 public class Template {
 
     public static final Pattern FIND_TOKEN_PATTERN = Pattern.compile("\\[(\\w*)\\]");
-
-    private static final String APPLICATION_JSON_VALUE = "application/json";
 
     /**
      * Models the handling of outgoing SMS messages.
@@ -76,7 +80,7 @@ public class Template {
                 String json = gson.toJson(jsonObject);
                 StringRequestEntity requestEntity;
                 try {
-                    requestEntity = new StringRequestEntity(json, APPLICATION_JSON_VALUE, "UTF-8");
+                    requestEntity = new StringRequestEntity(json, MediaType.APPLICATION_JSON, "UTF-8");
                 } catch  (UnsupportedEncodingException e) {
                     throw new IllegalStateException(String.format("Template error: %s: invalid json", name), e);
                 }

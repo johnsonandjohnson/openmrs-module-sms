@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -47,7 +48,6 @@ public class SmsHttpService {
 
     private static final String SMS_MODULE = "motech-sms";
     private static final Log LOGGER = LogFactory.getLog(SmsHttpService.class);
-    private static final String APPLICATION_FORM_URLENCODED_VALUE = "application/x-www-form-urlencoded";
 
     private TemplateService templateService;
     private ConfigService configService;
@@ -146,7 +146,7 @@ public class SmsHttpService {
         if (method.getClass().equals(PostMethod.class)) {
             PostMethod postMethod = (PostMethod) method;
             RequestEntity requestEntity = postMethod.getRequestEntity();
-            if (APPLICATION_FORM_URLENCODED_VALUE.equals(requestEntity.getContentType())) {
+            if (MediaType.APPLICATION_FORM_URLENCODED.equals(requestEntity.getContentType())) {
                 StringBuilder sb = new StringBuilder();
                 NameValuePair[] params = postMethod.getParameters();
                 for (NameValuePair param : params) {
