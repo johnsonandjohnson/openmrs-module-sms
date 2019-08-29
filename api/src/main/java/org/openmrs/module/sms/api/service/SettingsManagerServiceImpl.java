@@ -48,14 +48,6 @@ public class SettingsManagerServiceImpl extends BaseOpenmrsService implements Se
 		return getDestinationFile(configurationFileName).exists();
 	}
 
-	@Override
-	public String getServerUrl() {
-		String serverUrl = Context.getAdministrationService().getGlobalProperty(SMS_SERVER_URL);
-		if (StringUtils.isEmpty(serverUrl)) {
-			String message = String.format("The %s global setting need to be set.", SMS_SERVER_URL)
-		}
-	}
-
 	private File getDestinationFile(String filename) {
 		File configFileFolder = OpenmrsUtil.getDirectoryInApplicationDataDirectory(Constants.CONFIG_DIR);
 		return new File(configFileFolder, filename);

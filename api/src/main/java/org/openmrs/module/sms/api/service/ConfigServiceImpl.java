@@ -33,7 +33,7 @@ import java.util.List;
  */
 @Service("configService")
 public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigService {
-    
+
     private static final Log LOGGER = LogFactory.getLog(ConfigServiceImpl.class);
 
     @Autowired
