@@ -26,6 +26,7 @@ public class SmsActivator extends BaseModuleActivator {
 	 */
 	public void shutdown() {
 		LOGGER.info("Shutdown Sms");
+		SmsEventListenerFactory.unRegisterEventListeners();
 	}
 
 	/**
@@ -34,6 +35,7 @@ public class SmsActivator extends BaseModuleActivator {
 	@Override
 	public void stopped() {
 		LOGGER.info("Stopped Sms");
+		SmsEventListenerFactory.unRegisterEventListeners();
 	}
 
 }
