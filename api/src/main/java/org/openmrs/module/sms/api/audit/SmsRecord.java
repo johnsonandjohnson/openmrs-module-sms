@@ -4,6 +4,7 @@ package org.openmrs.module.sms.api.audit;
 //todo: 'senderNumber' & 'recipientNumber' instead of 'phoneNumber'?
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.mds.annotations.Access;
@@ -59,6 +60,7 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
      * The timestamp for this SMS.
      */
     @Column
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime timestamp;
 
     /**

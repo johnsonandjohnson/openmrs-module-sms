@@ -50,6 +50,17 @@
 				<artifactId>com.springsource.org.apache.commons.httpclient</artifactId>
 				<version>${httpClientVersion}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.jadira.usertype</groupId>
+				<artifactId>usertype.core</artifactId>
+				<version>${jodaUsertype.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-entitymanager</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -99,5 +110,6 @@
 		<jodaTime.version>2.9.1</jodaTime.version>
 		<gsonVersion>1.7.1</gsonVersion>
 		<httpClientVersion>3.1.0</httpClientVersion>
+		<jodaUsertype.version>3.2.0.GA</jodaUsertype.version>
 	</properties>
 </project>
