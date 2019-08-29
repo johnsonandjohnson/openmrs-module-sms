@@ -50,11 +50,6 @@
 				<artifactId>com.springsource.org.apache.commons.httpclient</artifactId>
 				<version>${httpClientVersion}</version>
 			</dependency>
-			<dependency>
-				<groupId>org.apache.servicemix.bundles</groupId>
-				<artifactId>org.apache.servicemix.bundles.spring-web</artifactId>
-				<version>${bundlesSpringWebVersion}</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

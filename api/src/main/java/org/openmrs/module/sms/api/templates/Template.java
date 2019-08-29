@@ -25,6 +25,8 @@ public class Template {
 
     public static final Pattern FIND_TOKEN_PATTERN = Pattern.compile("\\[(\\w*)\\]");
 
+    private static final String APPLICATION_JSON_VALUE = "application/json";
+
     /**
      * Models the handling of outgoing SMS messages.
      */
@@ -75,7 +77,7 @@ public class Template {
                 String json = gson.toJson(jsonObject);
                 StringRequestEntity requestEntity;
                 try {
-                    requestEntity = new StringRequestEntity(json, MediaType.APPLICATION_JSON_VALUE, "UTF-8");
+                    requestEntity = new StringRequestEntity(json, APPLICATION_JSON_VALUE, "UTF-8");
                 } catch  (UnsupportedEncodingException e) {
                     throw new IllegalStateException(String.format("Template error: %s: invalid json", name), e);
                 }
