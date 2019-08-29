@@ -11,6 +11,7 @@ import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.event.constants.EventSubjects;
@@ -26,18 +27,20 @@ import java.util.List;
  * See {@link org.openmrs.module.sms.api.service.ConfigService}
  */
 @Service("configService")
-public class ConfigServiceImpl implements ConfigService {
+public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigService {
 
     private static final String SMS_CONFIGS_FILE_NAME = "sms-configs.json";
     private static final String SMS_CONFIGS_FILE_PATH = "/" + ConfigurationConstants.RAW_DIR + "/" +
         SMS_CONFIGS_FILE_NAME;
     private static final Log LOGGER = LogFactory.getLog(ConfigServiceImpl.class);
-    private SettingsFacade settingsFacade;
+
+    @Autowired
+    private SettingsManagerService settingsManagerService;
     private Configs configs;
     private EventRelay eventRelay;
 
     private synchronized void loadConfigs() {
-        try (InputStream is = settingsFacade.getRawConfig(SMS_CONFIGS_FILE_NAME)) {
+        try (InputStream is = settingsManagerService.getRawConfig(SMS_CONFIGS_FILE_NAME)) {
             String jsonText = IOUtils.toString(is);
             Gson gson = new Gson();
             configs = gson.fromJson(jsonText, Configs.class);
