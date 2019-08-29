@@ -175,6 +175,14 @@ public class SmsRecordSearchCriteria {
 
     // Getters
 
+    public Set<String> getSmsDirections() {
+        Set<String> directionsString = new HashSet<>();
+        for (SmsDirection sd : smsDirections)
+            directionsString.add(String.valueOf(sd));
+
+        return directionsString;
+    }
+
     /**
      * @return the configuration name which with the SMS should be associated with
      */

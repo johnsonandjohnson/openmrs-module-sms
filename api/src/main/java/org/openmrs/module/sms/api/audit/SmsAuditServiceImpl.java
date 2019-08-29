@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -30,8 +32,14 @@ public class SmsAuditServiceImpl implements SmsAuditService {
     @Override
     @Transactional
     public SmsRecords findAllSmsRecords(SmsRecordSearchCriteria criteria) {
+        Set<String> directions = criteria.getSmsDirections();
+        Set<SmsDirection> directionsEnum = new HashSet<>();
+
+        for (String direction : directions)
+            directionsEnum.add(SmsDirection.valueOf(direction));
+
         List<SmsRecord> recordList = smsRecordDao.findByCriteria(criteria.getConfig(),
-                EnumSet.allOf(SmsDirection.class), criteria.getPhoneNumber(),
+                directionsEnum, criteria.getPhoneNumber(),
                 criteria.getMessageContent(), criteria.getTimestampRange(), criteria.getDeliveryStatuses(),
                 criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage(),
                 criteria.getOrder());
@@ -42,8 +50,14 @@ public class SmsAuditServiceImpl implements SmsAuditService {
     @Override
     @Transactional
     public long countAllSmsRecords(SmsRecordSearchCriteria criteria) {
+        Set<String> directions = criteria.getSmsDirections();
+        Set<SmsDirection> directionsEnum = new HashSet<>();
+
+        for (String direction : directions)
+            directionsEnum.add(SmsDirection.valueOf(direction));
+
         return smsRecordDao.countFindByCriteria(criteria.getConfig(),
-                EnumSet.allOf(SmsDirection.class), criteria.getPhoneNumber(),
+                directionsEnum, criteria.getPhoneNumber(),
                 criteria.getMessageContent(), criteria.getTimestampRange(), criteria.getDeliveryStatuses(),
                 criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage());
     }
