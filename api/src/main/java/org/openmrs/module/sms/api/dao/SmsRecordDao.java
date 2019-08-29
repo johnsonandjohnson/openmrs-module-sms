@@ -2,20 +2,12 @@ package org.openmrs.module.sms.api.dao;
 
 import org.hibernate.criterion.Order;
 import org.joda.time.DateTime;
-import org.motechproject.commons.api.Range;
-import org.motechproject.mds.annotations.Lookup;
-import org.motechproject.mds.annotations.LookupField;
-import org.motechproject.mds.query.QueryParams;
-import org.motechproject.mds.service.MotechDataService;
 import org.openmrs.api.db.OpenmrsDataDAO;
 import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 
 import java.util.List;
 import java.util.Set;
-
-import static org.motechproject.mds.util.Constants.Operators.MATCHES;
-import static org.motechproject.mds.util.Constants.Operators.MATCHES_CASE_INSENSITIVE;
 
 /**
  * Used to query and save audit records in the database.
