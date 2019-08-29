@@ -110,7 +110,7 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
             String message = String.format("The %s global setting need to be set.", Constants.SMS_SERVER_URL);
             LOGGER.warn(message);
             SmsRuntimeException exception = new SmsRuntimeException(message);
-            Context.getAlertService().notifySuperUsers(message, exception)
+            Context.getAlertService().notifySuperUsers(message, exception);
 
             Context.getAdministrationService().setGlobalProperty(Constants.SMS_SERVER_URL, Constants.DEFAULT_SMS_SERVER_URL);
             serverUrl = Context.getAdministrationService().getGlobalProperty(Constants.SMS_SERVER_URL);

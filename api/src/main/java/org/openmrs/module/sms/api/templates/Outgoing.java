@@ -1,6 +1,6 @@
 package org.openmrs.module.sms.api.templates;
 
-import org.motechproject.config.SettingsFacade;
+import org.openmrs.module.sms.api.service.SettingsManagerService;
 
 /**
  * How providers deal with outgoing messages.
@@ -76,14 +76,14 @@ public class Outgoing {
 
     /**
      * Reads the default values from MOTECH settings.
-     * @param settingsFacade the setting facade that will be used for reading the settings
+     * @param settingsManagerService the setting facade that will be used for reading the settings
      */
-    public void readDefaults(SettingsFacade settingsFacade) {
-        defaultMillisecondsBetweenMessages = Integer.valueOf(settingsFacade.getProperty(
+    public void readDefaults(SettingsManagerService settingsManagerService) {
+        defaultMillisecondsBetweenMessages = Integer.valueOf(settingsManagerService.getProperty(
                 SMS_DEFAULT_MILLISECONDS_BETWEEN_MESSAGES));
-        defaultMaxSmsSize = Integer.valueOf(settingsFacade.getProperty(SMS_DEFAULT_MAX_SMS_SIZE));
-        defaultMaxRecipient = Integer.valueOf(settingsFacade.getProperty(SMS_DEFAULT_MAX_RECIPIENT));
-        defaultRecipientSeparator = settingsFacade.getProperty(SMS_DEFAULT_RECIPIENT_SEPARATOR);
+        defaultMaxSmsSize = Integer.valueOf(settingsManagerService.getProperty(SMS_DEFAULT_MAX_SMS_SIZE));
+        defaultMaxRecipient = Integer.valueOf(settingsManagerService.getProperty(SMS_DEFAULT_MAX_RECIPIENT));
+        defaultRecipientSeparator = settingsManagerService.getProperty(SMS_DEFAULT_RECIPIENT_SEPARATOR);
     }
 
     /**
