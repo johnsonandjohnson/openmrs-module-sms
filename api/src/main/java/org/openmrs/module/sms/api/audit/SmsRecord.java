@@ -5,7 +5,7 @@ package org.openmrs.module.sms.api.audit;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.DateTime;
-import org.motechproject.commons.date.util.DateUtil;
+import org.joda.time.DateTimeZone;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.UIFilterable;
@@ -194,7 +194,7 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
      * @return the timestamp for this SMS
      */
     public DateTime getTimestamp() {
-        return DateUtil.setTimeZoneUTC(timestamp);
+        return timestamp.toDateTime(DateTimeZone.UTC);
     }
 
     /**
