@@ -33,7 +33,7 @@ public class SmsAuditServiceImpl implements SmsAuditService {
     @Transactional
     public SmsRecords findAllSmsRecords(SmsRecordSearchCriteria criteria) {
         List<SmsRecord> recordList = smsRecordDao.findByCriteria(criteria.getConfig(),
-                getDirectionsEnum(criteria.getSmsDirections()), criteria.getPhoneNumber(),
+                criteria.getSmsDirections(), criteria.getPhoneNumber(),
                 criteria.getMessageContent(), criteria.getTimestampRange(), criteria.getDeliveryStatuses(),
                 criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage(),
                 criteria.getOrder());
@@ -45,18 +45,8 @@ public class SmsAuditServiceImpl implements SmsAuditService {
     @Transactional
     public long countAllSmsRecords(SmsRecordSearchCriteria criteria) {
         return smsRecordDao.countFindByCriteria(criteria.getConfig(),
-                getDirectionsEnum(criteria.getSmsDirections()), criteria.getPhoneNumber(),
+                criteria.getSmsDirections(), criteria.getPhoneNumber(),
                 criteria.getMessageContent(), criteria.getTimestampRange(), criteria.getDeliveryStatuses(),
                 criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage());
-    }
-
-    private Set<SmsDirection> getDirectionsEnum(Set<String> directionsSet) {
-        Set<SmsDirection> directionsEnum = new HashSet<>();
-
-        for (String direction : directionsSet) {
-            directionsEnum.add(SmsDirection.valueOf(direction));
-        }
-
-        return directionsEnum;
     }
 }

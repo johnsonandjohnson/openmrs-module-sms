@@ -175,12 +175,8 @@ public class SmsRecordSearchCriteria {
 
     // Getters
 
-    public Set<String> getSmsDirections() {
-        Set<String> directionsString = new HashSet<>();
-        for (SmsDirection sd : smsDirections)
-            directionsString.add(String.valueOf(sd));
-
-        return directionsString;
+    public Set<SmsDirection> getSmsDirections() {
+        return smsDirections;
     }
 
     /**
