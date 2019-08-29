@@ -3,7 +3,6 @@ package org.openmrs.module.sms.web.controller;
 import org.hibernate.criterion.Order;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
 import org.openmrs.module.sms.api.audit.*;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
@@ -14,6 +13,7 @@ import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Status;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.SmsEventSubjects;
+import org.openmrs.notification.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -43,7 +43,7 @@ public class StatusController {
 
     private static final Log LOGGER = LogFactory.getLog(StatusController.class);
 
-    private StatusMessageService statusMessageService;
+    private AlertService alertService;
     private EventRelay eventRelay;
     private SmsAuditService smsAuditService;
     private TemplateService templateService;
@@ -53,13 +53,13 @@ public class StatusController {
     @Autowired
     public StatusController(@Qualifier("templateService") TemplateService templateService,
                             @Qualifier("configService") ConfigService configService,
-                            EventRelay eventRelay, StatusMessageService statusMessageService,
+                            EventRelay eventRelay, AlertService alertService,
                             SmsAuditService smsAuditService, SmsRecordDao smsRecordDao
                             ) {
         this.templateService = templateService;
         this.configService = configService;
         this.eventRelay = eventRelay;
-        this.statusMessageService = statusMessageService;
+        this.alertService = alertService;
         this.smsAuditService = smsAuditService;
         this.smsRecordDao = smsRecordDao;
     }
@@ -80,7 +80,7 @@ public class StatusController {
             String msg = String.format("Received SMS Status for '%s' config but no matching config: %s, " +
                             "will try the default config", configName, params);
             LOGGER.error(msg);
-            statusMessageService.warn(msg, SMS_MODULE);
+            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
         }
         Config config = configService.getConfigOrDefault(configName);
         Template template = templateService.getTemplate(config.getTemplateName());
@@ -93,13 +93,13 @@ public class StatusController {
                 String msg = String.format("We have a message id, but don't know how to extract message status, this is most likely a template error. Config: %s, Parameters: %s",
                         configName, params);
                 LOGGER.error(msg);
-                statusMessageService.warn(msg, SMS_MODULE);
+                alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
             }
         } else {
             String msg = String.format("Status message received from provider, but no template support! Config: %s, Parameters: %s",
                     configName, params);
             LOGGER.error(msg);
-            statusMessageService.warn(msg, SMS_MODULE);
+            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
         }
     }
 
@@ -162,7 +162,7 @@ public class StatusController {
             String msg = String.format("Received status update but couldn't find a log record with matching " +
                     "ProviderMessageId or motechId: %s", providerMessageId);
             LOGGER.error(msg);
-            statusMessageService.warn(msg, SMS_MODULE);
+            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
         }
 
         if (existingSmsRecord != null) {
@@ -204,7 +204,7 @@ public class StatusController {
             String msg = String.format("Likely template error, unable to extract status string. Config: %s, Parameters: %s",
                     configName, params);
             LOGGER.error(msg);
-            statusMessageService.warn(msg, SMS_MODULE);
+            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
             smsRecord.setDeliveryStatus(DeliveryStatuses.FAILURE_CONFIRMED);
             eventRelay.sendEventMessage(outboundEvent(SmsEventSubjects.FAILURE_CONFIRMED, configName, recipients,
                     smsRecord.getMessageContent(), smsRecord.getMotechId(), providerMessageId, null, null,
