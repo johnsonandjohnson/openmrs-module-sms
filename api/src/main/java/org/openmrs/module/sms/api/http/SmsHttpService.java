@@ -25,10 +25,10 @@ import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -147,7 +147,7 @@ public class SmsHttpService {
         if (method.getClass().equals(PostMethod.class)) {
             PostMethod postMethod = (PostMethod) method;
             RequestEntity requestEntity = postMethod.getRequestEntity();
-            if (MediaType.APPLICATION_FORM_URLENCODED_VALUE.equals(requestEntity.getContentType())) {
+            if (MediaType.APPLICATION_FORM_URLENCODED.equals(requestEntity.getContentType())) {
                 StringBuilder sb = new StringBuilder();
                 NameValuePair[] params = postMethod.getParameters();
                 for (NameValuePair param : params) {

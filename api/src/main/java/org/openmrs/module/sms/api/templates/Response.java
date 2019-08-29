@@ -2,8 +2,7 @@ package org.openmrs.module.sms.api.templates;
 
 //todo: handle malformed template files (ie: resulting in exceptions in the regex parsing) in a useful way for implementers?
 
-import org.apache.http.HttpStatus;
-
+import java.net.HttpURLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,9 +14,9 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
  */
 public class Response {
 
-    private static final int HTTP_SUCCESS_MIN = HttpStatus.SC_OK;
+    private static final int HTTP_SUCCESS_MIN = HttpURLConnection.HTTP_OK;
     private static final int HTTP_99 = 99;
-    private static final int HTTP_SUCCESS_MAX = HttpStatus.SC_OK + HTTP_99;
+    private static final int HTTP_SUCCESS_MAX = HttpURLConnection.HTTP_OK + HTTP_99;
 
     /**
      * Whether recipients are provided in multiple lines.
