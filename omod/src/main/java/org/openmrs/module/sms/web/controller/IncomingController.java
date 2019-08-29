@@ -3,7 +3,6 @@ package org.openmrs.module.sms.web.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
-import org.motechproject.event.listener.EventRelay;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
@@ -25,7 +24,6 @@ import java.util.Map;
 
 import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.INBOUND;
-import static org.openmrs.module.sms.api.util.SmsEvents.inboundEvent;
 
 /**
  * Handles http requests to {motechserver}/motech-platform-server/module/sms/incoming{Config} sent by sms providers
@@ -41,7 +39,6 @@ public class IncomingController {
 
     private TemplateService templateService;
     private ConfigService configService;
-    private EventRelay eventRelay;
     private SmsRecordDao smsRecordDao;
     private AlertService alertService;
 
@@ -50,12 +47,11 @@ public class IncomingController {
     public IncomingController(SmsRecordDao smsRecordDao,
                               @Qualifier("templateService") TemplateService templateService,
                               @Qualifier("configService") ConfigService configService,
-                              AlertService alertService, EventRelay eventRelay) {
+                              AlertService alertService) {
         this.smsRecordDao = smsRecordDao;
         this.templateService = templateService;
         this.configService = configService;
         this.alertService = alertService;
-        this.eventRelay = eventRelay;
     }
 
 
@@ -83,12 +79,6 @@ public class IncomingController {
         }
         Template template = templateService.getTemplate(config.getTemplateName());
 
-        eventRelay.sendEventMessage(inboundEvent(config.getName(),
-                getSender(params, template),
-                getRecipient(params, template),
-                getMessage(params, template),
-                getMsgId(params, template),
-                getTimestamp(params, template)));
         smsRecordDao.create(new SmsRecord(config.getName(),
                 INBOUND,
                 getSender(params, template),

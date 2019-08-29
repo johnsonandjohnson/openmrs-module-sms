@@ -11,14 +11,14 @@ import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.EventRelay;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.ConfigProp;
+import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.OutgoingSms;
+import org.openmrs.module.sms.api.service.SmsEventService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
@@ -43,7 +43,7 @@ import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 /**
  * This is the main meat - here we talk to the providers using HTTP.
  */
-@Service
+@Service("sms.SmsHttpService")
 public class SmsHttpService {
 
     private static final String SMS_MODULE = "motech-sms";
@@ -51,7 +51,7 @@ public class SmsHttpService {
 
     private TemplateService templateService;
     private ConfigService configService;
-    private EventRelay eventRelay;
+    private SmsEventService smsEventService;
     private HttpClient commonsHttpClient;
     private AlertService alertService;
     @Autowired
@@ -73,7 +73,7 @@ public class SmsHttpService {
         String httpResponse = null;
         String errorMessage = null;
         Map<String, String> props = generateProps(sms, template, config);
-        List<MotechEvent> events = new ArrayList<>();
+        List<SmsEvent> events = new ArrayList<>();
         List<SmsRecord> auditRecords = new ArrayList<>();
 
         //
@@ -131,8 +131,8 @@ public class SmsHttpService {
         //
         // Finally send all the events that need sending...
         //
-        for (MotechEvent event : events) {
-            eventRelay.sendEventMessage(event);
+        for (SmsEvent event : events) {
+            smsEventService.sendEventMessage(event);
         }
 
         //
@@ -229,7 +229,7 @@ public class SmsHttpService {
 
     private void handleFailure(Integer httpStatus, String priorErrorMessage, //NO CHECKSTYLE ParameterNumber
                                Integer failureCount, Response templateResponse, String httpResponse, Config config,
-                               OutgoingSms sms, List<SmsRecord> auditRecords, List<MotechEvent> events) {
+                               OutgoingSms sms, List<SmsRecord> auditRecords, List<SmsEvent> events) {
         String errorMessage = priorErrorMessage;
 
         if (httpStatus == null) {
@@ -290,8 +290,8 @@ public class SmsHttpService {
     }
 
     @Autowired
-    public void setEventRelay(EventRelay eventRelay) {
-        this.eventRelay = eventRelay;
+    public void setSmsEventService(SmsEventService smsEventService) {
+        this.smsEventService = smsEventService;
     }
 
     @Autowired

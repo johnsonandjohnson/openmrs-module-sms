@@ -1,7 +1,6 @@
 package org.openmrs.module.sms.api.service;
 
 import org.joda.time.DateTime;
-import org.motechproject.event.MotechEvent;
 import org.openmrs.module.sms.api.util.SmsEventParams;
 
 import java.util.Collections;
@@ -57,11 +56,10 @@ public class OutgoingSms {
 
     /**
      * Constructs an instance using the field map from the provided event.
-     * @param event the event to parse into the SMS instance
+     * @param params
      * @see SmsEventParams
      */
-    public OutgoingSms(MotechEvent event) {
-        Map<String, Object> params = event.getParameters();
+    public OutgoingSms(Map<String, Object> params) {
         config = (String) params.get(SmsEventParams.CONFIG);
         recipients = (List<String>) params.get(SmsEventParams.RECIPIENTS);
         message = (String) params.get(SmsEventParams.MESSAGE);

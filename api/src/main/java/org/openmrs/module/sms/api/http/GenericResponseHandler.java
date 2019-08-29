@@ -41,9 +41,6 @@ public class GenericResponseHandler extends ResponseHandler {
                 getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, recipient, sms.getMessage(), now(),
                         DeliveryStatuses.DISPATCHED, null, sms.getMotechId(), providerMessageId, null));
             }
-            getEvents().add(outboundEvent(SmsEventSubjects.DISPATCHED, getConfig().getName(), sms.getRecipients(),
-                    sms.getMessage(), sms.getMotechId(), providerMessageId, null, null, null, sms.getCustomParams()));
-
         } else {
             Integer failureCount = sms.getFailureCount() + 1;
 

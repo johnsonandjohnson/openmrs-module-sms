@@ -36,6 +36,18 @@
 				<scope>compile</scope>
 			</dependency>
 			<dependency>
+				<groupId>org.openmrs</groupId>
+				<artifactId>event-api</artifactId>
+				<version>${eventVersion}</version>
+				<scope>provided</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-codec</groupId>
+						<artifactId>commons-codec</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
 				<groupId>joda-time</groupId>
 				<artifactId>joda-time</artifactId>
 				<version>${jodaTime.version}</version>
@@ -112,6 +124,7 @@
 		<javaCompilerSource>1.8</javaCompilerSource>
 		<javaCompilerTarget>1.8</javaCompilerTarget>
 		<commonsCodecVersion>1.5</commonsCodecVersion>
+		<eventVersion>2.6.0</eventVersion>
 		<jodaTime.version>2.9.1</jodaTime.version>
 		<gsonVersion>1.7.1</gsonVersion>
 		<httpClientVersion>3.1.0</httpClientVersion>

@@ -8,9 +8,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.motechproject.config.SettingsFacade;
 import org.motechproject.config.core.constants.ConfigurationConstants;
-import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.EventRelay;
-import org.motechproject.event.listener.annotations.MotechListener;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.event.constants.EventSubjects;
@@ -34,7 +31,6 @@ public class ConfigServiceImpl implements ConfigService {
     private static final Log LOGGER = LogFactory.getLog(ConfigServiceImpl.class);
     private SettingsFacade settingsFacade;
     private Configs configs;
-    private EventRelay eventRelay;
 
     private synchronized void loadConfigs() {
         try (InputStream is = settingsFacade.getRawConfig(SMS_CONFIGS_FILE_NAME)) {
@@ -48,22 +44,10 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Autowired
-    public ConfigServiceImpl(@Qualifier("smsSettings") SettingsFacade settingsFacade, EventRelay eventRelay) {
+    public ConfigServiceImpl(@Qualifier("smsSettings") SettingsFacade settingsFacade) {
         this.settingsFacade = settingsFacade;
-        this.eventRelay = eventRelay;
         loadConfigs();
     }
-
-    @MotechListener(subjects = { ConfigurationConstants.FILE_CHANGED_EVENT_SUBJECT })
-    public void handleFileChanged(MotechEvent event) {
-        String filePath = (String) event.getParameters().get(ConfigurationConstants.FILE_PATH);
-        if (!StringUtils.isBlank(filePath) && filePath.endsWith(SMS_CONFIGS_FILE_PATH)) {
-            LOGGER.info(String.format("%s has changed, reloading configs.", SMS_CONFIGS_FILE_NAME));
-            loadConfigs();
-            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIGS_CHANGED));
-        }
-    }
-
 
     public Config getDefaultConfig() {
         return configs.getDefaultConfig();
@@ -95,7 +79,6 @@ public class ConfigServiceImpl implements ConfigService {
         ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes());
         settingsFacade.saveRawConfig(SMS_CONFIGS_FILE_NAME, resource);
         loadConfigs();
-        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIGS_CHANGED));
     }
 
     public boolean hasConfigs() {

@@ -3,7 +3,6 @@ package org.openmrs.module.sms.web.controller;
 import org.hibernate.criterion.Order;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.motechproject.event.listener.EventRelay;
 import org.openmrs.module.sms.api.audit.*;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 import org.openmrs.module.sms.api.configs.Config;
@@ -12,7 +11,6 @@ import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Status;
 import org.openmrs.module.sms.api.templates.Template;
-import org.openmrs.module.sms.api.util.SmsEventSubjects;
 import org.openmrs.notification.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,7 +25,6 @@ import java.util.Map;
 
 import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
-import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 
 /**
  * Handles message delivery status updates sent by sms providers to
@@ -44,21 +41,20 @@ public class StatusController {
     private static final Log LOGGER = LogFactory.getLog(StatusController.class);
 
     private AlertService alertService;
-    private EventRelay eventRelay;
     private SmsAuditService smsAuditService;
     private TemplateService templateService;
     private ConfigService configService;
     private SmsRecordDao smsRecordDao;
 
     @Autowired
-    public StatusController(@Qualifier("templateService") TemplateService templateService,
-                            @Qualifier("configService") ConfigService configService,
-                            EventRelay eventRelay, AlertService alertService,
-                            SmsAuditService smsAuditService, SmsRecordDao smsRecordDao
-                            ) {
+    public StatusController(
+            @Qualifier("templateService") TemplateService templateService,
+            @Qualifier("configService") ConfigService configService,
+            AlertService alertService,
+            SmsAuditService smsAuditService,
+            SmsRecordDao smsRecordDao) {
         this.templateService = templateService;
         this.configService = configService;
-        this.eventRelay = eventRelay;
         this.alertService = alertService;
         this.smsAuditService = smsAuditService;
         this.smsRecordDao = smsRecordDao;
@@ -185,30 +181,20 @@ public class StatusController {
         List<String> recipients = Collections.singletonList(smsRecord.getPhoneNumber());
 
         if (statusString != null) {
-            String eventSubject;
             if (statusString.matches(status.getStatusSuccess())) {
                 smsRecord.setDeliveryStatus(statusString);
-                eventSubject = SmsEventSubjects.DELIVERY_CONFIRMED;
             } else if (status.hasStatusFailure() && statusString.matches(status.getStatusFailure())) {
                 smsRecord.setDeliveryStatus(statusString);
-                eventSubject = SmsEventSubjects.FAILURE_CONFIRMED;
             } else {
                 // If we're not certain the message was delivered or failed, then it's in the DISPATCHED gray area
                 smsRecord.setDeliveryStatus(statusString);
-                eventSubject = SmsEventSubjects.DISPATCHED;
             }
-            eventRelay.sendEventMessage(outboundEvent(eventSubject, configName, recipients,
-                    smsRecord.getMessageContent(), smsRecord.getMotechId(), providerMessageId, null, statusString,
-                    now(), null));
         } else {
             String msg = String.format("Likely template error, unable to extract status string. Config: %s, Parameters: %s",
                     configName, params);
             LOGGER.error(msg);
             alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
             smsRecord.setDeliveryStatus(DeliveryStatuses.FAILURE_CONFIRMED);
-            eventRelay.sendEventMessage(outboundEvent(SmsEventSubjects.FAILURE_CONFIRMED, configName, recipients,
-                    smsRecord.getMessageContent(), smsRecord.getMotechId(), providerMessageId, null, null,
-                    now(), null));
         }
         smsRecordDao.create(smsRecord);
     }
