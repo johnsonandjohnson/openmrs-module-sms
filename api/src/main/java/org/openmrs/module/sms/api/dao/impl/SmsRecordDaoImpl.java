@@ -4,6 +4,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.api.db.hibernate.HibernateOpenmrsDataDAO;
@@ -30,7 +31,7 @@ public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> impleme
 
     @Override
     public List<SmsRecord> findByCriteria(String config, Set<SmsDirection> directions, String phoneNumber,
-                                          String messageContent, Range<DateTime> timestamp, Set<String> deliveryStatuses,
+                                          String messageContent, Interval timestamp, Set<String> deliveryStatuses,
                                           String providerStatus, String motechId, String providerId, String errorMessage,
                                           Order order) {
         Criteria crit = getSession().createCriteria(this.mappedClass);
@@ -51,7 +52,7 @@ public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> impleme
 
     @Override
     public long countFindByCriteria(String config, Set<SmsDirection> directions, String phoneNumber, String messageContent,
-                                    Range<DateTime> timestamp, Set<String> deliveryStatuses, String providerStatus,
+                                    Interval timestamp, Set<String> deliveryStatuses, String providerStatus,
                                     String motechId, String providerId, String errorMessage) {
         Criteria crit = getSession().createCriteria(this.mappedClass);
         crit.add(Restrictions.eq("config", config));

@@ -1,7 +1,7 @@
 package org.openmrs.module.sms.api.dao;
 
 import org.hibernate.criterion.Order;
-import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.openmrs.api.db.OpenmrsDataDAO;
 import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
@@ -31,7 +31,7 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
      * @param errorMessage the error message for the SMS
      * @return the matching records
      */
-    List<SmsRecord> findByCriteria(String config, Set<SmsDirection> directions, String phoneNumber, String messageContent, Range<DateTime> timestamp,
+    List<SmsRecord> findByCriteria(String config, Set<SmsDirection> directions, String phoneNumber, String messageContent, Interval timestamp,
                                    Set<String> deliveryStatuses, String providerStatus, String motechId, String providerId, String errorMessage, Order order);
 
     /**
@@ -50,7 +50,7 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
      * @param errorMessage the error message for the SMS
      * @return the matching records
      */
-    long countFindByCriteria(String config, Set<SmsDirection> directions, String phoneNumber, String messageContent, Range<DateTime> timestamp,
+    long countFindByCriteria(String config, Set<SmsDirection> directions, String phoneNumber, String messageContent, Interval timestamp,
                              Set<String> deliveryStatuses, String providerStatus, String motechId, String providerId, String errorMessage);
 
     /**
