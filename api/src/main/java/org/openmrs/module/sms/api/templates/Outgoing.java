@@ -7,12 +7,8 @@ import org.openmrs.module.sms.api.util.Constants;
  * How providers deal with outgoing messages.
  */
 public class Outgoing {
-//    private static final String SMS_DEFAULT_MILLISECONDS_BETWEEN_MESSAGES = "sms.default.millisecond_between_messages";
-//    private static final String SMS_DEFAULT_MAX_SMS_SIZE = "sms.default.max_sms_size";
-//    private static final String SMS_DEFAULT_MAX_RECIPIENT = "sms.default.max_recipient";
-//    private static final String SMS_DEFAULT_RECIPIENT_SEPARATOR = "sms.default.recipient_separator";
 
-    /**f
+    /**
      * The {@link Request} object used for generating an outgoing SMS request.
      */
     private Request request;
