@@ -25,7 +25,7 @@ public class Templates {
      */
     public Templates(SettingsManagerService settingsManagerService, List<Template> templates) {
         for (Template template : templates) {
-            template.readDefaults(settingsManagerService);
+            template.readDefaults();
             this.templates.put(template.getName(), template);
         }
     }

@@ -67,7 +67,7 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public void importTemplate(Template template) {
-        template.readDefaults(this.settingsManagerService);
+        template.readDefaults();
         templates.put(template.getName(), template);
     }
 
@@ -99,7 +99,7 @@ public class TemplateServiceImpl implements TemplateService {
         }
 
         for (Template template : templateList) {
-            template.readDefaults(this.settingsManagerService);
+            template.readDefaults();
             templates.put(template.getName(), template);
         }
     }

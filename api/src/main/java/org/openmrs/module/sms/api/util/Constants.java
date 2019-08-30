@@ -20,6 +20,22 @@ public final class Constants {
 
     public static final String PARAM_JOB_ID = "JobID";
 
+    public static final String SMS_DEFAULT_MILLISECONDS_BETWEEN_MESSAGES_KEY = "sms.default.millisecond_between_messages";
+
+    public static final String SMS_DEFAULT_MAX_SMS_SIZE_KEY = "sms.default.max_sms_size";
+
+    public static final String SMS_DEFAULT_MAX_RECIPIENT_KEY = "sms.default.max_recipient";
+
+    public static final String SMS_DEFAULT_RECIPIENT_SEPARATOR_KEY = "sms.default.recipient_separator";
+
+    public static final String SMS_DEFAULT_MILLISECONDS_BETWEEN_MESSAGES_VALUE = "1";
+
+    public static final String SMS_DEFAULT_MAX_SMS_SIZE_VALUE = "160";
+
+    public static final String SMS_DEFAULT_MAX_RECIPIENT_VALUE = "1";
+
+    public static final String SMS_DEFAULT_RECIPIENT_SEPARATOR_VALUE = ",";
+
     private Constants() {
     }
 
