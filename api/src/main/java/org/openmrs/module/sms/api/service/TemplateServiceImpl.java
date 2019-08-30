@@ -7,12 +7,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.motechproject.commons.api.MotechException;
-import org.motechproject.config.core.constants.ConfigurationConstants;
+import org.openmrs.module.sms.api.exception.SmsRuntimeException;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.templates.TemplateForWeb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -31,8 +31,6 @@ public class TemplateServiceImpl implements TemplateService {
 
     private static final String SMS_TEMPLATE_CUSTOM_FILE_NAME = "sms-templates-custom.json";
     private static final String SMS_TEMPLATE_FILE_NAME = "sms-templates.json";
-    private static final String SMS_TEMPLATE_FILE_PATH = "/" + ConfigurationConstants.RAW_DIR + "/" +
-        SMS_TEMPLATE_FILE_NAME;
     private static final Log LOGGER = LogFactory.getLog(TemplateServiceImpl.class);
     private SettingsManagerService settingsManagerService;
     private Map<String, Template> templates = new HashMap<>();
@@ -62,7 +60,7 @@ public class TemplateServiceImpl implements TemplateService {
 
         Gson gson = new Gson();
         String jsonText = gson.toJson(templateList, new TypeToken<List<Template>>() { } .getType());
-        settingsManagerService.saveRawConfig(SMS_TEMPLATE_CUSTOM_FILE_NAME, jsonText);
+        settingsManagerService.saveRawConfig(SMS_TEMPLATE_CUSTOM_FILE_NAME, new ByteArrayResource(jsonText.getBytes()));
     }
 
     @Override
@@ -93,9 +91,9 @@ public class TemplateServiceImpl implements TemplateService {
                  templateList = gson.fromJson(jsonText, new TypeToken<List<Template>>() {}.getType());
             }
         } catch (JsonParseException e) {
-            throw new MotechException("File " + fileName + " is malformed", e);
+            throw new SmsRuntimeException("File " + fileName + " is malformed", e);
         } catch (IOException e) {
-            throw new MotechException("Error loading file " + fileName, e);
+            throw new SmsRuntimeException("Error loading file " + fileName, e);
         }
 
         for (Template template : templateList) {

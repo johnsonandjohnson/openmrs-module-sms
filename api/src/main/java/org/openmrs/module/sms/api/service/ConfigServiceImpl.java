@@ -35,7 +35,7 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
     private synchronized void loadConfigs() {
 
         if (configurationNotExist()){
-            loadDefaultETLConfiguration();
+            loadDefaultSmsConfiguration();
         }
 
         try (InputStream is = settingsManagerService.getRawConfig(Constants.SMS_CONFIGS_FILE_NAME)) {
@@ -52,7 +52,7 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
         return !settingsManagerService.configurationExist(Constants.SMS_CONFIGS_FILE_NAME);
     }
 
-    private void loadDefaultETLConfiguration() {
+    private void loadDefaultSmsConfiguration() {
         String defaultConfiguration = ResourceUtil.readResourceFile(Constants.SMS_CONFIGS_FILE_NAME);
         ByteArrayResource resource = new ByteArrayResource(defaultConfiguration.getBytes());
         settingsManagerService.saveRawConfig(Constants.SMS_CONFIGS_FILE_NAME, resource);
