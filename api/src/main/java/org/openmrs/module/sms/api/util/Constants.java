@@ -16,7 +16,7 @@ public final class Constants {
 
     public static final String SMS_SERVER_URL = "sms_server_url";
 
-    public static final String DEFAULT_SMS_SERVER_URL = "";
+    public static final String DEFAULT_SMS_SERVER_URL = "http://localhost:8080/openmrs";
 
     public static final String PARAM_JOB_ID = "JobID";
 

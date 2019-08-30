@@ -72,7 +72,7 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     @Autowired
-    public TemplateServiceImpl(@Qualifier("smsSettings") SettingsManagerService settingsManagerService) {
+    public TemplateServiceImpl(@Qualifier("sms.settings.manager") SettingsManagerService settingsManagerService) {
         this.settingsManagerService = settingsManagerService;
         loadTemplates();
     }
