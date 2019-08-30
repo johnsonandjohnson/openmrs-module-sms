@@ -7,10 +7,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.motechproject.mds.annotations.Access;
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.UIFilterable;
-import org.motechproject.mds.util.SecurityMode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

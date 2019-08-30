@@ -25,7 +25,7 @@ public class SmsSettingsServiceImpl extends BaseOpenmrsService implements SmsSet
 	private TemplateJsonParser templateJsonParser;
 
 	@Autowired
-	private SettingsFacade settingsFacade;
+	private SettingsManagerService settingsManagerService;
 
 	@Override
 	public Map<String, TemplateForWeb> getTemplates() {
@@ -50,6 +50,6 @@ public class SmsSettingsServiceImpl extends BaseOpenmrsService implements SmsSet
 
 	@Override
 	public String getCustomUISettings() {
-		return IOUtils.toString(settingsFacade.getRawConfig(Constants.UI_CONFIG));;
+		return IOUtils.toString(settingsManagerService.getRawConfig(Constants.UI_CONFIG));;
 	}
 }

@@ -1,17 +1,11 @@
 package org.openmrs.module.sms.api.audit;
 
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.motechproject.commons.api.Range;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 /**

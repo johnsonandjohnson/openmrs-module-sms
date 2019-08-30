@@ -1,6 +1,6 @@
 package org.openmrs.module.sms.api.templates;
 
-import org.motechproject.config.SettingsFacade;
+import org.openmrs.module.sms.api.service.SettingsManagerService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +20,12 @@ public class Templates {
     /**
      * Constructs this collection from the provided templates. The templates will
      * read their default values from the MOTECH configuration system through the provided settings facade.
-     * @param settingFacade the settings facade from which default values will be read
+     * @param settingsManagerService the settings facade from which default values will be read
      * @param templates the collection of templates from which this object will be built
      */
-    public Templates(SettingsFacade settingFacade, List<Template> templates) {
+    public Templates(SettingsManagerService settingsManagerService, List<Template> templates) {
         for (Template template : templates) {
-            template.readDefaults(settingFacade);
+            template.readDefaults();
             this.templates.put(template.getName(), template);
         }
     }

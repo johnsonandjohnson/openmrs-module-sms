@@ -12,7 +12,6 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.lang.StringUtils;
-import org.motechproject.config.SettingsFacade;
 
 import javax.ws.rs.core.MediaType;
 import java.io.UnsupportedEncodingException;
@@ -157,10 +156,9 @@ public class Template {
 
     /**
      * Reads the default values from Motech settings, updating this template.
-     * @param settingsFacade the settings facade used for reading the settings
      */
-    public void readDefaults(SettingsFacade settingsFacade) {
-        outgoing.readDefaults(settingsFacade);
+    public void readDefaults() {
+        outgoing.readDefaults();
     }
 
     private NameValuePair[] addQueryParameters(Map<String, String> props) {

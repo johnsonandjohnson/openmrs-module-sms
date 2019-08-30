@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.motechproject.commons.api.MotechException;
-import org.motechproject.config.SettingsFacade;
 import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.templates.TemplateForWeb;
@@ -35,7 +34,7 @@ public class TemplateServiceImpl implements TemplateService {
     private static final String SMS_TEMPLATE_FILE_PATH = "/" + ConfigurationConstants.RAW_DIR + "/" +
         SMS_TEMPLATE_FILE_NAME;
     private static final Log LOGGER = LogFactory.getLog(TemplateServiceImpl.class);
-    private SettingsFacade settingsFacade;
+    private SettingsManagerService settingsManagerService;
     private Map<String, Template> templates = new HashMap<>();
 
     @Override
@@ -63,18 +62,18 @@ public class TemplateServiceImpl implements TemplateService {
 
         Gson gson = new Gson();
         String jsonText = gson.toJson(templateList, new TypeToken<List<Template>>() { } .getType());
-        settingsFacade.saveRawConfig(SMS_TEMPLATE_CUSTOM_FILE_NAME, jsonText);
+        settingsManagerService.saveRawConfig(SMS_TEMPLATE_CUSTOM_FILE_NAME, jsonText);
     }
 
     @Override
     public void importTemplate(Template template) {
-        template.readDefaults(this.settingsFacade);
+        template.readDefaults();
         templates.put(template.getName(), template);
     }
 
     @Autowired
-    public TemplateServiceImpl(@Qualifier("smsSettings") SettingsFacade settingsFacade) {
-        this.settingsFacade = settingsFacade;
+    public TemplateServiceImpl(@Qualifier("sms.settings.manager") SettingsManagerService settingsManagerService) {
+        this.settingsManagerService = settingsManagerService;
         loadTemplates();
     }
 
@@ -87,7 +86,7 @@ public class TemplateServiceImpl implements TemplateService {
     private void load(String fileName) {
         List<Template> templateList = new ArrayList<>();
 
-        try (InputStream is = settingsFacade.getRawConfig(fileName)) {
+        try (InputStream is = settingsManagerService.getRawConfig(fileName)) {
             String jsonText = IOUtils.toString(is);
             Gson gson = new Gson();
             if (StringUtils.isNotBlank(jsonText)) {
@@ -100,7 +99,7 @@ public class TemplateServiceImpl implements TemplateService {
         }
 
         for (Template template : templateList) {
-            template.readDefaults(this.settingsFacade);
+            template.readDefaults();
             templates.put(template.getName(), template);
         }
     }

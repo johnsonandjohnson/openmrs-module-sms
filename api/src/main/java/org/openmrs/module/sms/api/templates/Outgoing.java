@@ -1,17 +1,14 @@
 package org.openmrs.module.sms.api.templates;
 
-import org.motechproject.config.SettingsFacade;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.sms.api.util.Constants;
 
 /**
  * How providers deal with outgoing messages.
  */
 public class Outgoing {
-    private static final String SMS_DEFAULT_MILLISECONDS_BETWEEN_MESSAGES = "sms.default.millisecond_between_messages";
-    private static final String SMS_DEFAULT_MAX_SMS_SIZE = "sms.default.max_sms_size";
-    private static final String SMS_DEFAULT_MAX_RECIPIENT = "sms.default.max_recipient";
-    private static final String SMS_DEFAULT_RECIPIENT_SEPARATOR = "sms.default.recipient_separator";
 
-    /**f
+    /**
      * The {@link Request} object used for generating an outgoing SMS request.
      */
     private Request request;
@@ -76,14 +73,17 @@ public class Outgoing {
 
     /**
      * Reads the default values from MOTECH settings.
-     * @param settingsFacade the setting facade that will be used for reading the settings
      */
-    public void readDefaults(SettingsFacade settingsFacade) {
-        defaultMillisecondsBetweenMessages = Integer.valueOf(settingsFacade.getProperty(
-                SMS_DEFAULT_MILLISECONDS_BETWEEN_MESSAGES));
-        defaultMaxSmsSize = Integer.valueOf(settingsFacade.getProperty(SMS_DEFAULT_MAX_SMS_SIZE));
-        defaultMaxRecipient = Integer.valueOf(settingsFacade.getProperty(SMS_DEFAULT_MAX_RECIPIENT));
-        defaultRecipientSeparator = settingsFacade.getProperty(SMS_DEFAULT_RECIPIENT_SEPARATOR);
+    public void readDefaults() {
+        defaultMillisecondsBetweenMessages = Integer.valueOf(Context.getAdministrationService()
+                .getGlobalProperty(Constants.SMS_DEFAULT_MILLISECONDS_BETWEEN_MESSAGES_KEY,
+                        Constants.SMS_DEFAULT_MILLISECONDS_BETWEEN_MESSAGES_VALUE));
+        defaultMaxSmsSize = Integer.valueOf(Context.getAdministrationService()
+                .getGlobalProperty(Constants.SMS_DEFAULT_MAX_SMS_SIZE_KEY, Constants.SMS_DEFAULT_MAX_SMS_SIZE_VALUE));
+        defaultMaxRecipient = Integer.valueOf(Context.getAdministrationService()
+                .getGlobalProperty(Constants.SMS_DEFAULT_MAX_RECIPIENT_KEY, Constants.SMS_DEFAULT_MAX_RECIPIENT_VALUE));
+        defaultRecipientSeparator = Context.getAdministrationService()
+                .getGlobalProperty(Constants.SMS_DEFAULT_RECIPIENT_SEPARATOR_KEY, Constants.SMS_DEFAULT_RECIPIENT_SEPARATOR_VALUE);
     }
 
     /**
