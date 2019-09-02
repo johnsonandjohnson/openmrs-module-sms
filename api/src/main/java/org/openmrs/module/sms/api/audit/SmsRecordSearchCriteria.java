@@ -2,7 +2,7 @@ package org.openmrs.module.sms.api.audit;
 
 import org.hibernate.criterion.Order;
 import org.joda.time.DateTime;
-import org.motechproject.commons.api.Range;
+import org.joda.time.Interval;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,7 +37,7 @@ public class SmsRecordSearchCriteria {
     /**
      * The date-time range the timestamp of the SMS should fall into.
      */
-    private Range<DateTime> timestampRange;
+    private Interval timestampRange;
 
     private String providerStatus;
 
@@ -139,7 +139,7 @@ public class SmsRecordSearchCriteria {
      * @return this instance of the search criteria
      */
     public SmsRecordSearchCriteria withTimestamp(DateTime timestamp) {
-        this.timestampRange = new Range<>(timestamp, timestamp);
+        this.timestampRange = new Interval(timestamp, timestamp);
         return this;
     }
 
@@ -148,7 +148,7 @@ public class SmsRecordSearchCriteria {
      * @param timestampRange the timestamp range into which the messages must fall into
      * @return this instance of the search criteria
      */
-    public SmsRecordSearchCriteria withTimestampRange(Range<DateTime> timestampRange) {
+    public SmsRecordSearchCriteria withTimestampRange(Interval timestampRange) {
         this.timestampRange = timestampRange;
         return this;
     }
@@ -203,7 +203,7 @@ public class SmsRecordSearchCriteria {
     /**
      * @return the timestamp range into which SNS messages should fall
      */
-    public Range<DateTime> getTimestampRange() {
+    public Interval getTimestampRange() {
         return timestampRange;
     }
 
