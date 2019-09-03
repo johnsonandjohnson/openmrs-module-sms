@@ -8,7 +8,6 @@ import org.openmrs.module.sms.api.util.SmsEventSubjects;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
 
 public class SendSmsEventListener extends AbstractSmsEventListener {
 
@@ -23,6 +22,7 @@ public class SendSmsEventListener extends AbstractSmsEventListener {
 	protected void handleEvent(Map<String, Object> properties) {
 		LOGGER.info(String.format("Handling external event %s: %s", Arrays.toString(getSubjects()),
 				properties.get("message").toString().replace("\n", "\\n")));
-		getComponent("sms.SmsService", SmsService.class).send(new OutgoingSms(properties));
+		getComponent("sms.SmsService", SmsService.class)
+				.send(new OutgoingSms(new SmsEvent(properties)));
 	}
 }
