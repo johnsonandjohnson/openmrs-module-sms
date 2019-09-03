@@ -84,6 +84,11 @@
 				<artifactId>jsr311-api</artifactId>
 				<version>${jsr311ApiVersion}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guavaVersion}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -136,5 +141,6 @@
 		<httpClientVersion>3.1.0</httpClientVersion>
 		<jodaUsertype.version>3.2.0.GA</jodaUsertype.version>
 		<jsr311ApiVersion>1.1</jsr311ApiVersion>
+		<guavaVersion>23.0</guavaVersion>
 	</properties>
 </project>

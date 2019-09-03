@@ -1,5 +1,7 @@
 package org.openmrs.module.sms.api.event;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.DateTime;
@@ -7,11 +9,16 @@ import org.openmrs.module.sms.api.util.Constants;
 import org.openmrs.module.sms.api.util.SmsEventParams;
 import org.openmrs.module.sms.api.util.SmsUtil;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SmsEvent {
+	private static final String RECIPIENTS_DELIMITER = ",";
+	private static final String CUSTOM_PARAMS_DELIMITER = ",";
+	private static final String CUSTOM_PARAMS_KEY_VALUE_SEPARATOR = "=";
+
 	private String subject;
 	private Map<String, Object> parameters;
 
@@ -89,9 +96,12 @@ public class SmsEvent {
 
 		for (String key : getParameters().keySet()) {
 			if (SmsEventParams.CUSTOM_PARAMS.equals(key)) {
-
+				result.put(key, Joiner.on(CUSTOM_PARAMS_DELIMITER)
+								.withKeyValueSeparator(CUSTOM_PARAMS_KEY_VALUE_SEPARATOR)
+								.join(getCustomParams()));
 			} else if (SmsEventParams.RECIPIENTS.equals(key)) {
-
+				List<String> recipients = getRecipients();
+				result.put(key, String.join(RECIPIENTS_DELIMITER, recipients));
 			} else {
 				result.put(key, getParameters().get(key).toString());
 			}
@@ -105,13 +115,16 @@ public class SmsEvent {
 
 		for (String key : properties.keySet()) {
 			if (SmsEventParams.CUSTOM_PARAMS.equals(key)) {
-
+				result.put(key, Splitter.on(CUSTOM_PARAMS_DELIMITER)
+						.withKeyValueSeparator(CUSTOM_PARAMS_KEY_VALUE_SEPARATOR)
+						.split(properties.get(SmsEventParams.CUSTOM_PARAMS)));
 			} else if (SmsEventParams.RECIPIENTS.equals(key)) {
-
+				String recipients = properties.get(SmsEventParams.RECIPIENTS);
+				result.put(key, Arrays.asList(recipients.split(RECIPIENTS_DELIMITER)));
 			} else if (SmsEventParams.DELIVERY_TIME.equals(key)) {
-
+				result.put(key, DateTime.parse(properties.get(SmsEventParams.DELIVERY_TIME)));
 			} else if (SmsEventParams.FAILURE_COUNT.equals(key)) {
-
+				result.put(key, Integer.valueOf(properties.get(SmsEventParams.FAILURE_COUNT)));
 			} else {
 				result.put(key, properties.get(key));
 			}
