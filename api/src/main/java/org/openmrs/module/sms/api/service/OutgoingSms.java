@@ -1,6 +1,7 @@
 package org.openmrs.module.sms.api.service;
 
 import org.joda.time.DateTime;
+import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.util.SmsEventParams;
 
 import java.util.Collections;
@@ -56,20 +57,20 @@ public class OutgoingSms {
 
     /**
      * Constructs an instance using the field map from the provided event.
-     * @param params
+     * @param smsEvent
      * @see SmsEventParams
      */
-    public OutgoingSms(Map<String, Object> params) {
-        config = (String) params.get(SmsEventParams.CONFIG);
-        recipients = (List<String>) params.get(SmsEventParams.RECIPIENTS);
-        message = (String) params.get(SmsEventParams.MESSAGE);
-        deliveryTime = (DateTime) params.get(SmsEventParams.DELIVERY_TIME);
-        if (params.containsKey(SmsEventParams.FAILURE_COUNT)) {
-            failureCount = (Integer) params.get(SmsEventParams.FAILURE_COUNT);
+    public OutgoingSms(SmsEvent smsEvent) {
+        config = smsEvent.getConfigParam();
+        recipients = smsEvent.getRecipients();
+        message = smsEvent.getMessage();
+        deliveryTime = smsEvent.getDeliveryTime();
+        if (smsEvent.paramsContainKey(SmsEventParams.FAILURE_COUNT)) {
+            failureCount = smsEvent.getFailureCount();
         }
-        motechId = (String) params.get(SmsEventParams.MOTECH_ID);
-        providerId = (String) params.get(SmsEventParams.PROVIDER_MESSAGE_ID);
-        customParams = (Map<String, String>) params.get(SmsEventParams.CUSTOM_PARAMS);
+        motechId = smsEvent.getMotechId();
+        providerId = smsEvent.getProviderId();
+        customParams = smsEvent.getCustomParams();
     }
 
     /**

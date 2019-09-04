@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.http.SmsHttpService;
 import org.openmrs.module.sms.api.service.OutgoingSms;
-import org.openmrs.module.sms.api.service.SmsService;
 import org.openmrs.module.sms.api.util.SmsEventSubjects;
 
 import java.util.Arrays;
@@ -23,6 +22,7 @@ public class StatusSmsEventListener extends AbstractSmsEventListener {
 	protected void handleEvent(Map<String, Object> properties) {
 		LOGGER.info(String.format("Handling external event %s: %s", Arrays.toString(getSubjects()),
 				properties.get("message").toString().replace("\n", "\\n")));
-		getComponent("sms.SmsHttpService", SmsHttpService.class).send(new OutgoingSms(properties));
+		getComponent("sms.SmsHttpService", SmsHttpService.class)
+				.send(new OutgoingSms(new SmsEvent(properties)));
 	}
 }
