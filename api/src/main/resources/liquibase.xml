@@ -59,17 +59,11 @@
         <addForeignKeyConstraint constraintName="sms_records_voided_by_fk"
                                  baseTableName="sms_records" baseColumnNames="voided_by"
                                  referencedTableName="users" referencedColumnNames="user_id"/>
-        <createIndex tableName="sms_records" indexName="sms_records_index_messageContent">
-            <column name="messageContent"></column>
-        </createIndex>
         <createIndex tableName="sms_records" indexName="sms_records_index_deliveryStatus">
             <column name="deliveryStatus"></column>
         </createIndex>
         <createIndex tableName="sms_records" indexName="sms_records_index_smsDirection">
             <column name="smsDirection"></column>
-        </createIndex>
-        <createIndex tableName="sms_records" indexName="sms_records_index_errorMessage">
-            <column name="errorMessage"></column>
         </createIndex>
         <createIndex tableName="sms_records" indexName="sms_records_index_providerStatus">
             <column name="providerStatus"></column>
