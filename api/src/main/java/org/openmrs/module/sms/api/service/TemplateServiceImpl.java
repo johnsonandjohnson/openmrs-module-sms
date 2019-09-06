@@ -104,7 +104,7 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     private void initializeConfig(String filename) {
-        if (settingsManagerService.configurationNotExist(filename)) {
+        if (!settingsManagerService.configurationExist(filename)) {
             if (ResourceUtil.resourceFileExists(filename)) {
                 settingsManagerService.createConfigurationFromResources(filename);
             } else {

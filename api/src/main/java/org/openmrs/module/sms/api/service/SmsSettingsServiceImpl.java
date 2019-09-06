@@ -61,7 +61,7 @@ public class SmsSettingsServiceImpl extends BaseOpenmrsService implements SmsSet
 	}
 
 	private void createEmptyConfigurationIfNotExists(String filename) {
-		if (settingsManagerService.configurationNotExist(filename)) {
+		if (!settingsManagerService.configurationExist(filename)) {
 			settingsManagerService.createEmptyConfiguration(filename);
 		}
 	}
