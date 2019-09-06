@@ -20,7 +20,7 @@ public class SmsSettingsServiceImpl extends BaseOpenmrsService implements SmsSet
 	private TemplateService templateService;
 
 	@Autowired
-	@Qualifier("configService")
+	@Qualifier("sms.configService")
 	private ConfigService configService;
 
 	@Autowired
@@ -52,10 +52,18 @@ public class SmsSettingsServiceImpl extends BaseOpenmrsService implements SmsSet
 
 	@Override
 	public String getCustomUISettings() {
+		createEmptyConfigurationIfNotExists(Constants.UI_CONFIG);
 		try {
 			return IOUtils.toString(settingsManagerService.getRawConfig(Constants.UI_CONFIG));
 		} catch (IOException e) {
 			throw new SmsRuntimeException(e);
 		}
 	}
+
+	private void createEmptyConfigurationIfNotExists(String filename) {
+		if (!settingsManagerService.configurationExist(filename)) {
+			settingsManagerService.createEmptyConfiguration(filename);
+		}
+	}
+
 }

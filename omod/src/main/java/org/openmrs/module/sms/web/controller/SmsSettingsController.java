@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping(value = "/sms")
-public class SettingsController {
+public class SmsSettingsController {
 
     private static final Log LOGGER = LogFactory.getLog(SendController.class);
 

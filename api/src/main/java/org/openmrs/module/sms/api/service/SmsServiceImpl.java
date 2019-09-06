@@ -44,7 +44,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
     @Autowired
     public SmsServiceImpl(SmsEventService smsEventService, SmsSchedulerService schedulerService,
                           @Qualifier("templateService") TemplateService templateService,
-                          @Qualifier("configService") ConfigService configService,
+                          @Qualifier("sms.configService") ConfigService configService,
                           SmsRecordDao smsRecordDao) {
         this.smsEventService = smsEventService;
         this.schedulerService = schedulerService;

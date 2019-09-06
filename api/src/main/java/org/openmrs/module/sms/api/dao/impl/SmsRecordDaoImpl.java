@@ -3,7 +3,6 @@ package org.openmrs.module.sms.api.dao.impl;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
@@ -12,10 +11,12 @@ import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Set;
 
+@Repository("sms.SmsRecordDao")
 public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> implements SmsRecordDao {
 
     @Autowired
@@ -36,11 +37,11 @@ public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> impleme
                                           Order order) {
         Criteria crit = getSession().createCriteria(this.mappedClass);
         crit.add(Restrictions.eq("config", config));
-        crit.add(Restrictions.eq("smsDirection", directions));
+        crit.add(Restrictions.in("smsDirection", directions));
         crit.add(Restrictions.eq("phoneNumber", phoneNumber));
         crit.add(Restrictions.eq("messageContent", messageContent));
         crit.add(Restrictions.eq("timestamp", timestamp));
-        crit.add(Restrictions.eq("deliveryStatus", deliveryStatuses));
+        crit.add(Restrictions.in("deliveryStatus", deliveryStatuses));
         crit.add(Restrictions.eq("providerStatus", providerStatus));
         crit.add(Restrictions.eq("motechId", motechId));
         crit.add(Restrictions.eq("providerId", providerId));
@@ -56,11 +57,11 @@ public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> impleme
                                     String motechId, String providerId, String errorMessage) {
         Criteria crit = getSession().createCriteria(this.mappedClass);
         crit.add(Restrictions.eq("config", config));
-        crit.add(Restrictions.eq("smsDirection", directions));
+        crit.add(Restrictions.in("smsDirection", directions));
         crit.add(Restrictions.eq("phoneNumber", phoneNumber));
         crit.add(Restrictions.eq("messageContent", messageContent));
         crit.add(Restrictions.eq("timeStamp", timestamp));
-        crit.add(Restrictions.eq("deliveryStatus", deliveryStatuses));
+        crit.add(Restrictions.in("deliveryStatus", deliveryStatuses));
         crit.add(Restrictions.eq("providerStatus", providerStatus));
         crit.add(Restrictions.eq("motechId", motechId));
         crit.add(Restrictions.eq("providerId", providerId));
