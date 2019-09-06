@@ -1,6 +1,7 @@
 package org.openmrs.module.sms.api.service;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.exception.SmsRuntimeException;
 import org.openmrs.module.sms.api.util.Constants;
@@ -49,14 +50,17 @@ public class SettingsManagerServiceImpl extends BaseOpenmrsService implements Se
 
 	@Override
 	public void createEmptyConfiguration(String fileName) {
-		ByteArrayResource resource = new ByteArrayResource("".getBytes());
-		saveRawConfig(fileName, resource);
+		saveStringConfiguration(StringUtils.EMPTY, fileName);
 	}
 
 	@Override
-	public void crateConfigurationFromResources(String fileName) {
+	public void createConfigurationFromResources(String fileName) {
 		String defaultConfiguration = ResourceUtil.readResourceFile(fileName);
-		ByteArrayResource resource = new ByteArrayResource(defaultConfiguration.getBytes());
+		saveStringConfiguration(defaultConfiguration, fileName);
+	}
+
+	private void saveStringConfiguration(String configuration, String fileName) {
+		ByteArrayResource resource = new ByteArrayResource(configuration.getBytes());
 		saveRawConfig(fileName, resource);
 	}
 

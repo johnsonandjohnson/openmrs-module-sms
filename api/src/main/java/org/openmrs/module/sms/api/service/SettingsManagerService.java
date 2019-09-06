@@ -15,5 +15,5 @@ public interface SettingsManagerService extends OpenmrsService {
 
 	void createEmptyConfiguration(String fileName);
 
-	void crateConfigurationFromResources(String fileName);
+	void createConfigurationFromResources(String fileName);
 }

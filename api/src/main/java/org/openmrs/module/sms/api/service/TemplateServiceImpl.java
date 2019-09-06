@@ -106,7 +106,7 @@ public class TemplateServiceImpl implements TemplateService {
     private void tryLoadDefaultOrCreateEmptyConfigurationIfNotExists(String filename) {
         if (settingsManagerService.configurationNotExist(filename)) {
             if (ResourceUtil.resourceFileExists(filename)) {
-                settingsManagerService.crateConfigurationFromResources(filename);
+                settingsManagerService.createConfigurationFromResources(filename);
             } else {
                 settingsManagerService.createEmptyConfiguration(filename);
             }

@@ -100,7 +100,7 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
 
     private void loadDefaultConfigurationIfNotExists(String filename) {
         if (settingsManagerService.configurationNotExist(filename)) {
-            settingsManagerService.crateConfigurationFromResources(filename);
+            settingsManagerService.createConfigurationFromResources(filename);
         }
     }
 }
