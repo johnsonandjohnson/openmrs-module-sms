@@ -84,7 +84,7 @@ public class TemplateServiceImpl implements TemplateService {
 
     private void load(String fileName) {
         List<Template> templateList = new ArrayList<>();
-        tryLoadDefaultOrCreateEmptyConfigurationIfNotExists(fileName);
+        initializeConfig(fileName);
         try (InputStream is = settingsManagerService.getRawConfig(fileName)) {
             String jsonText = IOUtils.toString(is);
             Gson gson = new Gson();
@@ -103,7 +103,7 @@ public class TemplateServiceImpl implements TemplateService {
         }
     }
 
-    private void tryLoadDefaultOrCreateEmptyConfigurationIfNotExists(String filename) {
+    private void initializeConfig(String filename) {
         if (settingsManagerService.configurationNotExist(filename)) {
             if (ResourceUtil.resourceFileExists(filename)) {
                 settingsManagerService.createConfigurationFromResources(filename);
