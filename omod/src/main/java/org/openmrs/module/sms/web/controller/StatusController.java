@@ -49,7 +49,7 @@ public class StatusController {
     @Autowired
     public StatusController(
             @Qualifier("templateService") TemplateService templateService,
-            @Qualifier("configService") ConfigService configService,
+            @Qualifier("sms.configService") ConfigService configService,
             AlertService alertService,
             SmsAuditService smsAuditService,
             SmsRecordDao smsRecordDao) {

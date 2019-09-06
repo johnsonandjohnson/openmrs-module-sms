@@ -12,9 +12,9 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.audit.SmsRecord;
-import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.ConfigProp;
+import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.OutgoingSms;
@@ -28,13 +28,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.ws.rs.core.MediaType;
 
 import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
@@ -56,6 +57,11 @@ public class SmsHttpService {
     private AlertService alertService;
     @Autowired
     private SmsRecordDao smsRecordDao;
+
+    @PostConstruct
+    public void initialize() {
+        this.commonsHttpClient = new HttpClient();
+    }
 
     /**
      * This method allows sending outgoing sms messages through HTTP. The configuration specified in the {@link OutgoingSms}
@@ -295,14 +301,9 @@ public class SmsHttpService {
     }
 
     @Autowired
-    @Qualifier("configService")
+    @Qualifier("sms.configService")
     public void setConfigService(ConfigService configService) {
         this.configService = configService;
-    }
-
-    @Autowired
-    public void setCommonsHttpClient(HttpClient commonsHttpClient) {
-        this.commonsHttpClient = commonsHttpClient;
     }
 
     @Autowired

@@ -46,7 +46,7 @@ public class IncomingController {
     @Autowired
     public IncomingController(SmsRecordDao smsRecordDao,
                               @Qualifier("templateService") TemplateService templateService,
-                              @Qualifier("configService") ConfigService configService,
+                              @Qualifier("sms.configService") ConfigService configService,
                               AlertService alertService) {
         this.smsRecordDao = smsRecordDao;
         this.templateService = templateService;

@@ -11,7 +11,7 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.util.Constants;
-import org.openmrs.module.sms.api.util.ResourceUtil;
+import org.openmrs.module.sms.api.util.SettingsManagerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * See {@link org.openmrs.module.sms.api.service.ConfigService}
  */
-@Service("configService")
+@Service("sms.configService")
 public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigService {
 
     private static final Log LOGGER = LogFactory.getLog(ConfigServiceImpl.class);
@@ -33,11 +33,7 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
     private Configs configs;
 
     private synchronized void loadConfigs() {
-
-        if (configurationNotExist()){
-            loadDefaultSmsConfiguration();
-        }
-
+        SettingsManagerUtil.loadDefaultIfNotExists(Constants.SMS_CONFIGS_FILE_NAME);
         try (InputStream is = settingsManagerService.getRawConfig(Constants.SMS_CONFIGS_FILE_NAME)) {
             String jsonText = IOUtils.toString(is);
             Gson gson = new Gson();
@@ -46,16 +42,6 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
         catch (Exception e) {
             throw new JsonIOException("Malformed " + Constants.SMS_CONFIGS_FILE_NAME + " file? " + e.toString(), e);
         }
-    }
-
-    private boolean configurationNotExist() {
-        return !settingsManagerService.configurationExist(Constants.SMS_CONFIGS_FILE_NAME);
-    }
-
-    private void loadDefaultSmsConfiguration() {
-        String defaultConfiguration = ResourceUtil.readResourceFile(Constants.SMS_CONFIGS_FILE_NAME);
-        ByteArrayResource resource = new ByteArrayResource(defaultConfiguration.getBytes());
-        settingsManagerService.saveRawConfig(Constants.SMS_CONFIGS_FILE_NAME, resource);
     }
 
     @Autowired
