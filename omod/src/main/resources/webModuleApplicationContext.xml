@@ -22,5 +22,7 @@
 
 	<context:component-scan base-package="org.openmrs.module.sms.web.controller" />
 
+	<!-- Used to handle AnnotationMethodHandlerExceptionResolver (@ExceptionHandler)
+	before default HandlerExceptionResolver implementations registered with DispatcherServlet -->
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver" p:order="1" />
 </beans>

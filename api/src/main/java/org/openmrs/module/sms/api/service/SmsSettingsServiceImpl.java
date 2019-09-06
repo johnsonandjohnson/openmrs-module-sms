@@ -7,7 +7,6 @@ import org.openmrs.module.sms.api.exception.SmsRuntimeException;
 import org.openmrs.module.sms.api.json.TemplateJsonParser;
 import org.openmrs.module.sms.api.templates.TemplateForWeb;
 import org.openmrs.module.sms.api.util.Constants;
-import org.openmrs.module.sms.api.util.SettingsManagerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -53,11 +52,17 @@ public class SmsSettingsServiceImpl extends BaseOpenmrsService implements SmsSet
 
 	@Override
 	public String getCustomUISettings() {
-		SettingsManagerUtil.createEmptyIfNotExists(Constants.UI_CONFIG);
+		createEmptyConfigurationIfNotExists(Constants.UI_CONFIG);
 		try {
 			return IOUtils.toString(settingsManagerService.getRawConfig(Constants.UI_CONFIG));
 		} catch (IOException e) {
 			throw new SmsRuntimeException(e);
+		}
+	}
+
+	private void createEmptyConfigurationIfNotExists(String filename) {
+		if (settingsManagerService.configurationNotExist(filename)) {
+			settingsManagerService.createEmptyConfiguration(filename);
 		}
 	}
 

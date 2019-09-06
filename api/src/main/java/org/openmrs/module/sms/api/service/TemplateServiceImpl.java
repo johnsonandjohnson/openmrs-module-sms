@@ -10,7 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.exception.SmsRuntimeException;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.templates.TemplateForWeb;
-import org.openmrs.module.sms.api.util.SettingsManagerUtil;
+import org.openmrs.module.sms.api.util.ResourceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
@@ -84,7 +84,7 @@ public class TemplateServiceImpl implements TemplateService {
 
     private void load(String fileName) {
         List<Template> templateList = new ArrayList<>();
-        SettingsManagerUtil.tryLoadDefaultOrCreateEmptyIfNotExists(fileName);
+        tryLoadDefaultOrCreateEmptyConfigurationIfNotExists(fileName);
         try (InputStream is = settingsManagerService.getRawConfig(fileName)) {
             String jsonText = IOUtils.toString(is);
             Gson gson = new Gson();
@@ -100,6 +100,16 @@ public class TemplateServiceImpl implements TemplateService {
         for (Template template : templateList) {
             template.readDefaults();
             templates.put(template.getName(), template);
+        }
+    }
+
+    private void tryLoadDefaultOrCreateEmptyConfigurationIfNotExists(String filename) {
+        if (settingsManagerService.configurationNotExist(filename)) {
+            if (ResourceUtil.resourceFileExists(filename)) {
+                settingsManagerService.crateConfigurationFromResources(filename);
+            } else {
+                settingsManagerService.createEmptyConfiguration(filename);
+            }
         }
     }
 }

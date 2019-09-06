@@ -11,7 +11,6 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.util.Constants;
-import org.openmrs.module.sms.api.util.SettingsManagerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
@@ -33,7 +32,7 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
     private Configs configs;
 
     private synchronized void loadConfigs() {
-        SettingsManagerUtil.loadDefaultIfNotExists(Constants.SMS_CONFIGS_FILE_NAME);
+        loadDefaultConfigurationIfNotExists(Constants.SMS_CONFIGS_FILE_NAME);
         try (InputStream is = settingsManagerService.getRawConfig(Constants.SMS_CONFIGS_FILE_NAME)) {
             String jsonText = IOUtils.toString(is);
             Gson gson = new Gson();
@@ -97,5 +96,11 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
             serverUrl = Constants.DEFAULT_SMS_SERVER_URL;
         }
         return serverUrl;
+    }
+
+    private void loadDefaultConfigurationIfNotExists(String filename) {
+        if (settingsManagerService.configurationNotExist(filename)) {
+            settingsManagerService.crateConfigurationFromResources(filename);
+        }
     }
 }

@@ -1,6 +1,5 @@
 package org.openmrs.module.sms.web.it;
 
-import org.apache.commons.codec.binary.Base64;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -15,8 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.ws.rs.core.HttpHeaders;
-
 import static java.util.Collections.singletonList;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,10 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @WebAppConfiguration
 public class SendControllerBundleITTest extends BaseModuleWebContextSensitiveTest {
-
-	private static final String ADMIN_USERNAME = "admin";
-
-	private static final String ADMIN_PASS = "test";
 
 	private MockMvc mockMvc;
 
@@ -53,7 +46,6 @@ public class SendControllerBundleITTest extends BaseModuleWebContextSensitiveTes
 		String outgoingSmsJson = mapper.writeValueAsString(outgoingSms);
 
 		mockMvc.perform(post("/sms/send")
-				.header(HttpHeaders.AUTHORIZATION, getAuthorizationValue())
 				.contentType(MediaType.parseMediaType("application/json"))
 				.content(outgoingSmsJson.getBytes("UTF-8")))
 				.andExpect(status().is(HttpStatus.NOT_FOUND.value()));
@@ -62,7 +54,4 @@ public class SendControllerBundleITTest extends BaseModuleWebContextSensitiveTes
 		//TODO: responds the way an SMS provider would.
 	}
 
-	private String getAuthorizationValue() {
-		return "Basic " + Base64.encodeBase64String((ADMIN_USERNAME + ":" + ADMIN_PASS).getBytes());
-	}
 }

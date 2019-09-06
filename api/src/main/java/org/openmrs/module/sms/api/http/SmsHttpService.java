@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.PostConstruct;
 import javax.ws.rs.core.MediaType;
 
 import static org.joda.time.DateTime.now;
@@ -57,11 +56,6 @@ public class SmsHttpService {
     private AlertService alertService;
     @Autowired
     private SmsRecordDao smsRecordDao;
-
-    @PostConstruct
-    public void initialize() {
-        this.commonsHttpClient = new HttpClient();
-    }
 
     /**
      * This method allows sending outgoing sms messages through HTTP. The configuration specified in the {@link OutgoingSms}
@@ -304,6 +298,11 @@ public class SmsHttpService {
     @Qualifier("sms.configService")
     public void setConfigService(ConfigService configService) {
         this.configService = configService;
+    }
+
+    @Autowired
+    public void setCommonsHttpClient(HttpClient commonsHttpClient) {
+        this.commonsHttpClient = commonsHttpClient;
     }
 
     @Autowired

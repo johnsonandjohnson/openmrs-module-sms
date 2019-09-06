@@ -1,11 +1,10 @@
 package org.openmrs.module.sms.api.service;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.exception.SmsRuntimeException;
 import org.openmrs.module.sms.api.util.Constants;
+import org.openmrs.module.sms.api.util.ResourceUtil;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -44,8 +43,21 @@ public class SettingsManagerServiceImpl extends BaseOpenmrsService implements Se
 	}
 
 	@Override
-	public boolean configurationExist(String configurationFileName) {
-		return getDestinationFile(configurationFileName).exists();
+	public boolean configurationNotExist(String configurationFileName) {
+		return !getDestinationFile(configurationFileName).exists();
+	}
+
+	@Override
+	public void createEmptyConfiguration(String fileName) {
+		ByteArrayResource resource = new ByteArrayResource("".getBytes());
+		saveRawConfig(fileName, resource);
+	}
+
+	@Override
+	public void crateConfigurationFromResources(String fileName) {
+		String defaultConfiguration = ResourceUtil.readResourceFile(fileName);
+		ByteArrayResource resource = new ByteArrayResource(defaultConfiguration.getBytes());
+		saveRawConfig(fileName, resource);
 	}
 
 	private File getDestinationFile(String filename) {

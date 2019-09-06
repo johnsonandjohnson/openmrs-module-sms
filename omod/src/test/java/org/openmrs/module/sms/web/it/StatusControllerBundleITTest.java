@@ -1,6 +1,5 @@
 package org.openmrs.module.sms.web.it;
 
-import org.apache.commons.codec.binary.Base64;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +18,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.UUID;
-import javax.ws.rs.core.HttpHeaders;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -31,10 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @WebAppConfiguration
 public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveTest {
-
-	private static final String ADMIN_USERNAME = "admin";
-
-	private static final String ADMIN_PASS = "test";
 
 	private static final String CONFIG_NAME = "sample-it-config";
 
@@ -86,7 +80,6 @@ public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveT
 		String messageId = UUID.randomUUID().toString();
 
 		mockMvc.perform(get(String.format("/sms/status/%s", CONFIG_NAME))
-				.header(HttpHeaders.AUTHORIZATION, getAuthorizationValue())
 				.param("Status", "sent")
 				.param("From", "+12065551212")
 				.param("To", "+12065551313")
@@ -97,9 +90,5 @@ public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveT
 		List<SmsRecord> smsRecords = smsRecordDao.getAll(true);
 		assertEquals(1, smsRecords.size());
 		assertEquals(smsRecords.get(0).getDeliveryStatus(), "sent");
-	}
-
-	private String getAuthorizationValue() {
-		return "Basic " + Base64.encodeBase64String((ADMIN_USERNAME + ":" + ADMIN_PASS).getBytes());
 	}
 }
