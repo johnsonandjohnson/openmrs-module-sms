@@ -73,10 +73,10 @@ public class TemplateServiceImpl implements TemplateService {
     @Autowired
     public TemplateServiceImpl(@Qualifier("sms.settings.manager") SettingsManagerService settingsManagerService) {
         this.settingsManagerService = settingsManagerService;
-        loadTemplates();
     }
 
-    private synchronized void loadTemplates() {
+    public void loadTemplates() {
+        LOGGER.debug("Loading the default templates");
         templates = new HashMap<>();
         load(SMS_TEMPLATE_FILE_NAME);
         load(SMS_TEMPLATE_CUSTOM_FILE_NAME);
