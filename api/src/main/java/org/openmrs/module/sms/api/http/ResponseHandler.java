@@ -11,6 +11,7 @@ import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.notification.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public abstract class ResponseHandler {
     private List<SmsRecord> auditRecords = new ArrayList<>();
 
     @Autowired
+    @Qualifier("alertService")
     private AlertService alertService;
 
     /**

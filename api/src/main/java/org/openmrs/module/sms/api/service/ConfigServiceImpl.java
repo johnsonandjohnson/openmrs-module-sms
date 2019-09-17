@@ -11,10 +11,7 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.util.Constants;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.List;
@@ -22,13 +19,12 @@ import java.util.List;
 /**
  * See {@link org.openmrs.module.sms.api.service.ConfigService}
  */
-@Service("sms.configService")
 public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigService {
 
     private static final Log LOGGER = LogFactory.getLog(ConfigServiceImpl.class);
 
-    @Autowired
     private SettingsManagerService settingsManagerService;
+
     private Configs configs;
 
     private synchronized void loadConfigs() {
@@ -43,8 +39,7 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
         }
     }
 
-    @Autowired
-    public ConfigServiceImpl(@Qualifier("sms.settings.manager") SettingsManagerService settingsManagerService) {
+    public ConfigServiceImpl(SettingsManagerService settingsManagerService) {
         this.settingsManagerService = settingsManagerService;
         loadConfigs();
     }

@@ -57,9 +57,9 @@ public class StatusController {
     public StatusController(
             @Qualifier("templateService") TemplateService templateService,
             @Qualifier("sms.configService") ConfigService configService,
-            AlertService alertService,
-            SmsAuditService smsAuditService,
-            SmsRecordDao smsRecordDao) {
+            @Qualifier("alertService") AlertService alertService,
+            @Qualifier("smsAuditService") SmsAuditService smsAuditService,
+            @Qualifier("sms.SmsRecordDao") SmsRecordDao smsRecordDao) {
         this.templateService = templateService;
         this.configService = configService;
         this.alertService = alertService;

@@ -44,10 +44,10 @@ public class IncomingController {
 
 
     @Autowired
-    public IncomingController(SmsRecordDao smsRecordDao,
-                              @Qualifier("templateService") TemplateService templateService,
-                              @Qualifier("sms.configService") ConfigService configService,
-                              AlertService alertService) {
+    public IncomingController(@Qualifier("sms.SmsRecordDao") SmsRecordDao smsRecordDao,
+            @Qualifier("templateService") TemplateService templateService,
+            @Qualifier("sms.configService") ConfigService configService,
+            @Qualifier("alertService") AlertService alertService) {
         this.smsRecordDao = smsRecordDao;
         this.templateService = templateService;
         this.configService = configService;

@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Template;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -14,7 +12,6 @@ import java.util.List;
  *
  * @see org.openmrs.module.sms.api.service.TemplateService
  */
-@Component
 public class TemplateJsonParser {
 
     private TemplateService templateService;
@@ -39,7 +36,6 @@ public class TemplateJsonParser {
         templateService.importTemplate(template);
     }
 
-    @Autowired
     public void setTemplateService(TemplateService templateService) {
         this.templateService = templateService;
     }

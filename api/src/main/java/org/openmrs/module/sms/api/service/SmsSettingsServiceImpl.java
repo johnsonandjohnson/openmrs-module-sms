@@ -7,26 +7,18 @@ import org.openmrs.module.sms.api.exception.SmsRuntimeException;
 import org.openmrs.module.sms.api.json.TemplateJsonParser;
 import org.openmrs.module.sms.api.templates.TemplateForWeb;
 import org.openmrs.module.sms.api.util.Constants;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.io.IOException;
 import java.util.Map;
 
 public class SmsSettingsServiceImpl extends BaseOpenmrsService implements SmsSettingsService {
 
-	@Autowired
-	@Qualifier("templateService")
 	private TemplateService templateService;
 
-	@Autowired
-	@Qualifier("sms.configService")
 	private ConfigService configService;
 
-	@Autowired
 	private TemplateJsonParser templateJsonParser;
 
-	@Autowired
 	private SettingsManagerService settingsManagerService;
 
 	@Override
@@ -66,4 +58,19 @@ public class SmsSettingsServiceImpl extends BaseOpenmrsService implements SmsSet
 		}
 	}
 
+	public void setTemplateService(TemplateService templateService) {
+		this.templateService = templateService;
+	}
+
+	public void setConfigService(ConfigService configService) {
+		this.configService = configService;
+	}
+
+	public void setTemplateJsonParser(TemplateJsonParser templateJsonParser) {
+		this.templateJsonParser = templateJsonParser;
+	}
+
+	public void setSettingsManagerService(SettingsManagerService settingsManagerService) {
+		this.settingsManagerService = settingsManagerService;
+	}
 }

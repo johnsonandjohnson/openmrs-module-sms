@@ -9,6 +9,7 @@ import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 
@@ -20,9 +21,11 @@ import static junit.framework.Assert.assertEquals;
 public class SmsAuditServiceBundleITTest extends BaseModuleWebContextSensitiveTest {
 
 	@Autowired
+	@Qualifier("sms.SmsRecordDao")
 	private SmsRecordDao smsRecordDao;
 
 	@Autowired
+	@Qualifier("smsAuditService")
 	private SmsAuditService smsAuditService;
 
 	@After

@@ -10,16 +10,12 @@ import org.openmrs.api.db.hibernate.HibernateOpenmrsDataDAO;
 import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Set;
 
-@Repository("sms.SmsRecordDao")
 public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> implements SmsRecordDao {
 
-    @Autowired
     private DbSessionFactory sessionFactory;
 
     public SmsRecordDaoImpl() {
@@ -28,6 +24,10 @@ public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> impleme
 
     private DbSession getSession(){
         return sessionFactory.getCurrentSession();
+    }
+
+    public void setDbSessionFactory(DbSessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override

@@ -5,17 +5,15 @@ import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.audit.SmsRecord;
-import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 import org.openmrs.module.sms.api.configs.Config;
+import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.task.SmsScheduledTask;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.Constants;
 import org.openmrs.module.sms.api.util.SmsEventParams;
 import org.openmrs.module.sms.api.util.SmsEventSubjects;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -41,10 +39,10 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
     private ConfigService configService;
     private SmsRecordDao smsRecordDao;
 
-    @Autowired
-    public SmsServiceImpl(SmsEventService smsEventService, SmsSchedulerService schedulerService,
-                          @Qualifier("templateService") TemplateService templateService,
-                          @Qualifier("sms.configService") ConfigService configService,
+    public SmsServiceImpl(SmsEventService smsEventService,
+                          SmsSchedulerService schedulerService,
+                          TemplateService templateService,
+                          ConfigService configService,
                           SmsRecordDao smsRecordDao) {
         this.smsEventService = smsEventService;
         this.schedulerService = schedulerService;

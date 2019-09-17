@@ -7,6 +7,7 @@ import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.service.SmsSettingsService;
 import org.openmrs.module.sms.api.templates.TemplateForWeb;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ public class SmsSettingsController {
     private static final Log LOGGER = LogFactory.getLog(SendController.class);
 
     @Autowired
+    @Qualifier("sms.SettingsService")
     private SmsSettingsService smsSettingsService;
 
     /**

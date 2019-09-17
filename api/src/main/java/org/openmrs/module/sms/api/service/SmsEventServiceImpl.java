@@ -4,12 +4,10 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.event.Event;
 import org.openmrs.event.EventMessage;
 import org.openmrs.module.sms.api.event.SmsEvent;
-import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.Map;
 
-@Service
 public class SmsEventServiceImpl extends BaseOpenmrsService implements SmsEventService {
 
 	@Override

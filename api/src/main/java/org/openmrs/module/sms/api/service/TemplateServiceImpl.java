@@ -11,10 +11,7 @@ import org.openmrs.module.sms.api.exception.SmsRuntimeException;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.templates.TemplateForWeb;
 import org.openmrs.module.sms.api.util.ResourceUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +24,6 @@ import java.util.Map;
  * See {@link org.openmrs.module.sms.api.service.TemplateService}.
  * This implementation uses the MOTECH configuration system to store the templates.
  */
-@Service("templateService")
 public class TemplateServiceImpl implements TemplateService {
 
     private static final String SMS_TEMPLATE_CUSTOM_FILE_NAME = "sms-templates-custom.json";
@@ -70,8 +66,7 @@ public class TemplateServiceImpl implements TemplateService {
         templates.put(template.getName(), template);
     }
 
-    @Autowired
-    public TemplateServiceImpl(@Qualifier("sms.settings.manager") SettingsManagerService settingsManagerService) {
+    public TemplateServiceImpl(SettingsManagerService settingsManagerService) {
         this.settingsManagerService = settingsManagerService;
     }
 

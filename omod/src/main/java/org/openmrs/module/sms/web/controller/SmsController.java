@@ -9,20 +9,20 @@
  */
 package org.openmrs.module.sms.web.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.User;
 import org.openmrs.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.List;
+import javax.servlet.http.HttpSession;
 
 /**
  * This class configured as controller using annotation and mapped with the URL of
@@ -36,7 +36,8 @@ public class SmsController {
 	protected final Log log = LogFactory.getLog(getClass());
 	
 	@Autowired
-	UserService userService;
+	@Qualifier("userService")
+	private UserService userService;
 	
 	/** Success form view name */
 	private final String VIEW = "/module/sms/sms";

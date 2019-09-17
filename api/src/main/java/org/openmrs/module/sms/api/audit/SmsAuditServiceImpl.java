@@ -1,8 +1,6 @@
 package org.openmrs.module.sms.api.audit;
 
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -11,11 +9,13 @@ import java.util.List;
 /**
  * Service that does the reading and writing to the SMS audit log.
  */
-@Service("smsAuditService")
 public class SmsAuditServiceImpl implements SmsAuditService {
 
-    @Autowired
     private SmsRecordDao smsRecordDao;
+
+    public void setSmsRecordDao(SmsRecordDao smsRecordDao) {
+        this.smsRecordDao = smsRecordDao;
+    }
 
     @Override
     @Transactional
