@@ -8,8 +8,10 @@ import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.service.ConfigService;
+import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,13 +39,19 @@ public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveT
 	private Configs backupConfigs;
 
 	@Autowired
+	@Qualifier("sms.configService")
 	private ConfigService configService;
 
 	@Autowired
+	@Qualifier("sms.SmsRecordDao")
 	private SmsRecordDao smsRecordDao;
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
+
+	@Autowired
+	@Qualifier("templateService")
+	private TemplateService templateService;
 
 	@Before
 	public void setUp() {
@@ -57,6 +65,7 @@ public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveT
 
 	@Before
 	public void createConfigs() {
+		templateService.loadTemplates();
 		backupConfigs = configService.getConfigs();
 		Config config = new Config();
 		config.setName(CONFIG_NAME);

@@ -9,18 +9,13 @@ import org.openmrs.scheduler.SchedulerException;
 import org.openmrs.scheduler.SchedulerService;
 import org.openmrs.scheduler.TaskDefinition;
 import org.openmrs.scheduler.tasks.AbstractTask;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Map;
 
-@Service
 public class SmsSchedulerServiceImpl extends BaseOpenmrsService implements SmsSchedulerService {
 
 	private static final Log LOGGER = LogFactory.getLog(SmsSchedulerServiceImpl.class);
 
-	@Autowired
 	private SchedulerService schedulerService;
 
 	@Override
@@ -49,5 +44,9 @@ public class SmsSchedulerServiceImpl extends BaseOpenmrsService implements SmsSc
 		} catch(SchedulerException ex) {
 			LOGGER.error(ex);
 		}
+	}
+
+	public void setSchedulerService(SchedulerService schedulerService) {
+		this.schedulerService = schedulerService;
 	}
 }

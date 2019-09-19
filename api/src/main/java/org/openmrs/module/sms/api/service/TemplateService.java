@@ -39,4 +39,9 @@ public interface TemplateService {
      * @param template the template to import
      */
     void importTemplate(Template template);
+
+    /**
+     * Loads the default templates. The method should be run after the module is started.
+     */
+    void loadTemplates();
 }

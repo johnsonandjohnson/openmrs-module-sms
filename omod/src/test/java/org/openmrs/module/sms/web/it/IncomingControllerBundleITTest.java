@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.openmrs.module.sms.api.service.SmsService;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import static junit.framework.Assert.assertNotNull;
 
@@ -14,6 +15,7 @@ import static junit.framework.Assert.assertNotNull;
 public class IncomingControllerBundleITTest extends BaseModuleWebContextSensitiveTest {
 
 	@Autowired
+	@Qualifier("sms.SmsService")
 	private SmsService smsService;
 
 	@After

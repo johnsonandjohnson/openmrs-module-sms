@@ -8,7 +8,6 @@ import org.openmrs.module.sms.api.util.Constants;
 import org.openmrs.module.sms.api.util.ResourceUtil;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-@Service("sms.settings.manager")
 public class SettingsManagerServiceImpl extends BaseOpenmrsService implements SettingsManagerService {
 
 	@Override

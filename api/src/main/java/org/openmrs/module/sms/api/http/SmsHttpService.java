@@ -23,9 +23,6 @@ import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.notification.AlertService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -43,10 +40,9 @@ import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 /**
  * This is the main meat - here we talk to the providers using HTTP.
  */
-@Service("sms.SmsHttpService")
 public class SmsHttpService {
 
-    private static final String SMS_MODULE = "motech-sms";
+    private static final String SMS_MODULE = "openmrs-sms";
     private static final Log LOGGER = LogFactory.getLog(SmsHttpService.class);
 
     private TemplateService templateService;
@@ -54,7 +50,6 @@ public class SmsHttpService {
     private SmsEventService smsEventService;
     private HttpClient commonsHttpClient;
     private AlertService alertService;
-    @Autowired
     private SmsRecordDao smsRecordDao;
 
     /**
@@ -283,30 +278,27 @@ public class SmsHttpService {
         return method;
     }
 
-    @Autowired
-    @Qualifier("templateService")
     public void setTemplateService(TemplateService templateService) {
         this.templateService = templateService;
     }
 
-    @Autowired
     public void setSmsEventService(SmsEventService smsEventService) {
         this.smsEventService = smsEventService;
     }
 
-    @Autowired
-    @Qualifier("sms.configService")
     public void setConfigService(ConfigService configService) {
         this.configService = configService;
     }
 
-    @Autowired
     public void setCommonsHttpClient(HttpClient commonsHttpClient) {
         this.commonsHttpClient = commonsHttpClient;
     }
 
-    @Autowired
     public void setAlertService(AlertService alertService) {
         this.alertService = alertService;
+    }
+
+    public void setSmsRecordDao(SmsRecordDao smsRecordDao) {
+        this.smsRecordDao = smsRecordDao;
     }
 }
