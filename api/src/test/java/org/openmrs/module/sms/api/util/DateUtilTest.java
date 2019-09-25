@@ -34,7 +34,7 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void shouldSuccessfulConvertDateToUtcTimeZone() {
+	public void shouldsuccessfullyConvertDateToUtcTimeZone() {
 		Date expectedUtc = createDate(2010, Calendar.NOVEMBER, 16, 14, 43, 59, "UTC");
 		Date dateCet = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "CET");
 		Date actual = DateUtil.getDateWithDefaultTimeZone(dateCet);
