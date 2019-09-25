@@ -1,10 +1,5 @@
 package org.openmrs.module.sms.api.web;
 
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecordSearchCriteria;
 
@@ -304,21 +299,8 @@ public class GridSettings {
         return new HashSet<>(Arrays.asList(deliveryStatus.split(",")));
     }
 
-        private Interval createRangeFromSettings() {
-        DateTime from;
-        DateTime to;
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-        if (StringUtils.isNotBlank(timeFrom)) {
-            from = formatter.parseDateTime(timeFrom);
-        } else {
-            from = new DateTime(0);
-        }
-        if (StringUtils.isNotBlank(timeTo)) {
-            to = formatter.parseDateTime(timeTo);
-        } else {
-            to = DateTime.now();
-        }
-        return new Interval(from, to);
+    private Interval createRangeFromSettings() {
+        return new Interval(timeFrom, timeTo);
     }
 
     @Override

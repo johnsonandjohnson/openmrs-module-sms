@@ -22,6 +22,7 @@ import org.openmrs.module.sms.api.service.SmsEventService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.notification.AlertService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
 
-import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
 import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 
@@ -242,7 +242,7 @@ public class SmsHttpService {
         }
 
         for (String recipient : sms.getRecipients()) {
-            auditRecords.add(new SmsRecord(config.getName(), OUTBOUND, recipient, sms.getMessage(), now(),
+            auditRecords.add(new SmsRecord(config.getName(), OUTBOUND, recipient, sms.getMessage(), DateUtil.now(),
                     config.retryOrAbortStatus(failureCount), null, sms.getMotechId(), null, errorMessage));
         }
         events.add(outboundEvent(config.retryOrAbortSubject(failureCount), config.getName(), sms.getRecipients(),

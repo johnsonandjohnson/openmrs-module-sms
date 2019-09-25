@@ -4,10 +4,9 @@ package org.openmrs.module.sms.api.audit;
 //todo: 'senderNumber' & 'recipientNumber' instead of 'phoneNumber'?
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+import org.openmrs.module.sms.api.util.DateUtil;
 
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -56,8 +55,7 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
      * The timestamp for this SMS.
      */
     @Column
-    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private DateTime timestamp;
+    private Date timestamp;
 
     /**
      * The delivery status for this SMS.
@@ -107,7 +105,7 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
      * @param errorMessage the error message for this SMS, if applicable
      */
     public SmsRecord(String config, SmsDirection smsDirection, String number,  //NO CHECKSTYLE ParameterNumber
-                     String message, DateTime timestamp, String deliveryStatus, String providerStatus,
+                     String message, Date timestamp, String deliveryStatus, String providerStatus,
                      String motechId, String providerId, String errorMessage) {
         this.config = config;
         this.smsDirection = smsDirection;
@@ -191,14 +189,14 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
     /**
      * @return the timestamp for this SMS
      */
-    public DateTime getTimestamp() {
-        return timestamp.toDateTime(DateTimeZone.UTC);
+    public Date getTimestamp() {
+        return DateUtil.getUtcDateTime(timestamp);
     }
 
     /**
      * @param timestamp the timestamp for this SMS
      */
-    public void setTimestamp(DateTime timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 

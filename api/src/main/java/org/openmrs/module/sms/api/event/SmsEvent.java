@@ -4,12 +4,13 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.joda.time.DateTime;
 import org.openmrs.module.sms.api.util.Constants;
+import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.module.sms.api.util.SmsEventParams;
 import org.openmrs.module.sms.api.util.SmsUtil;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,8 +88,8 @@ public class SmsEvent {
 		return (String) getParameters().get(SmsEventParams.MESSAGE);
 	}
 
-	public DateTime getDeliveryTime() {
-		return (DateTime) getParameters().get(SmsEventParams.DELIVERY_TIME);
+	public Date getDeliveryTime() {
+		return (Date) getParameters().get(SmsEventParams.DELIVERY_TIME);
 	}
 
 	public Map<String, String> convertProperties() {
@@ -102,6 +103,8 @@ public class SmsEvent {
 			} else if (SmsEventParams.RECIPIENTS.equals(key)) {
 				List<String> recipients = getRecipients();
 				result.put(key, String.join(RECIPIENTS_DELIMITER, recipients));
+			} else if (getParameters().get(key) instanceof Date) {
+				result.put(key, DateUtil.dateToString((Date) getParameters().get(key)));
 			} else {
 				result.put(key, getParameters().get(key).toString());
 			}
@@ -122,7 +125,7 @@ public class SmsEvent {
 				String recipients = properties.get(SmsEventParams.RECIPIENTS);
 				result.put(key, Arrays.asList(recipients.split(RECIPIENTS_DELIMITER)));
 			} else if (SmsEventParams.DELIVERY_TIME.equals(key)) {
-				result.put(key, DateTime.parse(properties.get(SmsEventParams.DELIVERY_TIME)));
+				result.put(key, DateUtil.parse(properties.get(SmsEventParams.DELIVERY_TIME)));
 			} else if (SmsEventParams.FAILURE_COUNT.equals(key)) {
 				result.put(key, Integer.valueOf(properties.get(SmsEventParams.FAILURE_COUNT)));
 			} else {

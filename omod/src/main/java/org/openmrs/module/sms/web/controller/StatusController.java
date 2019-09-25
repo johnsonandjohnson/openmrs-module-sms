@@ -14,6 +14,7 @@ import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Status;
 import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.notification.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,7 +31,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
 
 /**
@@ -170,11 +170,11 @@ public class StatusController {
 
         if (existingSmsRecord != null) {
             smsRecord = new SmsRecord(configName, OUTBOUND, existingSmsRecord.getPhoneNumber(),
-                    existingSmsRecord.getMessageContent(), now(), null, statusString,
+                    existingSmsRecord.getMessageContent(), DateUtil.now(), null, statusString,
                     existingSmsRecord.getMotechId(), providerMessageId, null);
         } else {
             //start with an empty SMS record
-            smsRecord = new SmsRecord(configName, OUTBOUND, null, null, now(), null, statusString, null,
+            smsRecord = new SmsRecord(configName, OUTBOUND, null, null, DateUtil.now(), null, statusString, null,
                     providerMessageId, null);
         }
 

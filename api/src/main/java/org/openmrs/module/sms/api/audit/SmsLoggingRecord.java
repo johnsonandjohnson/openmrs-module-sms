@@ -1,9 +1,6 @@
 package org.openmrs.module.sms.api.audit;
 
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-
-import java.util.Calendar;
+import org.openmrs.module.sms.api.util.DateUtil;
 
 /**
  * Represents one record in the logging UI
@@ -69,8 +66,7 @@ public class SmsLoggingRecord {
         this.phoneNumber = record.getPhoneNumber();
         this.smsDirection = record.getSmsDirection().toString();
         // DateUtil.setTimeZone converts the message time from UTC to local time for display
-        this.timestamp = DateTimeFormat.forPattern("Y-MM-dd hh:mm:ss").print(record.getTimestamp()
-                .toDateTime(DateTimeZone.forTimeZone(Calendar.getInstance().getTimeZone())));
+        this.timestamp = DateUtil.getDateWithLocalTimeZone(record.getTimestamp());
         this.deliveryStatus = record.getDeliveryStatus().toString();
         this.providerStatus = record.getProviderStatus();
         this.messageContent = record.getMessageContent();

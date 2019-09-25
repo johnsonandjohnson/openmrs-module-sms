@@ -1,10 +1,10 @@
 package org.openmrs.module.sms.api.service;
 
-import org.joda.time.DateTime;
 import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.util.SmsEventParams;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,7 +31,7 @@ public class OutgoingSms {
     /**
      * If specified will schedule the message for future delivery using the MOTECH scheduler
      */
-    private DateTime deliveryTime;
+    private Date deliveryTime;
     /**
      * MOTECH specific message GUID
      */
@@ -80,7 +80,7 @@ public class OutgoingSms {
      * @param message the message to send
      * @param deliveryTime the expected delivery time of the sms
      */
-    public OutgoingSms(String config, List<String> recipients, String message, DateTime deliveryTime) {
+    public OutgoingSms(String config, List<String> recipients, String message, Date deliveryTime) {
         this.recipients = recipients;
         this.message = message;
         this.config = config;
@@ -94,7 +94,7 @@ public class OutgoingSms {
      * @param message the message to send
      * @param deliveryTime the expected delivery time of the sms
      */
-    public OutgoingSms(String config, String recipient, String message, DateTime deliveryTime) {
+    public OutgoingSms(String config, String recipient, String message, Date deliveryTime) {
         this(config, Collections.singletonList(recipient), message, deliveryTime);
     }
 
@@ -120,7 +120,7 @@ public class OutgoingSms {
      * @param message the message to send
      * @param deliveryTime the expected delivery time of the sms
      */
-    public OutgoingSms(List<String> recipients, String message, DateTime deliveryTime) {
+    public OutgoingSms(List<String> recipients, String message, Date deliveryTime) {
         this.recipients = recipients;
         this.message = message;
         this.deliveryTime = deliveryTime;
@@ -132,7 +132,7 @@ public class OutgoingSms {
      * @param message the message to send
      * @param deliveryTime the expected delivery time of the sms
      */
-    public OutgoingSms(String recipient, String message, DateTime deliveryTime) {
+    public OutgoingSms(String recipient, String message, Date deliveryTime) {
         this(Collections.singletonList(recipient), message, deliveryTime);
     }
 
@@ -215,7 +215,7 @@ public class OutgoingSms {
      * the message for future delivery using the MOTECH scheduler.
      * @return the delivery time for this SMS
      */
-    public DateTime getDeliveryTime() {
+    public Date getDeliveryTime() {
         return deliveryTime;
     }
 
@@ -234,7 +234,7 @@ public class OutgoingSms {
      * the message for future delivery using the MOTECH scheduler.
      * @param deliveryTime  the delivery time for this SMS
     */
-    public void setDeliveryTime(DateTime deliveryTime) {
+    public void setDeliveryTime(Date deliveryTime) {
         this.deliveryTime = deliveryTime;
     }
 

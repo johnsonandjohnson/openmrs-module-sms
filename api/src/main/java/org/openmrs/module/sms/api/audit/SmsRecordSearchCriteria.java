@@ -1,9 +1,9 @@
 package org.openmrs.module.sms.api.audit;
 
 import org.hibernate.criterion.Order;
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
+import org.openmrs.module.sms.api.web.Interval;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -138,7 +138,7 @@ public class SmsRecordSearchCriteria {
      * @param timestamp the timestamp of the messages
      * @return this instance of the search criteria
      */
-    public SmsRecordSearchCriteria withTimestamp(DateTime timestamp) {
+    public SmsRecordSearchCriteria withTimestamp(Date timestamp) {
         this.timestampRange = new Interval(timestamp, timestamp);
         return this;
     }

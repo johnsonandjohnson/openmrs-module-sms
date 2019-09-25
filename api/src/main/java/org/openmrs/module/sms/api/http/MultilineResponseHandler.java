@@ -6,12 +6,11 @@ import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.templates.Template;
-import org.openmrs.module.sms.api.util.SmsEventSubjects;
+import org.openmrs.module.sms.api.util.DateUtil;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
 import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 
@@ -57,7 +56,7 @@ public class MultilineResponseHandler extends ResponseHandler {
                     warn(errorMessage);
 
                     getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, sms.getRecipients().toString(),
-                            sms.getMessage(), now(), getConfig().retryOrAbortStatus(failureCount), null,
+                            sms.getMessage(), DateUtil.now(), getConfig().retryOrAbortStatus(failureCount), null,
                             sms.getMotechId(), null, null));
                 } else {
                     String failureMessage = messageAndRecipient[0];
@@ -67,7 +66,7 @@ public class MultilineResponseHandler extends ResponseHandler {
                             recipients, sms.getMessage(), sms.getMotechId(), null, failureCount, null, null, sms.getCustomParams()));
                     getLogger().info(String.format("Failed to send SMS: %s", failureMessage));
                     getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, recipient, sms.getMessage(),
-                            now(), getConfig().retryOrAbortStatus(failureCount), null, sms.getMotechId(), null,
+                            DateUtil.now(), getConfig().retryOrAbortStatus(failureCount), null, sms.getMotechId(), null,
                             failureMessage));
                 }
             } else {
@@ -77,7 +76,7 @@ public class MultilineResponseHandler extends ResponseHandler {
                 //todo: HIPAA concerns?
                 getLogger().info(String.format("Sent messageId %s '%s' to %s", messageId, messageForLog(sms),
                         recipient));
-                getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, recipient, sms.getMessage(), now(),
+                getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, recipient, sms.getMessage(), DateUtil.now(),
                         DeliveryStatuses.DISPATCHED, null, sms.getMotechId(), messageId, null));
             }
         }
