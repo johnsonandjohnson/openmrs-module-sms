@@ -19,14 +19,14 @@ import static org.junit.Assert.assertThat;
 public class DateUtilTest {
 
 	@Test
-	public void parse_shouldSuccessfulParseDateTime() {
+	public void shouldSuccessfulParseDateTime() {
 		Date expected = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "Asia/Almaty");
 		Date actual = DateUtil.parse("2010-11-16T15:43:59.000+06:00");
 		assertThat(actual, equalTo(expected));
 	}
 
 	@Test
-	public void plusDays_shouldReturnCorrectDate() {
+	public void shouldSuccessfullyAddDaysToDate() {
 		Date expected = createDate(2010, Calendar.MARCH, 2, 15, 43, 59, "CET");
 		Date date = createDate(2010, Calendar.FEBRUARY, 27, 15, 43, 59, "CET");
 		Date actual = DateUtil.plusDays(date, 3);
@@ -34,17 +34,16 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void getUtcDateTime_shouldSuccessfulConvertDate() {
+	public void shouldSuccessfulConvertDateToUtcTimeZone() {
 		Date expectedUtc = createDate(2010, Calendar.NOVEMBER, 16, 14, 43, 59, "UTC");
 		Date dateCet = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "CET");
-		Date actual = DateUtil.getUtcDateTime(dateCet);
+		Date actual = DateUtil.getDateWithDefaultTimeZone(dateCet);
 		assertThat(actual, equalTo(expectedUtc));
 	}
 
 	@Test
-	public void getLocalTimeZone_shouldReturnResultAsExpected() throws Exception {
+	public void getLocalTimeZoneShouldReturnResultAsExpected() throws Exception {
 		Date date = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "Asia/Almaty");
-		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Almaty"));
 		TimeZone timeZone = TimeZone.getTimeZone("Asia/Almaty");
 		PowerMockito.mockStatic(TimeZone.class);
 		BDDMockito.given(TimeZone.getDefault()).willReturn(timeZone);
@@ -55,7 +54,7 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void conversionTest_shouldReturnResultAsExpected() {
+	public void conversionTestShouldReturnResultAsExpected() {
 		String expectedDateAsString = "2012-01-10T00:00:00.000+06:00";
 		Date actual = DateUtil.parse(expectedDateAsString);
 		assertThat(DateUtil.dateToString(actual, "Asia/Almaty"), equalTo(expectedDateAsString));

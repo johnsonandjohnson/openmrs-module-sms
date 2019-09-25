@@ -37,7 +37,7 @@ public final class DateUtil {
 	}
 
 	public static Date now() {
-		return new Date();
+		return getDateWithDefaultTimeZone(new Date());
 	}
 
 	public static Date plusDays(Date date, int duration) {
@@ -47,8 +47,8 @@ public final class DateUtil {
 		return calendar.getTime();
 	}
 
-	public static Date getUtcDateTime(Date timestamp) {
-		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+	public static Date getDateWithDefaultTimeZone(Date timestamp) {
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(DEFAULT_TIME_ZONE));
 		calendar.setTime(timestamp);
 		return calendar.getTime();
 	}

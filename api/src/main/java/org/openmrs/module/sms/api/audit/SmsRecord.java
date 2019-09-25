@@ -190,7 +190,7 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
      * @return the timestamp for this SMS
      */
     public Date getTimestamp() {
-        return DateUtil.getUtcDateTime(timestamp);
+        return DateUtil.getDateWithDefaultTimeZone(timestamp);
     }
 
     /**
