@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 public class DateUtilTest {
 
 	@Test
-	public void shouldSuccessfulParseDateTime() {
+	public void shouldSuccessfullyParseDateTime() {
 		Date expected = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "Asia/Almaty");
 		Date actual = DateUtil.parse("2010-11-16T15:43:59.000+06:00");
 		assertThat(actual, equalTo(expected));
@@ -42,7 +42,7 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void getLocalTimeZoneShouldReturnResultAsExpected() throws Exception {
+	public void shouldReturnDateWithLocalTimeZone() throws Exception {
 		Date date = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "Asia/Almaty");
 		TimeZone timeZone = TimeZone.getTimeZone("Asia/Almaty");
 		PowerMockito.mockStatic(TimeZone.class);
@@ -54,7 +54,7 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void conversionTestShouldReturnResultAsExpected() {
+	public void shouldReturnConversionResultAsExpected() {
 		String expectedDateAsString = "2012-01-10T00:00:00.000+06:00";
 		Date actual = DateUtil.parse(expectedDateAsString);
 		assertThat(DateUtil.dateToString(actual, "Asia/Almaty"), equalTo(expectedDateAsString));
