@@ -55,6 +55,7 @@ public final class DateUtil {
 
 	public static String getDateWithLocalTimeZone(Date timestamp) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_TIME_FORMAT);
+		simpleDateFormat.setTimeZone(getLocalTimeZone());
 		return simpleDateFormat.format(timestamp);
 	}
 
@@ -68,6 +69,10 @@ public final class DateUtil {
 
 	public static String dateToString(Date date) {
 		return dateToString(date, DEFAULT_TIME_ZONE);
+	}
+
+	public static TimeZone getLocalTimeZone() {
+		return TimeZone.getDefault();
 	}
 
 	private DateUtil() { }

@@ -2,6 +2,8 @@ package org.openmrs.module.sms.api.util;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.BDDMockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -11,11 +13,9 @@ import java.util.TimeZone;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({DateUtil.class})
+@PrepareForTest({ DateUtil.class})
 public class DateUtilTest {
 
 	@Test
@@ -42,13 +42,14 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void getLocalTimeZone_shouldReturnResultAsExpected() {
-		Date date = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "CET");
-		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("CET"));
-		mockStatic(Calendar.class);
-		when(Calendar.getInstance()).thenReturn(calendar);
+	public void getLocalTimeZone_shouldReturnResultAsExpected() throws Exception {
+		Date date = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "Asia/Almaty");
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Almaty"));
+		TimeZone timeZone = TimeZone.getTimeZone("Asia/Almaty");
+		PowerMockito.mockStatic(TimeZone.class);
+		BDDMockito.given(TimeZone.getDefault()).willReturn(timeZone);
 
-		String expected = "2010-11-16T15:43:59.000+01:00";
+		String expected = "2010-11-16T15:43:59.000+06:00";
 		String actual = DateUtil.getDateWithLocalTimeZone(date);
 		assertThat(actual, equalTo(expected));
 	}
