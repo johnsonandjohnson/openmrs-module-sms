@@ -6,9 +6,8 @@ import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.templates.Template;
-import org.openmrs.module.sms.api.util.SmsEventSubjects;
+import org.openmrs.module.sms.api.util.DateUtil;
 
-import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
 import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 
@@ -43,14 +42,14 @@ public class MultilineSingleResponseHandler extends ResponseHandler {
                     sms.getRecipients(), sms.getMessage(), sms.getMotechId(), null, failureCount, null, null, sms.getCustomParams()));
             getLogger().info(String.format("Failed to send SMS: %s", failureMessage));
             getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, sms.getRecipients().get(0),
-                    sms.getMessage(), now(), getConfig().retryOrAbortStatus(failureCount), null, sms.getMotechId(),
+                    sms.getMessage(), DateUtil.now(), getConfig().retryOrAbortStatus(failureCount), null, sms.getMotechId(),
                     null, failureMessage));
         } else {
             //todo: HIPAA concerns?
             getLogger().info(String.format("Sent messageId %s '%s' to %s", messageId, messageForLog(sms),
                     sms.getRecipients().get(0)));
             getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, sms.getRecipients().get(0),
-                    sms.getMessage(), now(), DeliveryStatuses.DISPATCHED, null, sms.getMotechId(), messageId, null));
+                    sms.getMessage(), DateUtil.now(), DeliveryStatuses.DISPATCHED, null, sms.getMotechId(), messageId, null));
         }
     }
 }

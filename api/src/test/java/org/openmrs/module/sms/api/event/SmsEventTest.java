@@ -1,11 +1,12 @@
 package org.openmrs.module.sms.api.event;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.module.sms.api.util.SmsEventParams;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +33,9 @@ public class SmsEventTest {
 	};
 	private static final String CUSTOM_PARAMS_AS_STRING = "key1=value1,key2=value2";
 
-	private static final DateTime DELIVERY_TIME = DateTime.parse("2012-01-10T00:00:00.000+06:00");
-	private static final String DELIVERY_TIME_AS_STRING = "2012-01-10T00:00:00.000+06:00";
+	private static final Date DELIVERY_TIME = DateUtil.parse("2012-01-10T00:00:00.000+06:00");
+	private static final String DELIVERY_TIME_AS_STRING = "2012-01-09T18:00:00.000Z";
+	private static final String DELIVERY_TIME_ZONE = "Asia/Almaty";
 
 	private Map<String, Object> paramsObject;
 	private Map<String, String> paramsString;

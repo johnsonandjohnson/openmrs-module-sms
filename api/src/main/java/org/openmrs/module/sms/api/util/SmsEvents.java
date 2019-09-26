@@ -1,15 +1,11 @@
 package org.openmrs.module.sms.api.util;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.openmrs.module.sms.api.event.SmsEvent;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
-
-import static org.joda.time.DateTime.now;
 
 
 /**
@@ -34,7 +30,7 @@ public final class SmsEvents {
     public static SmsEvent outboundEvent(String subject, String config, //NO CHECKSTYLE ParameterNumber
                                             List<String> recipients, String message, String motechId,
                                             String providerMessageId, Integer failureCount, String providerStatus,
-                                            DateTime timestamp, Map<String, String> customParams) {
+                                            Date timestamp, Map<String, String> customParams) {
         Map<String, Object> params = new HashMap<>();
         params.put(SmsEventParams.CONFIG, config);
         params.put(SmsEventParams.RECIPIENTS, recipients);
@@ -52,7 +48,7 @@ public final class SmsEvents {
             params.put(SmsEventParams.PROVIDER_STATUS, providerStatus);
         }
         if (timestamp == null) {
-            params.put(SmsEventParams.TIMESTAMP, now());
+            params.put(SmsEventParams.TIMESTAMP, DateUtil.now());
         } else {
             params.put(SmsEventParams.TIMESTAMP, timestamp);
         }

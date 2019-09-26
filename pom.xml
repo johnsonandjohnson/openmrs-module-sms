@@ -48,11 +48,6 @@
 				</exclusions>
 			</dependency>
 			<dependency>
-				<groupId>joda-time</groupId>
-				<artifactId>joda-time</artifactId>
-				<version>${jodaTime.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>com.google.code.gson</groupId>
 				<artifactId>gson</artifactId>
 				<version>${gsonVersion}</version>
@@ -65,17 +60,6 @@
 					<exclusion>
 						<groupId>org.apache.commons</groupId>
 						<artifactId>com.springsource.org.apache.commons.codec</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.jadira.usertype</groupId>
-				<artifactId>usertype.core</artifactId>
-				<version>${jodaUsertype.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.hibernate</groupId>
-						<artifactId>hibernate-entitymanager</artifactId>
 					</exclusion>
 				</exclusions>
 			</dependency>
@@ -148,10 +132,8 @@
 		<javaCompilerTarget>1.8</javaCompilerTarget>
 		<commonsCodecVersion>1.5</commonsCodecVersion>
 		<eventVersion>2.6.0</eventVersion>
-		<jodaTime.version>2.9.1</jodaTime.version>
 		<gsonVersion>1.7.1</gsonVersion>
 		<httpClientVersion>3.1.0</httpClientVersion>
-		<jodaUsertype.version>3.2.0.GA</jodaUsertype.version>
 		<jsr311ApiVersion>1.1</jsr311ApiVersion>
 		<guavaVersion>23.0</guavaVersion>
 		<legacyVersion>1.5.0</legacyVersion>

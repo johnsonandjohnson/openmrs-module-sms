@@ -1,12 +1,12 @@
 package org.openmrs.module.sms.web.it;
 
-import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Test;
 import org.openmrs.module.sms.api.audit.SmsAuditService;
 import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
+import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,7 +35,7 @@ public class SmsAuditServiceBundleITTest extends BaseModuleWebContextSensitiveTe
 
 	@Test
 	public void verifyServiceFunctional() {
-		SmsRecord smsRecord = new SmsRecord("config", SmsDirection.INBOUND, "from", "message", DateTime.now(),
+		SmsRecord smsRecord = new SmsRecord("config", SmsDirection.INBOUND, "from", "message", DateUtil.now(),
 				"PENDING", "status", "mid", "pid", null);
 		smsRecordDao.create(smsRecord);
 

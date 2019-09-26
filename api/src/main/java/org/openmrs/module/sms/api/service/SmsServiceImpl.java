@@ -2,7 +2,6 @@ package org.openmrs.module.sms.api.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateTime;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
@@ -12,15 +11,16 @@ import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.task.SmsScheduledTask;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.Constants;
+import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.module.sms.api.util.SmsEventParams;
 import org.openmrs.module.sms.api.util.SmsEventSubjects;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
 import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 
@@ -147,7 +147,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
         //todo: delivery_time on the sms provider's side if they support it?
         for (List<String> recipients : recipientsList) {
             if (sms.hasDeliveryTime()) {
-                DateTime dt = sms.getDeliveryTime();
+                Date dt = sms.getDeliveryTime();
                 for (String part : messageParts) {
                     String motechId = generateMotechId();
                     SmsEvent event = outboundEvent(SmsEventSubjects.SCHEDULED, config.getName(), recipients, part,
@@ -155,14 +155,14 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
                     //MOTECH scheduler needs unique job ids, so adding motechId as job_id_key will do that
                     event.getParameters().put(Constants.PARAM_JOB_ID, motechId);
                     event.getParameters().put(SmsEventParams.DELIVERY_TIME, dt);
-                    schedulerService.safeScheduleRunOnceJob(event, dt.toDate(), new SmsScheduledTask());
+                    schedulerService.safeScheduleRunOnceJob(event, dt, new SmsScheduledTask());
                     LOGGER.info(String.format("Scheduling message [%s] to [%s] at %s.",
                             part.replace("\n", "\\n"), recipients, sms.getDeliveryTime()));
                     //add one millisecond to the next sms part so they will be delivered in order
                     //without that it seems Quartz doesn't fire events in the order they were scheduled
-                    dt = dt.plus(1);
+                    dt = DateUtil.plusDays(dt, 1);
                     for (String recipient : recipients) {
-                        smsRecordDao.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
+                        smsRecordDao.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, DateUtil.now(),
                                 DeliveryStatuses.SCHEDULED, null, motechId, null, null));
                     }
                 }
@@ -174,7 +174,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
                     LOGGER.info(String.format("Sending message [%s] to [%s].",
                             part.replace("\n", "\\n"), recipients));
                     for (String recipient : recipients) {
-                        smsRecordDao.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
+                        smsRecordDao.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, DateUtil.now(),
                                 DeliveryStatuses.PENDING, null, motechId, null, null));
                     }
                 }

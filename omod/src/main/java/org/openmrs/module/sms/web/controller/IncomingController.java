@@ -2,14 +2,14 @@ package org.openmrs.module.sms.web.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateTime;
 import org.openmrs.module.sms.api.audit.SmsRecord;
-import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 import org.openmrs.module.sms.api.configs.Config;
+import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.notification.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.Date;
 import java.util.Map;
 
-import static org.joda.time.DateTime.now;
 import static org.openmrs.module.sms.api.audit.SmsDirection.INBOUND;
 
 /**
@@ -83,7 +83,7 @@ public class IncomingController {
                 INBOUND,
                 getSender(params, template),
                 getMessage(params, template),
-                now(),
+                DateUtil.now(),
                 getStatus(params, template),
                 null,
                 null,
@@ -120,7 +120,7 @@ public class IncomingController {
         return params.get(template.getIncoming().getMsgIdKey());
     }
 
-    private DateTime getTimestamp(Map<String, String> params, Template template) {
+    private Date getTimestamp(Map<String, String> params, Template template) {
         if (params.containsKey(template.getIncoming().getTimestampKey())) {
             String dt = params.get(template.getIncoming().getTimestampKey());
             //todo: some providers may send timestamps in a different way, deal it it if/when we see that
@@ -128,9 +128,9 @@ public class IncomingController {
             if (dt.matches("(\\d\\d\\d\\d|\\d\\d)-\\d\\d?-\\d\\d? \\d\\d?:\\d\\d?:\\d\\d?")) {
                 dt = dt.replace(" ", "T");
             }
-            return DateTime.parse(dt);
+            return DateUtil.parse(dt);
         }
-        return now();
+        return DateUtil.now();
     }
 
     private String getStatus(Map<String, String> params, Template template) {
