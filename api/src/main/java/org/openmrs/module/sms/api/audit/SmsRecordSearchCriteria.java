@@ -1,6 +1,10 @@
 package org.openmrs.module.sms.api.audit;
 
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.sms.api.web.Interval;
 
 import java.util.Date;
@@ -241,6 +245,34 @@ public class SmsRecordSearchCriteria {
 
     public Order getOrder() {
         return order;
+    }
+
+    public void loadSearchCriteria(Criteria criteria) {
+        addSetRestriction(criteria, "smsDirection", smsDirections);
+        addStringRestriction(criteria, "config", config);
+        addStringRestriction(criteria, "phoneNumber", phoneNumber);
+        addStringRestriction(criteria, "messageContent", messageContent);
+        criteria.add(Restrictions.between("timestamp", timestampRange.getFrom(), timestampRange.getTo()));
+        addStringRestriction(criteria, "providerStatus", providerStatus);
+        addSetRestriction(criteria, "deliveryStatus", deliveryStatuses);
+        addStringRestriction(criteria, "motechId", motechId);
+        addStringRestriction(criteria, "providerId", providerId);
+        addStringRestriction(criteria, "errorMessage", errorMessage);
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+    }
+
+    private void addSetRestriction(Criteria criteria, String fieldName, Set set) {
+        if (set != null && !set.isEmpty()) {
+            criteria.add(Restrictions.in(fieldName, set));
+        }
+    }
+
+    private void addStringRestriction(Criteria criteria, String fieldName, String value) {
+        if (StringUtils.isNotBlank(value)) {
+            criteria.add(Restrictions.like(fieldName, value, MatchMode.ANYWHERE));
+        }
     }
 
     @Override

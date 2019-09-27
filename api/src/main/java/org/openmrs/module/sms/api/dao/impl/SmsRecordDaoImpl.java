@@ -104,6 +104,7 @@ public class SmsRecordDaoImpl extends BaseOpenmrsDataDao<SmsRecord> implements S
     @Override
     public List<SmsRecord> findPageableByCriteria(PagingInfo pagingInfo, SmsRecordSearchCriteria searchCriteria) {
         Criteria crit = getSession().createCriteria(this.mappedClass);
+        searchCriteria.loadSearchCriteria(crit);
         loadPagingTotal(pagingInfo, crit);
         createPagingCriteria(pagingInfo, crit);
         return crit.list();
