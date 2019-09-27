@@ -1,15 +1,11 @@
 package org.openmrs.module.sms.api.dao;
 
-import org.hibernate.criterion.Order;
 import org.openmrs.api.db.OpenmrsDataDAO;
-import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.audit.SmsRecordSearchCriteria;
-import org.openmrs.module.sms.api.web.Interval;
 import org.openmrs.module.sms.domain.PagingInfo;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Used to query and save audit records in the database.
@@ -21,39 +17,19 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
      * Retrieves all sms records matching the given criteria. All string fields in this lookup are matched
      * using the matches() operator, meaning they will be matched using the same rules that {@link String#matches(String)}
      * uses.
-     * @param config the name of the configuration associated with the SMS message
-     * @param directions the set of directions (inbound, outbound)
-     * @param phoneNumber the number of the phone the message was received from or delivered to
-     * @param messageContent the contents of the SMS message
-     * @param timestamp the date-time range the timestamp of the SMS should fall into
-     * @param deliveryStatuses the set of delivery status for the messages
-     * @param providerStatus
-     * @param motechId the id by which MOTECH identifies the message
-     * @param providerId the provider generated ID for the SMS
-     * @param errorMessage the error message for the SMS
+     * @param searchCriteria the search criteria
      * @return the matching records
      */
-    List<SmsRecord> findByCriteria(String config, Set<SmsDirection> directions, String phoneNumber, String messageContent, Interval timestamp,
-                                   Set<String> deliveryStatuses, String providerStatus, String motechId, String providerId, String errorMessage, Order order);
+    List<SmsRecord> findByCriteria(SmsRecordSearchCriteria searchCriteria);
 
     /**
      * Retrieves the total count of SMS messages matching the given criteria. All string fields in this lookup are matched
      * using the matches() operator, meaning they will be matched using the same rules that {@link String#matches(String)}
      * uses.
-     * @param config the name of the configuration associated with the SMS message
-     * @param directions the set of directions (inbound, outbound)
-     * @param phoneNumber the number of the phone the message was received from or delivered to
-     * @param messageContent the contents of the SMS message
-     * @param timestamp the date-time range the timestamp of the SMS should fall into
-     * @param deliveryStatuses the set of delivery status for the messages
-     * @param providerStatus
-     * @param motechId the id by which MOTECH identifies the message
-     * @param providerId the provider generated ID for the SMS
-     * @param errorMessage the error message for the SMS
+     * @param searchCriteria the search criteria
      * @return the matching records
      */
-    long countFindByCriteria(String config, Set<SmsDirection> directions, String phoneNumber, String messageContent, Interval timestamp,
-                             Set<String> deliveryStatuses, String providerStatus, String motechId, String providerId, String errorMessage);
+    long countFindByCriteria(SmsRecordSearchCriteria searchCriteria);
 
     /**
      * Retrieves records by the provider ID.

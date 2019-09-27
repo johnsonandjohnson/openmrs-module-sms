@@ -27,11 +27,7 @@ public class SmsAuditServiceImpl implements SmsAuditService {
     @Override
     @Transactional
     public SmsRecords findAllSmsRecords(SmsRecordSearchCriteria criteria) {
-        List<SmsRecord> recordList = smsRecordDao.findByCriteria(criteria.getConfig(),
-                criteria.getSmsDirections(), criteria.getPhoneNumber(),
-                criteria.getMessageContent(), criteria.getTimestampRange(), criteria.getDeliveryStatuses(),
-                criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage(),
-                criteria.getOrder());
+        List<SmsRecord> recordList = smsRecordDao.findByCriteria(criteria);
 
         return new SmsRecords(recordList.size(), recordList);
     }
@@ -39,10 +35,7 @@ public class SmsAuditServiceImpl implements SmsAuditService {
     @Override
     @Transactional
     public long countAllSmsRecords(SmsRecordSearchCriteria criteria) {
-        return smsRecordDao.countFindByCriteria(criteria.getConfig(),
-                criteria.getSmsDirections(), criteria.getPhoneNumber(),
-                criteria.getMessageContent(), criteria.getTimestampRange(), criteria.getDeliveryStatuses(),
-                criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage());
+        return smsRecordDao.countFindByCriteria(criteria);
     }
 
     @Override

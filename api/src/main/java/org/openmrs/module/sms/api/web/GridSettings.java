@@ -332,7 +332,7 @@ public class GridSettings {
                 .withMessageContent(messageContent)
                 .withTimestampRange(range)
                 .withProviderStatus(providerStatus)
-                .withDeliverystatuses(deliveryStatuses)
+                .withDeliveryStatuses(deliveryStatuses)
                 .withMotechId(motechId)
                 .withProviderId(providerId)
                 .withErrorMessage(errorMessage)

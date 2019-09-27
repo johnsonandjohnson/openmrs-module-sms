@@ -167,7 +167,7 @@ public class SmsRecordSearchCriteria {
      * @param deliveryStatuses the set of delivery status that will be taken into consideration when executing the query
      * @return this instance of the search criteria
      */
-    public SmsRecordSearchCriteria withDeliverystatuses(Set<String> deliveryStatuses) {
+    public SmsRecordSearchCriteria withDeliveryStatuses(Set<String> deliveryStatuses) {
         this.deliveryStatuses.addAll(deliveryStatuses);
         return this;
     }
@@ -252,14 +252,24 @@ public class SmsRecordSearchCriteria {
         addStringRestriction(criteria, "config", config);
         addStringRestriction(criteria, "phoneNumber", phoneNumber);
         addStringRestriction(criteria, "messageContent", messageContent);
-        criteria.add(Restrictions.between("timestamp", timestampRange.getFrom(), timestampRange.getTo()));
+        addTimestampRestriction(criteria);
         addStringRestriction(criteria, "providerStatus", providerStatus);
         addSetRestriction(criteria, "deliveryStatus", deliveryStatuses);
         addStringRestriction(criteria, "motechId", motechId);
         addStringRestriction(criteria, "providerId", providerId);
         addStringRestriction(criteria, "errorMessage", errorMessage);
+        addOrderRestriction(criteria);
+    }
+
+    private void addOrderRestriction(Criteria criteria) {
         if (order != null) {
             criteria.addOrder(order);
+        }
+    }
+
+    private void addTimestampRestriction(Criteria criteria) {
+        if (timestampRange != null) {
+            criteria.add(Restrictions.between("timestamp", timestampRange.getFrom(), timestampRange.getTo()));
         }
     }
 
