@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.audit.SmsAuditService;
 import org.openmrs.module.sms.api.audit.SmsRecordSearchCriteria;
 import org.openmrs.module.sms.api.web.GridSettings;
-import org.openmrs.module.sms.api.web.SmsRecordsPageable;
+import org.openmrs.module.sms.api.web.dto.SmsRecordsPageable;
 import org.openmrs.module.sms.domain.PagingInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
