@@ -4,7 +4,9 @@ import org.hibernate.criterion.Order;
 import org.openmrs.api.db.OpenmrsDataDAO;
 import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
+import org.openmrs.module.sms.api.audit.SmsRecordSearchCriteria;
 import org.openmrs.module.sms.api.web.Interval;
+import org.openmrs.module.sms.domain.PagingInfo;
 
 import java.util.List;
 import java.util.Set;
@@ -80,4 +82,12 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
     SmsRecord create(SmsRecord smsRecord);
 
     List<SmsRecord> retrieveAll();
+
+    /**
+     * Retrieves records by the specified criteria and based on the specified paging object.
+     * @param pagingInfo  The {@link PagingInfo} object contains pageable configuration.
+     * @param searchCriteria The {@link SmsRecordSearchCriteria} object specifying condition for criteria
+     * @return The list of matching records
+     */
+    List<SmsRecord> findPageableByCriteria(PagingInfo pagingInfo, SmsRecordSearchCriteria searchCriteria);
 }

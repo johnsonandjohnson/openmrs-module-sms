@@ -1,6 +1,7 @@
 package org.openmrs.module.sms.api.audit;
 
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
+import org.openmrs.module.sms.domain.PagingInfo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -42,5 +43,12 @@ public class SmsAuditServiceImpl implements SmsAuditService {
                 criteria.getSmsDirections(), criteria.getPhoneNumber(),
                 criteria.getMessageContent(), criteria.getTimestampRange(), criteria.getDeliveryStatuses(),
                 criteria.getProviderStatus(), criteria.getMotechId(), criteria.getProviderId(), criteria.getErrorMessage());
+    }
+
+    @Override
+    public SmsRecords findPageableByCriteria(PagingInfo pagingInfo, SmsRecordSearchCriteria criteria) {
+        List<SmsRecord> result = smsRecordDao.findPageableByCriteria(pagingInfo, criteria);
+        int size = pagingInfo.shouldLoadRecordCount() ? result.size() : pagingInfo.getTotalRecordCount().intValue();
+        return new SmsRecords(size, result);
     }
 }

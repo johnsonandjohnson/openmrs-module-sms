@@ -3,31 +3,21 @@ package org.openmrs.module.sms.api.dao.impl;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.openmrs.api.db.hibernate.DbSession;
-import org.openmrs.api.db.hibernate.DbSessionFactory;
-import org.openmrs.api.db.hibernate.HibernateOpenmrsDataDAO;
 import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
+import org.openmrs.module.sms.api.audit.SmsRecordSearchCriteria;
+import org.openmrs.module.sms.api.dao.BaseOpenmrsDataDao;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.web.Interval;
+import org.openmrs.module.sms.domain.PagingInfo;
 
 import java.util.List;
 import java.util.Set;
 
-public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> implements SmsRecordDao {
-
-    private DbSessionFactory sessionFactory;
+public class SmsRecordDaoImpl extends BaseOpenmrsDataDao<SmsRecord> implements SmsRecordDao {
 
     public SmsRecordDaoImpl() {
         super(SmsRecord.class);
-    }
-
-    private DbSession getSession(){
-        return sessionFactory.getCurrentSession();
-    }
-
-    public void setDbSessionFactory(DbSessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
     }
 
     @Override
@@ -109,5 +99,13 @@ public class SmsRecordDaoImpl extends HibernateOpenmrsDataDAO<SmsRecord> impleme
     @Override
     public List<SmsRecord> retrieveAll() {
         return getAll(false);
+    }
+
+    @Override
+    public List<SmsRecord> findPageableByCriteria(PagingInfo pagingInfo, SmsRecordSearchCriteria searchCriteria) {
+        Criteria crit = getSession().createCriteria(this.mappedClass);
+        loadPagingTotal(pagingInfo, crit);
+        createPagingCriteria(pagingInfo, crit);
+        return crit.list();
     }
 }
