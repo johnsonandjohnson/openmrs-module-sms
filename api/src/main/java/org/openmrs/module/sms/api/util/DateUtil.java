@@ -60,6 +60,9 @@ public final class DateUtil {
 	}
 
 	public static String dateToString(Date date, String timeZone) {
+		if (date == null) {
+			return null;
+		}
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_TIME_FORMAT);
 		if (StringUtils.isNotBlank(timeZone)) {
 			simpleDateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));

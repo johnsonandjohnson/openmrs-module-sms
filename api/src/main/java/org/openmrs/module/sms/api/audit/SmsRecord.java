@@ -4,6 +4,7 @@ package org.openmrs.module.sms.api.audit;
 //todo: 'senderNumber' & 'recipientNumber' instead of 'phoneNumber'?
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openmrs.module.sms.api.util.DateUtil;
 
 import java.util.Date;
@@ -18,6 +19,7 @@ import javax.persistence.Table;
  */
 @Entity(name = "sms.smsRecord")
 @Table(name = "sms_records")
+@JsonSerialize(using = SmsRecordSerializer.class)
 public class SmsRecord extends AbstractBaseOpenmrsData {
 
     private static final String MEDIUMTEXT = "mediumtext";
