@@ -59,11 +59,11 @@ public class SmsRecordControllerITTest extends BaseModuleWebContextSensitiveTest
 	@Before
 	public void setUp() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-		Date timestamp = createDate(2010, Calendar.NOVEMBER, 16, 15, 12, 59, "UTC");
+		Date timestamp = createDate(2010, Calendar.NOVEMBER, 16, 15, 12, 59);
 		smsRecordDao.saveOrUpdate(createSmsRecord(TEST_MESSAGE, PHONE_NUMBER, CONFIG, timestamp));
-		timestamp = createDate(2019, Calendar.SEPTEMBER, 30, 8, 22, 15, "UTC");
+		timestamp = createDate(2019, Calendar.SEPTEMBER, 30, 8, 22, 15);
 		smsRecordDao.saveOrUpdate(createSmsRecord(TEST_MESSAGE2, PHONE_NUMBER2, CONFIG2, timestamp));
-		timestamp = createDate(2015, Calendar.DECEMBER, 24, 18, 53, 42, "UTC");
+		timestamp = createDate(2015, Calendar.DECEMBER, 24, 18, 53, 42);
 		smsRecordDao.saveOrUpdate(createSmsRecord(TEST_MESSAGE3, PHONE_NUMBER3, CONFIG3, timestamp));
 	}
 
@@ -169,11 +169,11 @@ public class SmsRecordControllerITTest extends BaseModuleWebContextSensitiveTest
 		return record;
 	}
 
-	private Date createDate(int year, int month, int day, int hour, int minute, int second, String timezone) {
+	private Date createDate(int year, int month, int day, int hour, int minute, int second) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(year, month, day, hour, minute, second);
 		calendar.set(Calendar.MILLISECOND, 0);
-		calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 		return calendar.getTime();
 	}
 }
