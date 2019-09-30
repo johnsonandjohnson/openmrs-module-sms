@@ -39,6 +39,8 @@ public class SmsRecordDTO implements Serializable {
 
 	private String creator;
 
+	public SmsRecordDTO() { }
+
 	public SmsRecordDTO(Integer id, String errorMessage, String providerStatus, String motechId, String providerId,
 			String deliveryStatus, String messageContent, String timestamp, String config, String smsDirection,
 			String phoneNumber, String modificationDate, String creationDate, String modifiedBy, String creator) {

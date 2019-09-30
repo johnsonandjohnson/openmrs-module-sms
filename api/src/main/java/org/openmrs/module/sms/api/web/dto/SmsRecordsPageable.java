@@ -24,6 +24,8 @@ public class SmsRecordsPageable implements Serializable {
 
 	private List<SmsRecordDTO> rows;
 
+	public SmsRecordsPageable() { }
+
 	public SmsRecordsPageable(PagingInfo page, SmsRecords smsRecords) {
 		this.pageIndex = page.getPage();
 		this.pageSize = page.getPageSize();
