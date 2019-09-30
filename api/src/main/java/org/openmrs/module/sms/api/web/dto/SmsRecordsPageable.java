@@ -33,30 +33,6 @@ public class SmsRecordsPageable implements Serializable {
 		this.rows = convertSmsRecordsToDTO(smsRecords.getRecords());
 	}
 
-	private List<SmsRecordDTO> convertSmsRecordsToDTO(List<SmsRecord> records) {
-		List<SmsRecordDTO> result = new ArrayList<>();
-		for (SmsRecord record : records) {
-			result.add(new SmsRecordDTOBuilder()
-					.setId(record.getId())
-					.setErrorMessage(record.getErrorMessage())
-					.setProviderStatus(record.getProviderStatus())
-					.setMotechId(record.getMotechId())
-					.setProviderId(record.getProviderId())
-					.setDeliveryStatus(record.getDeliveryStatus())
-					.setMessageContent(record.getMessageContent())
-					.setTimestamp(DateUtil.dateToString(record.getTimestamp()))
-					.setConfig(record.getConfig())
-					.setSmsDirection(record.getSmsDirection())
-					.setPhoneNumber(record.getPhoneNumber())
-					.setModificationDate(DateUtil.dateToString(record.getDateChanged()))
-					.setCreationDate(DateUtil.dateToString(record.getDateCreated()))
-					.setModifiedBy(record.getChangedBy())
-					.setCreator(record.getCreator())
-					.createSmsRecordDTO());
-		}
-		return result;
-	}
-
 	public Integer getPageIndex() {
 		return pageIndex;
 	}
@@ -105,5 +81,29 @@ public class SmsRecordsPageable implements Serializable {
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	private List<SmsRecordDTO> convertSmsRecordsToDTO(List<SmsRecord> records) {
+		List<SmsRecordDTO> result = new ArrayList<>();
+		for (SmsRecord record : records) {
+			result.add(new SmsRecordDTOBuilder()
+					.setId(record.getId())
+					.setErrorMessage(record.getErrorMessage())
+					.setProviderStatus(record.getProviderStatus())
+					.setMotechId(record.getMotechId())
+					.setProviderId(record.getProviderId())
+					.setDeliveryStatus(record.getDeliveryStatus())
+					.setMessageContent(record.getMessageContent())
+					.setTimestamp(DateUtil.dateToString(record.getTimestamp()))
+					.setConfig(record.getConfig())
+					.setSmsDirection(record.getSmsDirection())
+					.setPhoneNumber(record.getPhoneNumber())
+					.setModificationDate(DateUtil.dateToString(record.getDateChanged()))
+					.setCreationDate(DateUtil.dateToString(record.getDateCreated()))
+					.setModifiedBy(record.getChangedBy())
+					.setCreator(record.getCreator())
+					.createSmsRecordDTO());
+		}
+		return result;
 	}
 }

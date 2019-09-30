@@ -16,12 +16,12 @@ public abstract class BaseOpenmrsDataDao<T extends BaseOpenmrsData> extends Hibe
 		super(mappedClass);
 	}
 
-	protected DbSession getSession(){
-		return sessionFactory.getCurrentSession();
-	}
-
 	public void setDbSessionFactory(DbSessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+
+	protected DbSession getSession(){
+		return sessionFactory.getCurrentSession();
 	}
 
 	/**
@@ -45,21 +45,6 @@ public abstract class BaseOpenmrsDataDao<T extends BaseOpenmrsData> extends Hibe
 	}
 
 	/**
-	 * Count amount of rows for the specified criteria.
-	 * @param criteria The {@link Criteria} tto execute against the hibernate data source
-	 * @return The row count
-	 */
-	private Long countRows(Criteria criteria) {
-		Long rows = (Long) criteria
-				.setProjection(Projections.rowCount())
-				.uniqueResult();
-		// resetting criteria
-		criteria.setProjection(null)
-				.setResultTransformer(Criteria.ROOT_ENTITY);
-		return rows;
-	}
-
-	/**
 	 * Updates the specified {@link Criteria} object to retrieve the data specified by the {@link PagingInfo} object.
 	 * @param pagingInfo The {@link PagingInfo} object that specifies which data should be retrieved.
 	 * @param criteria The {@link Criteria} to add the paging settings to, or {@code null} to create a new one.
@@ -77,5 +62,20 @@ public abstract class BaseOpenmrsDataDao<T extends BaseOpenmrsData> extends Hibe
 		}
 
 		return criteria;
+	}
+
+	/**
+	 * Count amount of rows for the specified criteria.
+	 * @param criteria The {@link Criteria} tto execute against the hibernate data source
+	 * @return The row count
+	 */
+	private Long countRows(Criteria criteria) {
+		Long rows = (Long) criteria
+				.setProjection(Projections.rowCount())
+				.uniqueResult();
+		// resetting criteria
+		criteria.setProjection(null)
+				.setResultTransformer(Criteria.ROOT_ENTITY);
+		return rows;
 	}
 }
