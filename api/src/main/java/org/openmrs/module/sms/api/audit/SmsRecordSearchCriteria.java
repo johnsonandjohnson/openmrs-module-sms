@@ -1,6 +1,10 @@
 package org.openmrs.module.sms.api.audit;
 
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.sms.api.web.Interval;
 
 import java.util.Date;
@@ -163,7 +167,7 @@ public class SmsRecordSearchCriteria {
      * @param deliveryStatuses the set of delivery status that will be taken into consideration when executing the query
      * @return this instance of the search criteria
      */
-    public SmsRecordSearchCriteria withDeliverystatuses(Set<String> deliveryStatuses) {
+    public SmsRecordSearchCriteria withDeliveryStatuses(Set<String> deliveryStatuses) {
         this.deliveryStatuses.addAll(deliveryStatuses);
         return this;
     }
@@ -241,6 +245,44 @@ public class SmsRecordSearchCriteria {
 
     public Order getOrder() {
         return order;
+    }
+
+    public void loadSearchCriteria(Criteria criteria) {
+        addSetRestriction(criteria, "smsDirection", smsDirections);
+        addStringRestriction(criteria, "config", config);
+        addStringRestriction(criteria, "phoneNumber", phoneNumber);
+        addStringRestriction(criteria, "messageContent", messageContent);
+        addTimestampRestriction(criteria);
+        addStringRestriction(criteria, "providerStatus", providerStatus);
+        addSetRestriction(criteria, "deliveryStatus", deliveryStatuses);
+        addStringRestriction(criteria, "motechId", motechId);
+        addStringRestriction(criteria, "providerId", providerId);
+        addStringRestriction(criteria, "errorMessage", errorMessage);
+        addOrderRestriction(criteria);
+    }
+
+    private void addOrderRestriction(Criteria criteria) {
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+    }
+
+    private void addTimestampRestriction(Criteria criteria) {
+        if (timestampRange != null) {
+            criteria.add(Restrictions.between("timestamp", timestampRange.getFrom(), timestampRange.getTo()));
+        }
+    }
+
+    private void addSetRestriction(Criteria criteria, String fieldName, Set set) {
+        if (set != null && !set.isEmpty()) {
+            criteria.add(Restrictions.in(fieldName, set));
+        }
+    }
+
+    private void addStringRestriction(Criteria criteria, String fieldName, String value) {
+        if (StringUtils.isNotBlank(value)) {
+            criteria.add(Restrictions.like(fieldName, value, MatchMode.ANYWHERE));
+        }
     }
 
     @Override

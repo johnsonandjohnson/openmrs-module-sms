@@ -1,5 +1,7 @@
 package org.openmrs.module.sms.api.audit;
 
+import org.openmrs.module.sms.domain.PagingInfo;
+
 import java.util.List;
 
 /**
@@ -29,4 +31,6 @@ public interface SmsAuditService {
      * @return the count of sms records matching the provided criteria
      */
     long countAllSmsRecords(SmsRecordSearchCriteria criteria);
+
+    SmsRecords findPageableByCriteria(PagingInfo pagingInfo, SmsRecordSearchCriteria criteria);
 }

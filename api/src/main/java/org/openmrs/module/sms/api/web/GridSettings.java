@@ -1,7 +1,10 @@
 package org.openmrs.module.sms.api.web;
 
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.criterion.Order;
 import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecordSearchCriteria;
+import org.openmrs.module.sms.domain.PagingInfo;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,6 +14,16 @@ import java.util.Set;
  * Models the audit log filter settings UI
  */
 public class GridSettings {
+
+    /**
+     * The default page to display.
+     */
+    private static final int DEFAULT_PAGE_INDEX = 1;
+
+    /**
+     * The default value of number of rows to display per page.
+     */
+    private static final int DEFAULT_PAGE_SIZE = 100;
 
     /**
      * The number of rows to display per page.
@@ -81,6 +94,11 @@ public class GridSettings {
      * The provider ID to search for.
      */
     private String providerId;
+
+    /**
+     * The error message to search for
+     */
+    private String errorMessage;
 
     /**
      * @return the number of rows to display per page
@@ -279,24 +297,80 @@ public class GridSettings {
     }
 
     /**
+     * @return the error message to search for
+     */
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    /**
+     * @param errorMessage the error message to search for
+     */
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    /**
      * Converts these grid settings to a {@link SmsRecordSearchCriteria} object, which
-     * contains type safe information and should be used for building database lookups.
+     * contains type safe information and should be used for building database criteria.
      * @return the newly created search crtieria
      */
+    public SmsRecordSearchCriteria toSmsRecordSearchCriteria() {
+        boolean reverse = "desc".equalsIgnoreCase(sortDirection);
+        Order order = null;
+        if (StringUtils.isNotBlank(sortColumn)) {
+            order = reverse ? Order.desc(sortColumn) : Order.asc(sortColumn);
+        }
+
+        Set<SmsDirection> directions  = getSmsDirectionFromSettings();
+        Set<String> deliveryStatuses  = getDeliveryStatusFromSettings();
+        Interval range = createRangeFromSettings();
+        SmsRecordSearchCriteria criteria = new SmsRecordSearchCriteria()
+                .withSmsDirections(directions)
+                .withConfig(config)
+                .withPhoneNumber(phoneNumber)
+                .withMessageContent(messageContent)
+                .withTimestampRange(range)
+                .withProviderStatus(providerStatus)
+                .withDeliveryStatuses(deliveryStatuses)
+                .withMotechId(motechId)
+                .withProviderId(providerId)
+                .withErrorMessage(errorMessage)
+                .withOrder(order);
+
+        return criteria;
+    }
+
+    /**
+     * Converts these grid settings to a {@link PagingInfo} object, which
+     * contains the paging configuration.
+     * @return the newly created paging information
+     */
+    public PagingInfo toPageInfo() {
+        Integer pageIndex = getPage();
+        Integer pageSize = getRows();
+        return new PagingInfo(pageIndex != null ? pageIndex : DEFAULT_PAGE_INDEX,
+                pageSize != null ? pageSize : DEFAULT_PAGE_SIZE);
+    }
 
     private Set<SmsDirection> getSmsDirectionFromSettings() {
         Set<SmsDirection> smsDirections = new HashSet<>();
-        String[] smsDirectionList = smsDirection.split(",");
-        for (String type : smsDirectionList) {
-            if (!type.isEmpty()) {
-                smsDirections.add(SmsDirection.valueOf(type));
+        if (StringUtils.isNotBlank(smsDirection) && smsDirection.contains(",")) {
+            String[] smsDirectionList = smsDirection.split(",");
+            for (String type : smsDirectionList) {
+                if (!type.isEmpty()) {
+                    smsDirections.add(SmsDirection.valueOf(type));
+                }
             }
         }
         return smsDirections;
     }
 
     private Set<String> getDeliveryStatusFromSettings() {
-        return new HashSet<>(Arrays.asList(deliveryStatus.split(",")));
+        if (StringUtils.isNotBlank(deliveryStatus) && deliveryStatus.contains(",")) {
+            return new HashSet<>(Arrays.asList(deliveryStatus.split(",")));
+        }
+        return new HashSet<>();
     }
 
     private Interval createRangeFromSettings() {
