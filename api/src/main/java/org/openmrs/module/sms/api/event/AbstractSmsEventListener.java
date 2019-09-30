@@ -1,26 +1,29 @@
 package org.openmrs.module.sms.api.event;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.event.EventListener;
-import org.openmrs.module.sms.api.exception.SmsRuntimeException;
 
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.Message;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
 
 public abstract class AbstractSmsEventListener implements EventListener {
+
+	private static final Log LOGGER = LogFactory.getLog(AbstractSmsEventListener.class);
 
 	@Override
 	public void onMessage(Message message) {
 		try {
 			Map<String, Object> properties = getProperties(message);
 			handleEvent(properties);
-		} catch(JMSException ex) {
-			throw new SmsRuntimeException("Error during handling Sms event", ex);
+		} catch(Exception ex) {
+			// generic error handling is used to avoid the ActiveMQ retrying mechanism (retry 6 times)
+			LOGGER.error("Error during handling Sms event", ex);
 		}
 	}
 
