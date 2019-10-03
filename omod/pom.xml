@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.openmrs.module</groupId>
@@ -13,15 +13,15 @@
 	<description>Omod submodule for Sms</description>
 
 	<dependencies>
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>sms-api</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>sms-api</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>org.openmrs.web</groupId>
 			<artifactId>openmrs-web</artifactId>
-            <scope>provided</scope>
+			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.servlet</groupId>
@@ -58,6 +58,13 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>${project.parent.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-owa</artifactId>
+			<version>${project.parent.version}</version>
+			<type>zip</type>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -72,7 +79,47 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>include-owa</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.parent.groupId}</groupId>
+									<artifactId>${project.parent.artifactId}-owa</artifactId>
+									<version>${project.parent.version}</version>
+									<type>zip</type>
+									<destFileName>sms.owa</destFileName>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/classes/web/module/owas</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>Expand moduleApplicationContext and messages</id>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<phase>generate-resources</phase>
+						<configuration>
+							<includeGroupIds>${project.parent.groupId}</includeGroupIds>
+							<includeArtifactIds>${project.parent.artifactId}-api</includeArtifactIds>
+							<excludeTransitive>true</excludeTransitive>
+							<includes>**/*</includes>
+							<outputDirectory>${project.build.directory}/classes</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+
 
 </project>
