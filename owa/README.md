@@ -47,23 +47,57 @@ that looks like:
 }
 ```
 
-### Live Reload
+### Live Reload with CfL docker
 
-To use [Browersync](https://www.browsersync.io/) to watch your files and reload
-the page, inject CSS or synchronize user actions across browser instances, you
-will need the `APP_ENTRY_POINT` entry in your `config.json` file:
-
+Adjust variables listed below to your environment, open terminal and run them
+```bash
+SMS_REPO=/home/user/cfl/omrs-sms
+SMS_OMOD=sms-1.0.0-SNAPSHOT.omod
+CFL_REPO=/home/user/cfl/cfl-openmrs
+```
+Build the sms module
+```bash
+cd $SMS_REPO
+mvn clean install
+```
+Replace the sms module file `CFL_REPO/cfl/web/modules/SMS_OMOD` by `SMS_REPO/omod/target/SMS_OMOD`
+```bash
+rm $CFL_REPO/cfl/web/modules/sms*
+mv $SMS_REPO/omod/target/$SMS_OMOD $CFL_REPO/cfl/web/modules
+```
+Run docker-compose
+```bash
+cd $CFL_REPO/cfl/
+docker-compose -f $CFL_REPO/cfl/docker-compose.override.yml up -d --build
+```
+Log in to local OpenMRS app to make sure everythink works fine before executing further steps.
+Go to `SMS_REPO/owa` and create a file `config.json`
+```bash
+cd $SMS_REPO/owa
+touch config.json
+```
+Replace `CFL_REPO` with our own path and paste into `config.json` file. 
 ```js
 {
-  "LOCAL_OWA_FOLDER": "/home/user/cfl/cfl-openmrs/cfl/web/owa",
-  "APP_ENTRY_POINT": "http://localhost:8080/openmrs/owa/sms/index.html"
+  "LOCAL_OWA_FOLDER":"CFL_REPO/cfl/web/owa/",
+  "APP_ENTRY_POINT":"http://localhost:8080/openmrs/owa/sms/index.html"
 }
 ```
-Run Browsersync as follows:
+This file isn't tracked by git so you can leave it like that.
+<br/>
+Now run
+```bash
+cd $SMS_REPO/owa
+sudo npm run watch
+```
+You can add
+```html
+<h1>TEST</h1>
+```
+to `SMS_REPO/owa/js/components/App.jsx` in order to check if it works.
 
-```
-npm run watch
-```
+#### Note!
+You will have to use `Ctrl+F5` to see changes in the HTML. It's caused by Docker volume system. 
 
 ### Extending
 
