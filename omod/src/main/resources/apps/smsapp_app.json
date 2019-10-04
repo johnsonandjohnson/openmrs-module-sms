@@ -1,0 +1,19 @@
+[
+    {
+        "id": "smsapp.basicSms",
+        "label": "SMS module",
+        "description": "SMS management page",
+        "extensions": [
+            {
+                "id": "smsapp.basicSms.homepageLink",
+                "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
+                "type": "link",
+                "order": 9,
+                "label": "sms.title",
+                "url": "owa/sms/index.html",
+                "icon": "icon-comment",
+                "requiredPrivilege": "SMS module Privilege"
+            }
+        ]
+    }
+]
