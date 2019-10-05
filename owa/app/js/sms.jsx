@@ -6,20 +6,25 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
+
 import React from 'react';
-import {render} from 'react-dom';
-import {Router, Route, hashHistory} from 'react-router'
-import {Provider} from 'react-redux'
+import { render } from 'react-dom';
+import { HashRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
+import 'babel-polyfill';
 
-import createStore from './redux-store'
-import routes from './routes'
+import { history } from './config/redux-store';
+import exportStore from './config/export-store';
 
-let store = createStore();
+import routes from './routes';
 
 render((
-         <Provider store={store}>
-           <Router history={hashHistory}>
-             {routes(store)}
-           </Router>
-         </Provider>
-       ), document.getElementById('app'));
+  <Provider store={exportStore}>
+    <ConnectedRouter history={history}>
+      <HashRouter>
+        {routes(exportStore)}
+      </HashRouter>
+    </ConnectedRouter>
+  </Provider>
+), document.getElementById('app'));

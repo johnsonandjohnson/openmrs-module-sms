@@ -6,17 +6,14 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
+import React from 'react';
 
-import {createStore, applyMiddleware, combineReducers} from 'redux'
-import promiseMiddleware from 'redux-promise-middleware';
-import thunkMiddleware from 'redux-thunk';
-import * as reducers from './reducers'
-
-export default function () {
-  const reducer = combineReducers(reducers);
-  const store = createStore(reducer, {}, applyMiddleware(
-    thunkMiddleware,
-    promiseMiddleware()
-  ));
-  return store;
+export default class Logs extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Hello, Logs</h1>
+      </div>
+    )
+  }
 }
