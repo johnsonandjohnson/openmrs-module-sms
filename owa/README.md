@@ -84,9 +84,7 @@ Replace `CFL_REPO` with our own path and paste into `config.json` file.
   "APP_ENTRY_POINT":"http://localhost:8080/openmrs/owa/sms/index.html"
 }
 ```
-This file isn't tracked by git so you can leave it like that.
-<br/>
-Now run
+This file isn't tracked by git so you can leave it like that. Now run
 ```bash
 cd $SMS_REPO/owa
 sudo npm run watch
@@ -95,10 +93,8 @@ You can add
 ```html
 <h1>TEST</h1>
 ```
-to `SMS_REPO/owa/js/components/App.jsx` in order to check if it works.
-
-#### Note!
-You will have to use `Ctrl+F5` to see changes in the HTML. It's caused by Docker volume system. 
+to `SMS_REPO/owa/js/components/App.jsx` in order to check if it works. <br />
+<b>Note!</b> You will have to use `Ctrl+F5` to see changes in the HTML. It's caused by Docker volume system. 
 
 ### Extending
 
