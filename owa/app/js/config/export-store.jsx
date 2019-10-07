@@ -6,15 +6,9 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import 'babel-polyfill';
+import createStore from './redux-store';
 
-import App from './components/App'
-import Logs from './components/Logs'
+const exportStore = createStore();
 
-export default (store) => (
-  <Switch>
-    <Route exact path="/" component={App} />
-    <Route exact path="/logs" component={Logs} />
-  </Switch>
-);
+export default exportStore;

@@ -68,7 +68,8 @@ mv $SMS_REPO/omod/target/$SMS_OMOD $CFL_REPO/cfl/web/modules
 Run docker-compose
 ```bash
 cd $CFL_REPO/cfl/
-docker-compose -f $CFL_REPO/cfl/docker-compose.override.yml up -d --build
+docker-compose down
+docker-compose up -d --build
 ```
 Log in to local OpenMRS app to make sure everythink works fine before executing further steps.
 Go to `SMS_REPO/owa` and create a file `config.json`
