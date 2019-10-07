@@ -7,10 +7,10 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
-import exampleReducer from './exampleReducer'
+import exampleReducer from "./exampleReducer";
 
 export default combineReducers({
-    exampleReducer
+  exampleReducer
 });
