@@ -6,7 +6,7 @@
         "extensions": [
             {
                 "id": "smsapp.basicSms.homepageLink",
-                "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
+                "extensionPointId": "systemAdministration.apps",
                 "type": "link",
                 "order": 9,
                 "label": "sms.title",
