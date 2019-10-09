@@ -7,6 +7,7 @@ import org.openmrs.module.sms.api.audit.SmsRecordSearchCriteria;
 import org.openmrs.module.sms.domain.PagingInfo;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -355,22 +356,31 @@ public class GridSettings {
 
     private Set<SmsDirection> getSmsDirectionFromSettings() {
         Set<SmsDirection> smsDirections = new HashSet<>();
-        if (StringUtils.isNotBlank(smsDirection) && smsDirection.contains(",")) {
-            String[] smsDirectionList = smsDirection.split(",");
-            for (String type : smsDirectionList) {
-                if (!type.isEmpty()) {
-                    smsDirections.add(SmsDirection.valueOf(type));
+        if (StringUtils.isNotBlank(smsDirection)) {
+            if (smsDirection.contains(",")) {
+                String[] smsDirectionList = smsDirection.split(",");
+                for (String type : smsDirectionList) {
+                    if (!type.isEmpty()) {
+                        smsDirections.add(SmsDirection.valueOf(type));
+                    }
                 }
+            } else {
+                smsDirections = Collections.singleton(SmsDirection.valueOf(smsDirection));
             }
         }
         return smsDirections;
     }
 
     private Set<String> getDeliveryStatusFromSettings() {
-        if (StringUtils.isNotBlank(deliveryStatus) && deliveryStatus.contains(",")) {
-            return new HashSet<>(Arrays.asList(deliveryStatus.split(",")));
+        Set<String> smsDeliveryStatus = new HashSet<>();
+        if (StringUtils.isNotBlank(deliveryStatus)) {
+            if (deliveryStatus.contains(",")) {
+                smsDeliveryStatus =  new HashSet<>(Arrays.asList(deliveryStatus.split(",")));
+            } else {
+                smsDeliveryStatus = Collections.singleton(deliveryStatus);
+            }
         }
-        return new HashSet<>();
+        return smsDeliveryStatus;
     }
 
     private Interval createRangeFromSettings() {
