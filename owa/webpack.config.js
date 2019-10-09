@@ -228,11 +228,11 @@ var webpackConfig = {
       "redux-promise-middleware",
       "react-redux",
       "redux-saga",
-      "redux-logger"
+      "redux-logger",
+      "redux-thunk"
     ]
   },
   devtool: devtool,
-  target,
   output: {
     path: outputPath,
     filename: "[name]" + outputFile
