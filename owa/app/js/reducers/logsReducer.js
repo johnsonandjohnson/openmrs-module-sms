@@ -7,7 +7,7 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 
-import axios from 'axios';
+import axiosInstance from '../config/axios';
 import { LocalizedMessage } from '@openmrs/react-components';
 
 import { REQUEST, SUCCESS, FAILURE } from './action-type.util'
@@ -98,24 +98,15 @@ export default (state = initialState, action) => {
   }
 };
 
-// ToDo add as interceptors
-const logsUrl = 'ws/sms/log';
-const localhost = axios.create({
-  baseURL: 'http://localhost:3000/openmrs/',
-  headers: {
-    Authorization: 'Basic YWRtaW46QWRtaW4xMjM='
-  }
-});
-
 export const reset = () => ({
   type: ACTION_TYPES.RESET
 });
 
 export const getLogs = (state) => async (dispatch) => {
-  const requestUrl = `${logsUrl}`;
+  const requestUrl = 'ws/sms/log';
   await dispatch({
     type: ACTION_TYPES.FETCH_LOGS,
-    payload: localhost.get(requestUrl, {
+    payload: axiosInstance.get(requestUrl, {
       params: {
         page: state.page + 1,
         rows: state.pageSize

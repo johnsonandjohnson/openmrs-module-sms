@@ -46,7 +46,8 @@ var getConfig = function() {
     // create file with defaults if not found
     config = {
       LOCAL_OWA_FOLDER: "/home/user/cfl/cfl-openmrs/cfl/web/owa/",
-      APP_ENTRY_POINT: "http://localhost:8080/openmrs/owa/sms/index.html"
+      APP_ENTRY_POINT: "http://localhost:8080/openmrs/owa/sms/index.html",
+      VERSION: "1.0.0-SNAPSHOT"
     };
 
     fs.writeFile("config.json", JSON.stringify(config));
@@ -114,7 +115,8 @@ const rules = [
 if (env === "production") {
   plugins.push(
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify("production")
+      "process.env.NODE_ENV": JSON.stringify("production"),
+      "process.env.VERSION": JSON.stringify(config.VERSION)
     })
   );
   plugins.push(new UglifyPlugin());
@@ -147,6 +149,11 @@ if (env === "production") {
   );
 }
 if (env === "deploy") {
+  plugins.push(
+    new webpack.DefinePlugin({
+      "process.env.VERSION": JSON.stringify(config.VERSION)
+    })
+  );
   outputFile = `${outputFile}.js`;
   vendorOutputFile = "vendor.bundle.js";
   outputPath = `${config.LOCAL_OWA_FOLDER}${
@@ -155,6 +162,11 @@ if (env === "deploy") {
   devtool = "source-map";
 }
 if (env === "development") {
+  plugins.push(
+    new webpack.DefinePlugin({
+      "process.env.VERSION": JSON.stringify(config.VERSION)
+    })
+  );
   outputFile = `${outputFile}.js`;
   vendorOutputFile = "vendor.bundle.js";
   outputPath = `${__dirname}/dist/`;
