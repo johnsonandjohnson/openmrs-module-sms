@@ -10,11 +10,11 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import App from './components/App'
-import Logs from './components/Logs'
+import Logs from './components/logs/Logs'
 
 export default (store) => (
   <Switch>
-    <Route exact path="/" component={App} />
-    <Route exact path="/logs" component={Logs} />
+    <Route exact path='/' component={App} />
+    <Route path='/logs' component={Logs} />
   </Switch>
 );

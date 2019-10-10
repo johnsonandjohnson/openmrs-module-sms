@@ -7,13 +7,20 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 import React from 'react';
+import { connect } from 'react-redux';
 
-export default class Logs extends React.Component {
+import LogsTable from './LogsTable';
+
+export class Logs extends React.Component {
   render() {
     return (
       <div>
-        <h1>Hello, Logs</h1>
+        <LogsTable />
       </div>
     )
   }
 }
+
+export const mapStateToProps = state => ({});
+
+export default connect(mapStateToProps)(Logs);

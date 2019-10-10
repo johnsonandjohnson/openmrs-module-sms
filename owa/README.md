@@ -71,7 +71,7 @@ cd $CFL_REPO/cfl/
 docker-compose down
 docker-compose up -d --build
 ```
-Log in to local OpenMRS app to make sure everythink works fine before executing further steps.
+Log in to local OpenMRS app to make sure everything works fine before executing further steps.
 Go to `SMS_REPO/owa` and create a file `config.json`
 ```bash
 cd $SMS_REPO/owa

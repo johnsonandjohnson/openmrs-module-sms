@@ -11,12 +11,11 @@ import {
   createStore, applyMiddleware, compose,
 } from 'redux';
 import promiseMiddleware from 'redux-promise-middleware';
+import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import { createHashHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import reducers from '../reducers'
-
-const promiseTypeSuffixes = ['LOADING', 'SUCCESS', 'FAILURE'];
 
 export const history = createHashHistory({
   basename: '/',
@@ -24,7 +23,8 @@ export const history = createHashHistory({
 
 const middlewares = [
   routerMiddleware(history),
-  promiseMiddleware({ promiseTypeSuffixes })
+  thunkMiddleware,
+  promiseMiddleware()
 ];
 
 if (process.env.NODE_ENV !== 'production') {
