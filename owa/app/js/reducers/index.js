@@ -8,9 +8,11 @@
  */
 
 import { combineReducers } from "redux";
+import { reducers as openmrs } from '@openmrs/react-components';
 
 import logsReducer from './logsReducer';
 
 export default combineReducers({
+  openmrs,
   logsReducer
 });
