@@ -12,13 +12,12 @@ import Tile from './Tile';
 export default class App extends React.Component {
   render() {
     return (
-      <div className="container">
+      <div className="main-container">
         <div className="row">
           <div className="col-md-12 col-xs-12">
             <h2>SMS</h2>
           </div>
         </div>
-
         <div className="panel-body">
           <Tile name='Send' href='#/send' icon={['fas', 'paper-plane']} />
           <Tile name='Logs' href='#/logs' icon={['fas', 'clipboard-list']} />

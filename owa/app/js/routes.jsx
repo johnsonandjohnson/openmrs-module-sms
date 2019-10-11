@@ -8,13 +8,16 @@
  */
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { Header, Head } from '@openmrs/react-components';
 
 import App from './components/App'
 import Logs from './components/logs/Logs'
 
-export default (store) => (
+export default (store) => (<div>
+  <Head defaultTitle='OpenMRS Electronic Medical Record' id='app.title' />
+  <Header />
   <Switch>
     <Route exact path='/' component={App} />
     <Route path='/logs' component={Logs} />
   </Switch>
-);
+</div>);
