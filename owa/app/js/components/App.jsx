@@ -7,12 +7,14 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 import React from 'react';
+import { connect } from 'react-redux';
+
 import Tile from './Tile';
 
-export default class App extends React.Component {
+class App extends React.Component {
   render() {
     return (
-      <div className="main-container">
+      <div className="body-wrapper">
         <div className="row">
           <div className="col-md-12 col-xs-12">
             <h2>SMS</h2>
@@ -26,3 +28,5 @@ export default class App extends React.Component {
     )
   }
 }
+
+export default connect()(App);
