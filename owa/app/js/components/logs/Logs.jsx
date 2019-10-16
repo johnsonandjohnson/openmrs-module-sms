@@ -14,7 +14,7 @@ import LogsTable from './LogsTable';
 export class Logs extends React.Component {
   render() {
     return (
-      <div>
+      <div className="body-wrapper">
         <LogsTable />
       </div>
     )
