@@ -7,14 +7,14 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 
-import { combineReducers } from "redux";
-import { reducers as openmrs } from '@openmrs/react-components';
-
-import logsReducer from './logsReducer';
-import sendReducer from './sendReducer';
-
-export default combineReducers({
-  openmrs,
-  logsReducer,
-  sendReducer
-});
+export class SmsModel {
+  constructor(smsState) {
+    this.recipients = smsState.recipients;
+    this.message = smsState.message;
+    this.config = smsState.config;
+    this.deliveryTime = smsState.deliveryTime;
+    this.providerId = smsState.providerId;
+    this.failureCount = smsState.failureCount;
+    this.customParams = smsState.customParams;
+  }
+}

@@ -13,6 +13,7 @@ import { Header } from '@openmrs/react-components';
 import App from './components/App';
 import Logs from './components/logs/Logs';
 import BreadCrumb from './components/BreadCrumb';
+import SendSms from './components/SendSms'
 
 export default (store) => (<div>
   <Header />
@@ -20,5 +21,6 @@ export default (store) => (<div>
   <Switch>
     <Route exact path='/' component={App} />
     <Route path='/logs' component={Logs} />
+    <Route path='/send' component={SendSms} />
   </Switch>
 </div>);
