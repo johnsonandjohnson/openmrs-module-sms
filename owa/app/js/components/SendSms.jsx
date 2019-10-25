@@ -16,7 +16,7 @@ import { sendSms, getSmsConfigs, reset } from '../reducers/sendReducer';
 const initialState = {
   recipients: [],
   message: '',
-  config: 'test-config',
+  config: '',
   deliveryTime: null,
   providerId: 'Twilio',
   failureCount: 0,
@@ -37,6 +37,9 @@ export class SendSms extends React.Component {
   }
   componentDidMount() {
     this.props.getSmsConfigs(this.props);
+    this.setState({
+      config: this.props.configs[0]
+    })
   }
   
   handleCancelButton() {
@@ -80,7 +83,6 @@ export class SendSms extends React.Component {
   }
 
   render() {
-    let listOfDeliveryTime = ['Immediately', '10s', '1m', '1h'];
     return (
       <div>
         <ToastContainer
@@ -96,15 +98,15 @@ export class SendSms extends React.Component {
         <h1>Send SMS</h1>
         <form ref={form => this.form = form}>
           <h3>Select configuration</h3>
-          {this.props.configs.map(config => <label>
+          {this.props.configs.map(config => <label className='inline'>
           <input type='radio' name='configs' onChange={this.configChange} defaultChecked/>
           {config.name}</label>)}
           <br />
           <h3>Select delivery time</h3>
-          {listOfDeliveryTime.map((deliveryTime, i) => <label>
-            <input type='radio' name='deliveryTimeOptions' onChange={this.deliveryTimeChange} defaultChecked={deliveryTime === 'Immediately' ? true : false} />
-            {deliveryTime}
-          </label>)}
+            <label className='inline'><input type='radio' name='deliveryTimeOptions' onChange={this.deliveryTimeChange} value={0} defaultChecked={true}/>Immediately</label>
+            <label className='inline'><input type='radio' name='deliveryTimeOptions' onChange={this.deliveryTimeChange} value={10}/>10s</label>
+            <label className='inline'><input type='radio' name='deliveryTimeOptions' onChange={this.deliveryTimeChange} value={60}/>1m</label>
+            <label className='inline'><input type='radio' name='deliveryTimeOptions' onChange={this.deliveryTimeChange} value={3600}/>1h</label>
           <br />
           <h3>Add recipients' phone number</h3>
           <label>
