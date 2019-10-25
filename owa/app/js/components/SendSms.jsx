@@ -8,20 +8,10 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { sendSms, getSmsConfigs, reset } from '../reducers/sendReducer';
-
-const initialState = {
-  recipients: [],
-  message: '',
-  config: '',
-  deliveryTime: null,
-  providerId: 'Twilio',
-  failureCount: 0,
-  customParams: null,
-}
 
 export class SendSms extends React.Component {
   constructor(props) {
@@ -33,26 +23,32 @@ export class SendSms extends React.Component {
     this.recipientsChange = this.recipientsChange.bind(this);
     this.messageChange = this.messageChange.bind(this);
     this.customParamsChange = this.customParamsChange.bind(this);
-    this.state = initialState;
+    this.state = props.sendForm;
   }
   componentDidMount() {
     this.props.getSmsConfigs(this.props);
-    this.setState({
-      config: this.props.configs[0]
-    })
   }
-  
+
+  componentDidUpdate(prevProps) {
+    if (this.props.configs !== prevProps.configs) {
+      this.setState({
+        config: this.props.defaultConfigName,
+        providerId: this.props.configs[0].templateName,
+        deliveryTime: 0
+      });
+    }
+  }
+
   handleCancelButton() {
     this.form.reset();
-    this.setState(initialState);
+    this.setState(this.props.sendForm);
   }
 
   handleSubmit() {
     this.props.sendSms(this.state);
-    toast.success("The message was sent to provided recipient(s)!");
   }
 
-  configChange() {
+  configChange(event) {
     this.setState({
       config: event.target.value
     });
@@ -99,7 +95,7 @@ export class SendSms extends React.Component {
         <form ref={form => this.form = form}>
           <h3>Select configuration</h3>
           {this.props.configs.map(config => <label className='inline'>
-          <input type='radio' name='configs' onChange={this.configChange} defaultChecked/>
+          <input key={config.name} type='radio' name='configs' onChange={this.configChange} value={config.name} defaultChecked={this.props.defaultConfigName === config.name}/>
           {config.name}</label>)}
           <br />
           <h3>Select delivery time</h3>
