@@ -10,6 +10,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import _ from 'lodash';
 
 import { sendSms, getSmsConfigs, reset } from '../reducers/sendReducer';
 
@@ -33,7 +34,7 @@ export class SendSms extends React.Component {
     if (this.props.configs !== prevProps.configs) {
       this.setState({
         config: this.props.defaultConfigName,
-        providerId: this.props.configs[0].templateName,
+        providerId: this.getProviderId(this.props.defaultConfigName)[0],
         deliveryTime: 0
       });
     }
@@ -50,9 +51,16 @@ export class SendSms extends React.Component {
 
   configChange(event) {
     this.setState({
-      config: event.target.value
+      config: event.target.value,
+      providerId: this.getProviderId(event.target.value)[0]
     });
   }
+
+  getProviderId(selectedConfig) {
+    const providerIdArray = this.props.configs.map(config => selectedConfig === config.name ? config.templateName : null);
+    _.pull(providerIdArray, null);
+    return providerIdArray;
+  } 
 
   deliveryTimeChange() {
     this.setState({
