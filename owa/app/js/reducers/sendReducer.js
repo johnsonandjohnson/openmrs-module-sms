@@ -9,6 +9,8 @@
 
 import { REQUEST, SUCCESS, FAILURE } from './action-type.util'
 import axiosInstance from '../config/axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { SmsModel } from '../shared/model/sms.model'
 
@@ -28,7 +30,8 @@ const initialState = {
     providerId: '',
     failureCount: 0,
     customParams: null,
-  }
+  },
+  defaultConfigName: ''
 };
 
 export default (state = initialState, action) => {
@@ -44,6 +47,7 @@ export default (state = initialState, action) => {
         loading: false
       };
     case SUCCESS(ACTION_TYPES.SEND):
+      toast.success("The message was sent to provided recipient(s)!");
       return {
         ...state
       };
@@ -62,7 +66,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        configs: action.payload.data.configs
+        configs: action.payload.data.configs,
+        defaultConfigName: action.payload.data.defaultConfigName
       };
     case ACTION_TYPES.RESET: {
       return initialState;
