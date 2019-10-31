@@ -14,10 +14,10 @@ pipelines:
         name: Push to OpenMRS repository
         script:
           - git clone --depth 1 $OPENMRS_REPO_URL repo
-          - cd repo
+          - cd repogit 
           - git checkout dev
           - cp ../omod/target/*.omod cfl/web/cfl-modules
           - git add .
-          - git commit -m "Automated SMS module update" --author "$PIPELINES_AUTHOR"
+          - git commit -m "Automated SMS module update"
           - git push origin dev
 
