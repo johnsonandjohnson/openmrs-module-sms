@@ -36,7 +36,7 @@ let outputPath;
 
 let devtool;
 
-var getConfig = function() {
+var getConfig = function () {
   var config;
 
   try {
@@ -57,7 +57,7 @@ var getConfig = function() {
 };
 var config = getConfig();
 
-var resolveBrowserSyncTarget = function() {
+var resolveBrowserSyncTarget = function () {
   if (targetPort != null && targetPort != "null") {
     return (
       config.APP_ENTRY_POINT.substr(0, "http://localhost:".length) +
@@ -75,8 +75,8 @@ var browserSyncTarget = resolveBrowserSyncTarget();
 
 const rules = [
   {
-    test: /\.jsx?$/,
-    loader: "babel-loader",
+    test: /\.(t|j)sx?$/,
+    loader: "awesome-typescript-loader",
     exclude: /node_modules/,
     query: {
       presets: ["env", "react"],
@@ -108,7 +108,8 @@ const rules = [
       "postcss-loader",
       "sass-loader?sourcemap&sourceMapContents&outputStyle=expanded"
     ]
-  }
+  },
+  { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
 ];
 
 /** Minify for production */
@@ -124,19 +125,19 @@ if (env === "production") {
   vendorOutputFile = "vendor.bundle.[chunkhash].js";
   outputPath = `${__dirname}/dist/`;
   plugins.push(
-    new WebpackOnBuildPlugin(function(stats) {
+    new WebpackOnBuildPlugin(function (stats) {
       //create zip file
       var archiver = require("archiver");
       var output = fs.createWriteStream(THIS_APP_ID + ".zip");
       var archive = archiver("zip");
 
-      output.on("close", function() {
+      output.on("close", function () {
         console.log(
           "distributable has been zipped! size: " + archive.pointer()
         );
       });
 
-      archive.on("error", function(err) {
+      archive.on("error", function (err) {
         throw err;
       });
 
@@ -158,7 +159,7 @@ if (env === "deploy") {
   vendorOutputFile = "vendor.bundle.js";
   outputPath = `${config.LOCAL_OWA_FOLDER}${
     config.LOCAL_OWA_FOLDER.slice(-1) != "/" ? "/" : ""
-  }${THIS_APP_ID}`;
+    }${THIS_APP_ID}`;
   devtool = "source-map";
 }
 if (env === "development") {
@@ -255,10 +256,11 @@ var webpackConfig = {
   },
   resolve: {
     modules: [path.resolve(__dirname), "node_modules"],
-    extensions: [".js", ".jsx", ".css", ".scss"]
+    extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss"]
   },
   plugins,
-  externals: nodeModules
+  externals: nodeModules,
+  devtool: "source-map"
 };
 
 module.exports = webpackConfig;
