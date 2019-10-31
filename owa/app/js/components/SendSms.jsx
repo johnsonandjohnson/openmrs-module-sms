@@ -34,8 +34,7 @@ export class SendSms extends React.Component {
     if (this.props.configs !== prevProps.configs) {
       this.setState({
         config: this.props.defaultConfigName,
-        providerId: this.getProviderId(this.props.defaultConfigName)[0],
-        deliveryTime: 0
+        providerId: this.getProviderId(this.props.defaultConfigName)[0]
       });
     }
   }
@@ -63,9 +62,12 @@ export class SendSms extends React.Component {
   } 
 
   deliveryTimeChange() {
-    this.setState({
-      deliveryTime: event.target.value
-    });
+    let newDate = null;
+    if (event.target.value) {
+      const currentDate = new Date();
+      newDate = new Date(currentDate.getTime() + (event.target.value*1000)).toISOString();
+    }
+    this.setState({ deliveryTime: newDate });
   }
 
   recipientsChange() {
@@ -107,7 +109,7 @@ export class SendSms extends React.Component {
           {config.name}</label>)}
           <br />
           <h3>Select delivery time</h3>
-            <label className='inline'><input type='radio' name='deliveryTimeOptions' onChange={this.deliveryTimeChange} value={0} defaultChecked={true}/>Immediately</label>
+            <label className='inline'><input type='radio' name='deliveryTimeOptions' onChange={this.deliveryTimeChange} value={null} defaultChecked={true}/>Immediately</label>
             <label className='inline'><input type='radio' name='deliveryTimeOptions' onChange={this.deliveryTimeChange} value={10}/>10s</label>
             <label className='inline'><input type='radio' name='deliveryTimeOptions' onChange={this.deliveryTimeChange} value={60}/>1m</label>
             <label className='inline'><input type='radio' name='deliveryTimeOptions' onChange={this.deliveryTimeChange} value={3600}/>1h</label>
