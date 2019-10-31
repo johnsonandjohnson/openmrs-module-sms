@@ -185,7 +185,6 @@ public class StatusController {
         String statusString = params.get(status.getStatusKey());
         String providerMessageId = params.get(status.getMessageIdKey());
         SmsRecord smsRecord = findOrCreateSmsRecord(configName, providerMessageId, statusString);
-        List<String> recipients = Collections.singletonList(smsRecord.getPhoneNumber());
 
         if (statusString != null) {
             if (statusString.matches(status.getStatusSuccess())) {

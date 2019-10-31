@@ -16,7 +16,7 @@ pipelines:
           - git clone --depth 1 $OPENMRS_REPO_URL repo
           - cd repo
           - git checkout dev
-          - cp omod/target/*.omod cfl/web/cfl-modules
+          - cp ../omod/target/*.omod cfl/web/cfl-modules
           - git add .
           - git commit -m "Automated SMS module update"
           - git push origin dev
