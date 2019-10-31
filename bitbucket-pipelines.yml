@@ -14,7 +14,7 @@ pipelines:
         name: Push to OpenMRS repository
         script:
           - git clone --depth 1 $OPENMRS_REPO_URL repo
-          - cd repogit 
+          - cd repo
           - git checkout dev
           - cp ../omod/target/*.omod cfl/web/cfl-modules
           - git add .
