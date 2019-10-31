@@ -18,6 +18,6 @@ pipelines:
           - git checkout dev
           - cp ../omod/target/*.omod cfl/web/cfl-modules
           - git add .
-          - git commit -m "Automated SMS module update"
+          - git commit -m "Automated SMS module update" -m --author="$PIPELINES_AUTHOR"
           - git push origin dev
 
