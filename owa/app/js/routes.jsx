@@ -14,6 +14,7 @@ import App from './components/app';
 import Logs from './components/logs/logs';
 import BreadCrumb from './components/BreadCrumb';
 import SendSms from './components/SendSms'
+import Settings from './components/settings';
 
 export default (store) => (<div>
   <Header />
@@ -22,5 +23,6 @@ export default (store) => (<div>
     <Route exact path='/' component={App} />
     <Route path='/logs' component={Logs} />
     <Route path='/send' component={SendSms} />
+    <Route path='/settings' component={Settings} />
   </Switch>
 </div>);
