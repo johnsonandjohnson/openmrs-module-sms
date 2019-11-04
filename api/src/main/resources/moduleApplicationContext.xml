@@ -176,4 +176,8 @@
         </property>
     </bean>
 
+    <bean id="sms.statusSmsEventListener" class="org.openmrs.module.sms.api.event.StatusSmsEventListener" />
+
+    <bean id="sms.sendSmsEventListener" class="org.openmrs.module.sms.api.event.SendSmsEventListener" />
+
 </beans>
