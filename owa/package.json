@@ -55,7 +55,8 @@
     "redux-types": "^2.0.3",
     "sinon": "^4.4.6",
     "sweetalert": "^2.1.0",
-    "toastr": "^2.1.4"
+    "toastr": "^2.1.4",
+    "yup": "^0.27.0"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "5.10.1",
