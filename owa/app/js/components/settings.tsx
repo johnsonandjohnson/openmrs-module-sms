@@ -72,6 +72,17 @@ class Settings extends React.Component <ISettingsProps, ISettingsState> {
 
   setDefaultConfigName = (configName: string) => this.props.updateConfigs(this.props.configs, configName);
 
+  deleteConfig = (name: string) => {
+    const newConfigs: Array<IConfig> = this.props.configs;
+    const index = newConfigs.indexOf(newConfigs.find(config => config.name === name));
+    if (index > -1) {
+      newConfigs.splice(index, 1);
+    }
+    const defaultConfigName = this.props.defaultConfigName !== name ? this.props.defaultConfigName :
+      newConfigs.length > 0 ? newConfigs[0].name : null;
+    this.props.updateState(newConfigs, defaultConfigName);
+  }
+
   saveConfigs = () => this.props.updateConfigs(this.props.configs, this.props.defaultConfigName);
 
   renderInput = (config: IConfig, fieldName: string, inputType: string, label: string, isDefault: boolean, index: number) => (
@@ -148,6 +159,12 @@ class Settings extends React.Component <ISettingsProps, ISettingsState> {
         >
           Set Default
         </Button>
+        <Button 
+          className="btn cancel btn-xs" 
+          onClick={e => this.deleteConfig(config.name)}
+        >
+          Delete
+        </Button>
       </Accordion>
     );
   };
@@ -157,7 +174,7 @@ class Settings extends React.Component <ISettingsProps, ISettingsState> {
   renderControlButtons = () => (
     <div className="u-mt-15">
       <Button
-        className="btn condsfirm btn-xs" 
+        className="btn btn-xs" 
         onClick={this.componentDidMount}>
           Cancel
       </Button>
