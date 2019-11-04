@@ -1,107 +1,173 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { IConfig, IProp } from '../shared/model/config.model';
-import { getConfigs, getTemplates, updateConfigs, reset } from '../reducers/settings.reducer';
+import { getConfigs, getTemplates, updateConfigs, updateState, reset } from '../reducers/settings.reducer';
 import { Form, FormGroup, ControlLabel, FormControl, Checkbox, Button } from 'react-bootstrap';
 import _ from 'lodash';
 import Accordion from './cfl-accordion';
+import { ITemplate } from '../shared/model/template.model';
 
 interface ISettingsProps extends StateProps, DispatchProps {}
 
-class Settings extends React.Component <ISettingsProps> {
+interface ISettingsState {
+  configs: Array<IConfig>;
+}
+
+class Settings extends React.Component <ISettingsProps, ISettingsState> {
+
+  constructor(props: ISettingsProps) {
+    super(props);
+    this.state = {
+      configs: props.configs
+    }
+  };
 
   componentDidMount = () => {
     this.props.reset();
     this.props.getConfigs();
     this.props.getTemplates();
+  };
+
+  handleChange = (configName: string, fieldName: string, value: any, isDefault: boolean) => {
+    const newConfigs: Array<IConfig> = this.props.configs.map((config: IConfig) => {
+      if (config.name === configName) {
+        config[fieldName] = value;
+        if (fieldName === 'templateName') {
+          config.props = this.getPropsForTemplate(value);
+        }
+        return config;
+      }
+      return config;
+    });
+    const shouldChangeDefaultName = isDefault && fieldName === 'name';
+    this.props.updateState(newConfigs, shouldChangeDefaultName ? value : this.props.defaultConfigName);
+  };
+
+  handlePropChange = (configName: string, propName: string, value: string, isDefault: boolean) => {
+    const newConfigs: Array<IConfig> = this.props.configs.map((config: IConfig) => {
+      if (config.name === configName) {
+        config.props = config.props.map((prop: IProp) => {
+          if (prop.name === propName) {
+            prop.value = value;
+            return prop;
+          }
+          return prop;
+        });
+        return config;
+      }
+      return config;
+    });
+    this.props.updateState(newConfigs, this.props.defaultConfigName);
   }
 
-  handleChange = e => { }
+  getPropsForTemplate = (templateName: string): Array<IProp> => {
+    const template = this.findTemplate(templateName)
+    return template && template.configurables.map(conf => ({
+      name: conf,
+      value: null
+    }));
+  }
 
-  setDefaultConfigName = (event, configName: string) => this.props.updateConfigs(this.props.configs, configName);
+  findTemplate = (name: string): ITemplate => this.props.templates.find(template => template.name === name);
 
-  renderConfigForm = (config: IConfig, isDefault: boolean) => {
+  setDefaultConfigName = (configName: string) => this.props.updateConfigs(this.props.configs, configName);
+
+  saveConfigs = () => this.props.updateConfigs(this.props.configs, this.props.defaultConfigName);
+
+  renderInput = (config: IConfig, fieldName: string, inputType: string, label: string, isDefault: boolean, index: number) => (
+      <FormGroup controlId={`${fieldName}_${index}`}>
+        <ControlLabel>{label}</ControlLabel>
+        <FormControl type={inputType} name={fieldName} value={config[fieldName]} 
+          onChange={e => this.handleChange(config.name, fieldName, e.target.value, isDefault)}/>
+      </FormGroup>
+  );
+
+  renderCheckbox = (config: IConfig, fieldName: string, label: string, isDefault: boolean, index: number) => (
+      <FormGroup controlId={`${fieldName}_${index}`}>
+        <ControlLabel>{label}</ControlLabel>
+        <Checkbox name={fieldName} checked={config[fieldName]} 
+          onChange={e => this.handleChange(config.name, fieldName, e.target.checked, isDefault)} />
+      </FormGroup>
+  );
+
+  renderConfigForm = (config: IConfig, isDefault: boolean, index: number) => (
+    <Form className="form" onSubmit={e => {}}>
+      {this.renderInput(config, 'name', 'text', 'Name:', isDefault, index)}
+      {this.renderDropdown(config, 'templateName', 'Template:', index, isDefault)}
+      {this.renderInput(config, 'maxRetries', 'number', 'Maximum Retries:', isDefault, index)}
+      {this.renderInput(config, 'splitHeader', 'text', 'Split Message Header:', isDefault, index)}
+      {this.renderInput(config, 'splitFooter', 'text', 'Split Message Footer:', isDefault, index)}
+      {this.renderCheckbox(config, 'excludeLastFooter', 'Exclude footer from last split message', isDefault, index)}
+      <br/>
+      {this.renderProps(config, isDefault, index)}
+    </Form>
+  );
+
+  renderProps = (config: IConfig, isDefault: boolean, index: number) => {
+    const selectedTemplate = this.findTemplate(config.templateName);
+    return selectedTemplate && selectedTemplate.configurables.map(conf => this.renderProp(conf, config, isDefault, index));
+  };
+
+  renderProp = (propName: string, config: IConfig, isDefault: boolean, index: number) => {
+    const prop: IProp = config.props.find(p => p.name === propName);
     return (
-      <Form className="form" onSubmit={e => {}}>
-        <FormGroup controlId={`name_${config.name}`}>
-          <ControlLabel>Name:</ControlLabel>
-          <FormControl type="text" name="name" value={config.name} onChange={this.handleChange} />
-        </FormGroup>
-        {this.renderTemplateDropdown(config)}
-        <FormGroup controlId={`maxRetries_${config.name}`}>
-          <ControlLabel>Maximum Retries:</ControlLabel>
-          <FormControl type="number" name="maxRetries" value={config.maxRetries} onChange={this.handleChange} />
-        </FormGroup>
-        <FormGroup controlId={`splitHeader_${config.name}`}>
-          <ControlLabel>Split Message Header:</ControlLabel>
-          <FormControl type="text" name="splitHeader" value={config.splitHeader} onChange={this.handleChange} />
-        </FormGroup>
-        <FormGroup controlId={`splitFooter_${config.name}`}>
-          <ControlLabel>Split Message Footer:</ControlLabel>
-          <FormControl type="text" name="splitFooter" value={config.splitFooter} onChange={this.handleChange} />
-        </FormGroup>
-        <FormGroup controlId={`excludeLastFooter_${config.name}`}>
-          <ControlLabel>Exclude footer from last split message</ControlLabel>
-          <Checkbox name="excludeLastFooter" checked={config.excludeLastFooter} onChange={this.handleChange} />
-        </FormGroup>
-        <br/>
-        {this.renderProp('user', 'Username:', config)}
-        {this.renderProp('password', 'Password:', config)}
-        {this.renderProp('senderID', 'API ID:', config)}
-        {this.renderProp('dcs', 'Form:', config)}
+      <FormGroup controlId={`${propName}_${index}`}>
+        <ControlLabel>{`${propName}:`}</ControlLabel>
+        <FormControl type="text" name={propName} value={prop ? prop.value : ''} 
+          onChange={e => this.handlePropChange(config.name, propName, e.target.value, isDefault)} />
+      </FormGroup>
+    );
+  };
+
+  renderDropdown = (config: IConfig, fieldName: string, label: string, index: number, isDefault: boolean) => {
+    const templates: ReadonlyArray<ITemplate> = this.props.templates;
+    return (
+      <FormGroup controlId={`${fieldName}_${index}`}>
+        <ControlLabel>{label}</ControlLabel>
+        <FormControl type="select" 
+          componentClass="select"
+          name={fieldName}
+          value={config.templateName}
+          onChange={e => this.handleChange(config.name, fieldName, e.target.value, isDefault)} >
+          <option key='empty'></option>
+          {templates.map(template => <option key={template.name}>{template.name}</option>)}
+        </FormControl>
+      </FormGroup>
+    );
+  };
+
+  renderConfig = (config: IConfig, index: number) => {
+    const isDefault = config.name === this.props.defaultConfigName;
+    return (
+      <Accordion key={index} title={config.name} fasIcon={isDefault && ['fas', 'star']}>
+        {this.renderConfigForm(config, isDefault, index)}
         <Button 
           className="btn confirm btn-xs" 
-          onClick={e => this.setDefaultConfigName(e, config.name)}
+          onClick={e => this.setDefaultConfigName(config.name)}
           disabled={isDefault}
         >
           Set Default
         </Button>
-      </Form>
-    );
-  }
-
-  renderProp = (propName: string, label: string, config: IConfig) => {
-    const prop: IProp = config.props.find(p => p.name === propName);
-    return (
-      <>
-        {prop && (
-          <FormGroup controlId={`${prop.name}_${config.name}`}>
-            <ControlLabel>{label}</ControlLabel>
-            <FormControl type="text" name={prop.name} value={prop.value} onChange={this.handleChange} />
-          </FormGroup>
-        )}
-      </>
-    )
-  }
-
-  renderTemplateDropdown = (config: IConfig) => {
-    const { templates } = this.props;
-    return (
-      <FormGroup controlId={`templateName_${config.name}`}>
-        <ControlLabel>Template:</ControlLabel>
-        <FormControl type="select" 
-          componentClass="select"
-          name="templateName"
-          value={config.templateName}
-          onChange={this.handleChange} >
-          {Object.keys(templates).map(key => <option key={key}>{templates[key].name}</option>)}
-        </FormControl>
-      </FormGroup>
-    );
-  }
-
-  renderConfig = (config: IConfig) => {
-    const isDefault = config.name === this.props.defaultConfigName;
-    return (
-      <Accordion key={config.name} title={config.name} open={isDefault} fasIcon={isDefault && ['fas', 'star']}>
-        {this.renderConfigForm(config, isDefault)}
       </Accordion>
     );
-  }
+  };
 
-  renderConfigs = () => {
-    return this.props.configs.map(config => this.renderConfig(config));
-  }
+  renderConfigs = () => this.props.configs.map((config: IConfig, index: number) => this.renderConfig(config, index));
+
+  renderControlButtons = () => (
+    <div className="u-mt-15">
+      <Button
+        className="btn condsfirm btn-xs" 
+        onClick={this.componentDidMount}>
+          Cancel
+      </Button>
+      <Button
+        className="btn confirm btn-xs" 
+        onClick={this.saveConfigs}>
+          Save
+      </Button>
+    </div>
+  );
 
   render() {
     const { loading } = this.props;
@@ -112,11 +178,12 @@ class Settings extends React.Component <ISettingsProps> {
       ) : (
         <>
           {this.renderConfigs()}
+          {this.renderControlButtons()}
         </>
       )}
     </>
     )
-  }
+  };
 }
 
 const mapStateToProps = state => ({
@@ -130,6 +197,7 @@ const mapDispatchToProps = {
   getConfigs,
   getTemplates,
   updateConfigs,
+  updateState,
   reset
 };
 

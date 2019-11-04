@@ -10,24 +10,26 @@
 import { REQUEST, SUCCESS, FAILURE } from './action-type.util'
 import axiosInstance from '../config/axios';
 import { IConfig } from '../shared/model/config.model';
+import { ITemplate } from '../shared/model/template.model';
 
 export const ACTION_TYPES = {
   RESET: "settings/RESET",
   GET_CONFIGS: "settings/GET_CONFIGS",
   GET_TEMPLATES: "settings/GET_TEMPLATES",
-  UPLOAD_CONFIGS: "settings/UPLOAD_CONFIGS"
+  UPLOAD_CONFIGS: "settings/UPLOAD_CONFIGS",
+  UPDATE_STATE: "settings/UPDATE_STATE"
 };
 
 export interface ISettingsState {
   configs: ReadonlyArray<IConfig>;
-  templates: any;
+  templates: ReadonlyArray<ITemplate>;
   defaultConfigName: string;
   loading: boolean;
 }
 
 const initialState: ISettingsState = {
   configs: [] as ReadonlyArray<IConfig>,
-  templates: {},
+  templates: [] as ReadonlyArray<ITemplate>,
   defaultConfigName: '',
   loading: false
 };
@@ -56,7 +58,7 @@ export default (state: ISettingsState = initialState, action): ISettingsState =>
       return {
         ...state,
         loading: false,
-        templates: action.payload.data
+        templates: mapTemplatesToArray(action.payload.data)
       }
     case SUCCESS(ACTION_TYPES.GET_CONFIGS):
       return {
@@ -75,6 +77,12 @@ export default (state: ISettingsState = initialState, action): ISettingsState =>
     case ACTION_TYPES.RESET: {
       return initialState;
     };
+    case ACTION_TYPES.UPDATE_STATE:
+      return {
+        ...state,
+        configs: action.configs,
+        defaultConfigName: action.defaultConfigName
+      }
     default:
       return state;
   }
@@ -110,3 +118,11 @@ export const updateConfigs = (configs: ReadonlyArray<IConfig>, defaultConfigName
     }),
   });
 };
+
+export const updateState = (configs: ReadonlyArray<IConfig>, defaultConfigName: string) => ({
+  type: ACTION_TYPES.UPDATE_STATE,
+  configs,
+  defaultConfigName
+});
+
+const mapTemplatesToArray = payloadData =>  Object.keys(payloadData).map(key => payloadData[key]);
