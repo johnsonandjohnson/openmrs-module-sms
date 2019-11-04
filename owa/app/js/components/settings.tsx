@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { IConfig, IProp } from '../shared/model/config.model';
-import { getConfigs, getTemplates, reset } from '../reducers/settings.reducer';
-import { Form, FormGroup, ControlLabel, FormControl, Checkbox } from 'react-bootstrap';
+import { getConfigs, getTemplates, updateConfigs, reset } from '../reducers/settings.reducer';
+import { Form, FormGroup, ControlLabel, FormControl, Checkbox, Button } from 'react-bootstrap';
 import _ from 'lodash';
 import Accordion from './cfl-accordion';
 
@@ -18,7 +18,9 @@ class Settings extends React.Component <ISettingsProps> {
 
   handleChange = e => { }
 
-  renderConfigForm = (config: IConfig) => {
+  setDefaultConfigName = (event, configName: string) => this.props.updateConfigs(this.props.configs, configName);
+
+  renderConfigForm = (config: IConfig, isDefault: boolean) => {
     return (
       <Form className="form" onSubmit={e => {}}>
         <FormGroup controlId={`name_${config.name}`}>
@@ -47,6 +49,13 @@ class Settings extends React.Component <ISettingsProps> {
         {this.renderProp('password', 'Password:', config)}
         {this.renderProp('senderID', 'API ID:', config)}
         {this.renderProp('dcs', 'Form:', config)}
+        <Button 
+          className="btn confirm btn-xs" 
+          onClick={e => this.setDefaultConfigName(e, config.name)}
+          disabled={isDefault}
+        >
+          Set Default
+        </Button>
       </Form>
     );
   }
@@ -85,7 +94,7 @@ class Settings extends React.Component <ISettingsProps> {
     const isDefault = config.name === this.props.defaultConfigName;
     return (
       <Accordion key={config.name} title={config.name} open={isDefault} fasIcon={isDefault && ['fas', 'star']}>
-        {this.renderConfigForm(config)}
+        {this.renderConfigForm(config, isDefault)}
       </Accordion>
     );
   }
@@ -120,6 +129,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   getConfigs,
   getTemplates,
+  updateConfigs,
   reset
 };
 

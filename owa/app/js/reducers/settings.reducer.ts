@@ -14,7 +14,8 @@ import { IConfig } from '../shared/model/config.model';
 export const ACTION_TYPES = {
   RESET: "settings/RESET",
   GET_CONFIGS: "settings/GET_CONFIGS",
-  GET_TEMPLATES: "settings/GET_TEMPLATES"
+  GET_TEMPLATES: "settings/GET_TEMPLATES",
+  UPLOAD_CONFIGS: "settings/UPLOAD_CONFIGS"
 };
 
 export interface ISettingsState {
@@ -35,12 +36,18 @@ export default (state: ISettingsState = initialState, action): ISettingsState =>
   switch (action.type) {
     case REQUEST(ACTION_TYPES.GET_CONFIGS):
     case REQUEST(ACTION_TYPES.GET_TEMPLATES):
+    case REQUEST(ACTION_TYPES.UPLOAD_CONFIGS):
       return {
         ...state,
         loading: true
       };
     case FAILURE(ACTION_TYPES.GET_CONFIGS):
     case FAILURE(ACTION_TYPES.GET_TEMPLATES):
+      return {
+        ...state,
+        loading: false
+      };
+    case FAILURE(ACTION_TYPES.UPLOAD_CONFIGS):
       return {
         ...state,
         loading: false
@@ -58,6 +65,13 @@ export default (state: ISettingsState = initialState, action): ISettingsState =>
         configs: action.payload.data.configs,
         defaultConfigName: action.payload.data.defaultConfigName
       };
+    case SUCCESS(ACTION_TYPES.UPLOAD_CONFIGS):
+      return {
+        ...state,
+        loading: false,
+        configs: action.payload.data.configs,
+        defaultConfigName: action.payload.data.defaultConfigName
+      }
     case ACTION_TYPES.RESET: {
       return initialState;
     };
@@ -84,4 +98,15 @@ export const getTemplates = () => async (dispatch) => {
     type: ACTION_TYPES.GET_TEMPLATES,
     payload: axiosInstance.get(requestUrl)
   });
-}
+};
+
+export const updateConfigs = (configs: ReadonlyArray<IConfig>, defaultConfigName: string) => async (dispatch) => {
+  const requestUrl = 'ws/sms/configs';
+  await dispatch({
+    type: ACTION_TYPES.UPLOAD_CONFIGS,
+    payload: axiosInstance.post(requestUrl, {
+      defaultConfigName,
+      configs
+    }),
+  });
+};
