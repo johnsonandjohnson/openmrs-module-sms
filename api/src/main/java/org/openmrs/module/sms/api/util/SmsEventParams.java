@@ -48,15 +48,15 @@ public final class SmsEventParams {
      */
     public static final String FAILURE_COUNT = "failure_count";
     /**
-     * OpenMRS unique message id
+     * MOTECH unique message id
      */
-    public static final String OPENMRS_ID = "openMrs_id";
+    public static final String MOTECH_ID = "motech_id";
     /**
      * provider unique message id
      */
     public static final String PROVIDER_MESSAGE_ID = "provider_message_id";
     /**
-     * provider provided SMS delivery status, sometimes holds more information than what OpenMRS models
+     * provider provided SMS delivery status, sometimes holds more information than what MOTECH models
      */
     public static final String PROVIDER_STATUS = "provider_status";
     /**

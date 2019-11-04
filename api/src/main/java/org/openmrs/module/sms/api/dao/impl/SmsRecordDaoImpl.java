@@ -42,18 +42,18 @@ public class SmsRecordDaoImpl extends BaseOpenmrsDataDao<SmsRecord> implements S
     }
 
     @Override
-    public List<SmsRecord> findByOpenMrsId(String openMrsId) {
+    public List<SmsRecord> findByMotechId(String motechId) {
         Criteria crit = getSession().createCriteria(this.mappedClass);
-        crit.add(Restrictions.eq("openMrsId", openMrsId));
+        crit.add(Restrictions.eq("motechId", motechId));
 
         return crit.list();
     }
 
     @Override
-    public List<SmsRecord> findByProviderAndOpenMrsId(String providerId, String openMrsId) {
+    public List<SmsRecord> findByProviderAndMotechId(String providerId, String motechId) {
         Criteria crit = getSession().createCriteria(this.mappedClass);
         crit.add(Restrictions.eq("providerId", providerId));
-        crit.add(Restrictions.eq("openMrsId", openMrsId));
+        crit.add(Restrictions.eq("motechId", motechId));
 
         return crit.list();
     }

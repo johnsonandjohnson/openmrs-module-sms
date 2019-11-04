@@ -31,7 +31,7 @@
             <column name="timestamp" type="date"></column>
             <column name="deliveryStatus" type="varchar(255)"></column>
             <column name="providerStatus" type="varchar(255)"></column>
-            <column name="openMrsId" type="varchar(255)"></column>
+            <column name="motechId" type="varchar(255)"></column>
             <column name="providerId" type="varchar(255)"></column>
             <column name="errorMessage" type="MEDIUMTEXT"></column>
             <column name="uuid" type="char(38)">
@@ -68,8 +68,8 @@
         <createIndex tableName="sms_records" indexName="sms_records_index_providerStatus">
             <column name="providerStatus"></column>
         </createIndex>
-        <createIndex tableName="sms_records" indexName="sms_records_index_openMrsId">
-            <column name="openMrsId"></column>
+        <createIndex tableName="sms_records" indexName="sms_records_index_motechId">
+            <column name="motechId"></column>
         </createIndex>
         <createIndex tableName="sms_records" indexName="sms_records_index_timestamp">
             <column name="timestamp"></column>

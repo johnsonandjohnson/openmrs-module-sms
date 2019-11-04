@@ -42,9 +42,9 @@ public class SmsLoggingRecord {
     private String messageContent;
 
     /**
-     * The ID used to identify the SMS in OpenMRS.
+     * The ID used to identify the SMS in Motech.
      */
-    private String openMrsId;
+    private String motechId;
 
     /**
      * The provider generated ID for the SMS.
@@ -70,7 +70,7 @@ public class SmsLoggingRecord {
         this.deliveryStatus = record.getDeliveryStatus().toString();
         this.providerStatus = record.getProviderStatus();
         this.messageContent = record.getMessageContent();
-        this.openMrsId = record.getOpenMrsId();
+        this.motechId = record.getMotechId();
         this.providerId = record.getProviderId();
         this.errorMessage = record.getErrorMessage();
     }
@@ -168,17 +168,17 @@ public class SmsLoggingRecord {
     }
 
     /**
-     * @return the ID used to identify the SMS in OpenMRS
+     * @return the ID used to identify the SMS in Motech
      */
-    public String getOpenMrsId() {
-        return openMrsId;
+    public String getMotechId() {
+        return motechId;
     }
 
     /**
-     * @param openMrsId the ID used to identify the SMS in OpenMRS
+     * @param motechId the ID used to identify the SMS in Motech
      */
-    public void setOpenMrsId(String openMrsId) {
-        this.openMrsId = openMrsId;
+    public void setMotechId(String motechId) {
+        this.motechId = motechId;
     }
 
     /**
@@ -219,7 +219,7 @@ public class SmsLoggingRecord {
                 ", deliveryStatus='" + deliveryStatus + '\'' +
                 ", providerStatus='" + providerStatus + '\'' +
                 ", messageContent='" + messageContent + '\'' +
-                ", openMrsId='" + openMrsId + '\'' +
+                ", motechId='" + motechId + '\'' +
                 ", providerId='" + providerId + '\'' +
                 ", errorMessage='" + errorMessage + '\'' +
                 '}';

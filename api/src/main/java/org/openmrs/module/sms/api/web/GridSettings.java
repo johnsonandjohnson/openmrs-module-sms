@@ -87,9 +87,9 @@ public class GridSettings {
     private String smsDirection;
 
     /**
-     * The OpenMRS ID to search for.
+     * The MOTECH ID to search for.
      */
-    private String openMrsId;
+    private String motechId;
 
     /**
      * The provider ID to search for.
@@ -270,17 +270,17 @@ public class GridSettings {
     }
 
     /**
-     * @return the OpenMRS ID to search for
+     * @return the MOTECH ID to search for
      */
-    public String getOpenMrsId() {
-        return openMrsId;
+    public String getMotechId() {
+        return motechId;
     }
 
     /**
-     * @param openMrsId the OpenMRS ID to search for
+     * @param motechId the MOTECH ID to search for
      */
-    public void setOpenMrsId(String openMrsId) {
-        this.openMrsId = openMrsId;
+    public void setMotechId(String motechId) {
+        this.motechId = motechId;
     }
 
     /**
@@ -334,7 +334,7 @@ public class GridSettings {
                 .withTimestampRange(range)
                 .withProviderStatus(providerStatus)
                 .withDeliveryStatuses(deliveryStatuses)
-                .withOpenMrsId(openMrsId)
+                .withMotechId(motechId)
                 .withProviderId(providerId)
                 .withErrorMessage(errorMessage)
                 .withOrder(order);
@@ -402,7 +402,7 @@ public class GridSettings {
                 ", deliveryStatus='" + deliveryStatus + '\'' +
                 ", providerStatus='" + providerStatus + '\'' +
                 ", smsDirection='" + smsDirection + '\'' +
-                ", openMrsId='" + openMrsId + '\'' +
+                ", motechId='" + motechId + '\'' +
                 ", providerId='" + providerId + '\'' +
                 '}';
     }

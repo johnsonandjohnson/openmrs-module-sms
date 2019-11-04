@@ -27,13 +27,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
 
 /**
  * Handles message delivery status updates sent by sms providers to
- * {server}/openmrs/ws/sms/status{Config}
+ * {motechserver}/motech-platform-server/module/sms/status{Config}
  */
 @Controller
 @RequestMapping(value = "/sms/status")
@@ -41,7 +43,7 @@ public class StatusController {
 
     private static final int RECORD_FIND_RETRY_COUNT = 3;
     private static final int RECORD_FIND_TIMEOUT = 500;
-    private static final String SMS_MODULE = "openmrs-sms";
+    private static final String SMS_MODULE = "motech-sms";
 
     private static final Log LOGGER = LogFactory.getLog(StatusController.class);
 
@@ -66,7 +68,7 @@ public class StatusController {
     }
 
     /**
-     * Handles a status update from a provider. This method will result in publishing a OpenMRS Event and creating
+     * Handles a status update from a provider. This method will result in publishing a MOTECH Event and creating
      * a record in the database.
      * @param configName the name of the configuration for the provider that is sending the update
      * @param params params of the request sent by the provider
@@ -125,7 +127,7 @@ public class StatusController {
         do {
             //seems that lucene takes a while to index, so try a couple of times and delay in between
             if (retry > 0) {
-                LOGGER.debug(String.format("Trying again to find log record with openMrsId %s, try %d",
+                LOGGER.debug(String.format("Trying again to find log record with motechId %s, try %d",
                         providerMessageId, retry + 1));
                 try {
                     Thread.sleep(RECORD_FIND_TIMEOUT);
@@ -141,13 +143,13 @@ public class StatusController {
         } while (retry < RECORD_FIND_RETRY_COUNT && CollectionUtils.isEmpty(smsRecords.getRecords()));
 
         if (CollectionUtils.isEmpty(smsRecords.getRecords())) {
-            // If we couldn't find a record by provider message ID try using the OpenMRS ID
+            // If we couldn't find a record by provider message ID try using the MOTECH ID
             smsRecords = smsAuditService.findAllSmsRecords(new SmsRecordSearchCriteria()
                     .withConfig(configName)
-                    .withOpenMrsId(providerMessageId)
+                    .withMotechId(providerMessageId)
                     .withOrder(order));
             if (!CollectionUtils.isEmpty(smsRecords.getRecords())) {
-                LOGGER.debug(String.format("Found log record with matching openMrsId %s", providerMessageId));
+                LOGGER.debug(String.format("Found log record with matching motechId %s", providerMessageId));
                 existingSmsRecord = smsRecords.getRecords().get(0);
             }
         } else {
@@ -161,7 +163,7 @@ public class StatusController {
 
         if (existingSmsRecord == null) {
             String msg = String.format("Received status update but couldn't find a log record with matching " +
-                    "ProviderMessageId or openMrsId: %s", providerMessageId);
+                    "ProviderMessageId or motechId: %s", providerMessageId);
             LOGGER.error(msg);
             alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
         }
@@ -169,7 +171,7 @@ public class StatusController {
         if (existingSmsRecord != null) {
             smsRecord = new SmsRecord(configName, OUTBOUND, existingSmsRecord.getPhoneNumber(),
                     existingSmsRecord.getMessageContent(), DateUtil.now(), null, statusString,
-                    existingSmsRecord.getOpenMrsId(), providerMessageId, null);
+                    existingSmsRecord.getMotechId(), providerMessageId, null);
         } else {
             //start with an empty SMS record
             smsRecord = new SmsRecord(configName, OUTBOUND, null, null, DateUtil.now(), null, statusString, null,
