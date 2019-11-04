@@ -1,6 +1,6 @@
 package org.openmrs.module.sms.api.audit;
 
-//todo: OpenMRSTimestanp & providerTimestamp instead of just timestamp?
+//todo: openMrsTimestamp & providerTimestamp instead of just timestamp?
 //todo: 'senderNumber' & 'recipientNumber' instead of 'phoneNumber'?
 
 import org.apache.commons.lang.builder.ToStringBuilder;

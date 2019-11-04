@@ -238,7 +238,6 @@ public class OutgoingSms {
         this.deliveryTime = deliveryTime;
     }
 
-    // TODO: for OpenMRS-1466 - This does not belong in the API
     /**
      * Gets the failure counter, used by the SMS module to keep track of the failures
      * and execute retries.
@@ -248,7 +247,6 @@ public class OutgoingSms {
         return failureCount;
     }
 
-    // TODO: for OpenMRS-1466 - This does not belong in the API
     /**
      * Sets the failure counter, used by the SMS module to keep track of the failures
      * and execute retries.
