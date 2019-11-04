@@ -51,9 +51,9 @@ public class SmsRecordSearchCriteria {
     private Set<String> deliveryStatuses = new HashSet<>();
 
     /**
-     * The id by which OpenMRS identifies the message.
+     * The id by which MOTECH identifies the message.
      */
-    private String openMrsId;
+    private String motechId;
 
     /**
      * The provider generated ID for the SMS.
@@ -98,12 +98,12 @@ public class SmsRecordSearchCriteria {
     }
 
     /**
-     * Sets the OpenMRS ID part of the search query.
-     * @param openMrsId the ID used by OpenMRS to identify this SMS message
+     * Sets the MOTECH ID part of the search query.
+     * @param motechId the ID used by MOTECH to identify this SMS message
      * @return this instance of the search criteria
      */
-    public SmsRecordSearchCriteria withOpenMrsId(String openMrsId) {
-        this.openMrsId = openMrsId;
+    public SmsRecordSearchCriteria withMotechId(String motechId) {
+        this.motechId = motechId;
         return this;
     }
 
@@ -219,10 +219,10 @@ public class SmsRecordSearchCriteria {
     }
 
     /**
-     * @return the ID by which OpenMRS identifies the SMS
+     * @return the ID by which MOTECH identifies the SMS
      */
-    public String getOpenMrsId() {
-        return openMrsId;
+    public String getMotechId() {
+        return motechId;
     }
 
     /**
@@ -255,7 +255,7 @@ public class SmsRecordSearchCriteria {
         addTimestampRestriction(criteria);
         addStringRestriction(criteria, "providerStatus", providerStatus);
         addSetRestriction(criteria, "deliveryStatus", deliveryStatuses);
-        addStringRestriction(criteria, "openMrsId", openMrsId);
+        addStringRestriction(criteria, "motechId", motechId);
         addStringRestriction(criteria, "providerId", providerId);
         addStringRestriction(criteria, "errorMessage", errorMessage);
         addOrderRestriction(criteria);
@@ -295,7 +295,7 @@ public class SmsRecordSearchCriteria {
                 ", timestampRange=" + timestampRange +
                 ", providerStatus='" + providerStatus + '\'' +
                 ", deliveryStatuses=" + deliveryStatuses +
-                ", openMrsId='" + openMrsId + '\'' +
+                ", motechId='" + motechId + '\'' +
                 ", providerId='" + providerId + '\'' +
                 ", errorMessage='" + errorMessage + '\'' +
                 '}';

@@ -20,7 +20,7 @@
                 "bodyParameters":{
                     "mo":"1",
                     "callback":"3",
-                    "climsgid":"[openMrsId]",
+                    "climsgid":"[motechId]",
                     "user":"[username]",
                     "password":"[password]",
                     "api_id":"[clickatell_api_id]",
@@ -103,7 +103,7 @@
                     "from":"sms://[from]",
                     "to":"sms://[recipients]",
                     "body":"[message]",
-                    "guid":"[openMrsId]"
+                    "guid":"[motechId]"
                 }
             },
             "response":{
@@ -307,7 +307,7 @@
             "hasAuthentication":"false",
             "request":{
                 "type":"POST",
-                "urlPath":"https://go.votomobile.org/openmrs/api/v1/outgoing_call",
+                "urlPath":"https://go.votomobile.org/motech/api/v1/outgoing_call",
                 "jsonContentType":"true",
                 "bodyParameters":{
                     "message_id":"[message_id]",

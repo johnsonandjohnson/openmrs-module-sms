@@ -24,7 +24,7 @@ import java.util.UUID;
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
 import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
 
-//todo: final pass over how we use openMrsId system-wide
+//todo: final pass over how we use motechId system-wide
 
 /**
  * Send an SMS, we really don't send here, but rather pass it on to the SmsHttpService which does
@@ -103,7 +103,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
         return ret;
     }
 
-    private String generateOpenMrsId() {
+    private String generateMotechId() {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
@@ -149,11 +149,11 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
             if (sms.hasDeliveryTime()) {
                 Date dt = sms.getDeliveryTime();
                 for (String part : messageParts) {
-                    String openMrsId = generateOpenMrsId();
+                    String motechId = generateMotechId();
                     SmsEvent event = outboundEvent(SmsEventSubjects.SCHEDULED, config.getName(), recipients, part,
-                            openMrsId, null, null, null, null, sms.getCustomParams());
-                    //OpenMRS scheduler needs unique job ids, so adding openMrsId as job_id_key will do that
-                    event.getParameters().put(Constants.PARAM_JOB_ID, openMrsId);
+                            motechId, null, null, null, null, sms.getCustomParams());
+                    //MOTECH scheduler needs unique job ids, so adding motechId as job_id_key will do that
+                    event.getParameters().put(Constants.PARAM_JOB_ID, motechId);
                     event.getParameters().put(SmsEventParams.DELIVERY_TIME, dt);
                     schedulerService.safeScheduleRunOnceJob(event, dt, new SmsScheduledTask());
                     LOGGER.info(String.format("Scheduling message [%s] to [%s] at %s.",
@@ -163,19 +163,19 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
                     dt = DateUtil.plusDays(dt, 1);
                     for (String recipient : recipients) {
                         smsRecordDao.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, DateUtil.now(),
-                                DeliveryStatuses.SCHEDULED, null, openMrsId, null, null));
+                                DeliveryStatuses.SCHEDULED, null, motechId, null, null));
                     }
                 }
             } else {
                 for (String part : messageParts) {
-                    String openMrsId = generateOpenMrsId();
+                    String motechId = generateMotechId();
                     smsEventService.sendEventMessage(outboundEvent(SmsEventSubjects.PENDING, config.getName(), recipients,
-                            part, openMrsId, null, null, null, null, sms.getCustomParams()));
+                            part, motechId, null, null, null, null, sms.getCustomParams()));
                     LOGGER.info(String.format("Sending message [%s] to [%s].",
                             part.replace("\n", "\\n"), recipients));
                     for (String recipient : recipients) {
                         smsRecordDao.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, DateUtil.now(),
-                                DeliveryStatuses.PENDING, null, openMrsId, null, null));
+                                DeliveryStatuses.PENDING, null, motechId, null, null));
                     }
                 }
             }

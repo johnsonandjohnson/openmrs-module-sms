@@ -64,8 +64,8 @@ public class SmsEvent {
 		return (Integer) getParameters().get(SmsEventParams.FAILURE_COUNT);
 	}
 
-	public String getOpenMrsId() {
-		return (String) getParameters().get(SmsEventParams.OPENMRS_ID);
+	public String getMotechId() {
+		return (String) getParameters().get(SmsEventParams.MOTECH_ID);
 	}
 
 	public String getProviderId() {

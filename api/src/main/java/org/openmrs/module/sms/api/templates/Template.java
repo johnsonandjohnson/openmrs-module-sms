@@ -155,7 +155,7 @@ public class Template {
     }
 
     /**
-     * Reads the default values from OpenMRS settings, updating this template.
+     * Reads the default values from Motech settings, updating this template.
      */
     public void readDefaults() {
         outgoing.readDefaults();

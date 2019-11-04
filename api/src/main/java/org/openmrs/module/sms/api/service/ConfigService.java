@@ -56,7 +56,7 @@ public interface ConfigService {
     Config getConfigOrDefault(String name);
 
     /**
-     * Updates the SMS configs using the provided object. The configuration will be persisted with the OpenMRS config
+     * Updates the SMS configs using the provided object. The configuration will be persisted with the Motech config
      * system. Configurations which are no longer part of the provided object will be dropped.
      * @param configs an object containing all the SMS configurations
      */
@@ -69,8 +69,8 @@ public interface ConfigService {
     boolean hasConfigs();
 
     /**
-     * Returns the base url to this OpenMRS server. The url is read from the platform settings.
-     * @return the base url to this OpenMRS server
+     * Returns the base url to this MOTECH server. The url is read from the platform settings.
+     * @return the base url to this MOTECH server
      */
     String getServerUrl();
 }

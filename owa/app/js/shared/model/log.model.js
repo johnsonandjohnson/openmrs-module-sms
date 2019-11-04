@@ -12,7 +12,7 @@ export class LogModel {
     this.id = modelDTO.id;
     this.errorMessage = modelDTO.errorMessage;
     this.providerStatus = modelDTO.providerStatus;
-    this.openMrsId = modelDTO.openMrsId;
+    this.motechId = modelDTO.motechId;
     this.providerId = modelDTO.providerId;
     this.deliveryStatus = modelDTO.deliveryStatus;
     this.messageContent = modelDTO.messageContent;
