@@ -15,7 +15,7 @@ public class SmsRecordDTO implements Serializable {
 
 	private String providerStatus;
 
-	private String motechId;
+	private String openMrsId;
 
 	private String providerId;
 
@@ -41,13 +41,13 @@ public class SmsRecordDTO implements Serializable {
 
 	public SmsRecordDTO() { }
 
-	public SmsRecordDTO(Integer id, String errorMessage, String providerStatus, String motechId, String providerId,
-			String deliveryStatus, String messageContent, String timestamp, String config, String smsDirection,
-			String phoneNumber, String modificationDate, String creationDate, String modifiedBy, String creator) {
+	public SmsRecordDTO(Integer id, String errorMessage, String providerStatus, String openMrsId, String providerId,
+						String deliveryStatus, String messageContent, String timestamp, String config, String smsDirection,
+						String phoneNumber, String modificationDate, String creationDate, String modifiedBy, String creator) {
 		this.id = id;
 		this.errorMessage = errorMessage;
 		this.providerStatus = providerStatus;
-		this.motechId = motechId;
+		this.openMrsId = openMrsId;
 		this.providerId = providerId;
 		this.deliveryStatus = deliveryStatus;
 		this.messageContent = messageContent;
@@ -85,12 +85,12 @@ public class SmsRecordDTO implements Serializable {
 		this.providerStatus = providerStatus;
 	}
 
-	public String getMotechId() {
-		return motechId;
+	public String getOpenMrsId() {
+		return openMrsId;
 	}
 
-	public void setMotechId(String motechId) {
-		this.motechId = motechId;
+	public void setOpenMrsId(String openMrsId) {
+		this.openMrsId = openMrsId;
 	}
 
 	public String getProviderId() {

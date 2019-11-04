@@ -12,7 +12,7 @@ public class SmsRecordDTOBuilder {
 
 	private String providerStatus;
 
-	private String motechId;
+	private String openMrsId;
 
 	private String providerId;
 
@@ -51,8 +51,8 @@ public class SmsRecordDTOBuilder {
 		return this;
 	}
 
-	public SmsRecordDTOBuilder setMotechId(String motechId) {
-		this.motechId = motechId;
+	public SmsRecordDTOBuilder setOpenMrsId(String openMrsId) {
+		this.openMrsId = openMrsId;
 		return this;
 	}
 
@@ -112,7 +112,7 @@ public class SmsRecordDTOBuilder {
 	}
 
 	public SmsRecordDTO createSmsRecordDTO() {
-		return new SmsRecordDTO(id, errorMessage, providerStatus, motechId, providerId, deliveryStatus, messageContent,
+		return new SmsRecordDTO(id, errorMessage, providerStatus, openMrsId, providerId, deliveryStatus, messageContent,
 				timestamp, config, smsDirection, phoneNumber, modificationDate, creationDate, modifiedBy, creator);
 	}
 }

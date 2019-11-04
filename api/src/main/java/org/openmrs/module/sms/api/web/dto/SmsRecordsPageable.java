@@ -90,7 +90,7 @@ public class SmsRecordsPageable implements Serializable {
 					.setId(record.getId())
 					.setErrorMessage(record.getErrorMessage())
 					.setProviderStatus(record.getProviderStatus())
-					.setMotechId(record.getMotechId())
+					.setOpenMrsId(record.getOpenMrsId())
 					.setProviderId(record.getProviderId())
 					.setDeliveryStatus(record.getDeliveryStatus())
 					.setMessageContent(record.getMessageContent())

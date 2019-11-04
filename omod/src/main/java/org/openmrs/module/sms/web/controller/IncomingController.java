@@ -26,14 +26,14 @@ import java.util.Map;
 import static org.openmrs.module.sms.api.audit.SmsDirection.INBOUND;
 
 /**
- * Handles http requests to {motechserver}/motech-platform-server/module/sms/incoming{Config} sent by sms providers
+ * Handles http requests to {server}/openmrs/ws/sms/incoming{Config} sent by sms providers
  * when they receive an SMS
  */
 @Controller
 @RequestMapping(value = "/sms/incoming")
 public class IncomingController {
 
-    private static final String SMS_MODULE = "motech-sms";
+    private static final String SMS_MODULE = "openmrs-sms";
 
     private static final Log LOGGER = LogFactory.getLog(IncomingController.class);
 
@@ -58,7 +58,7 @@ public class IncomingController {
     //todo: add provider-specific UI to explain how implementers must setup their providers' incoming callback
 
     /**
-     * Handles an incoming SMS notification coming from the provider. A MOTECH Event notifying about this will also
+     * Handles an incoming SMS notification coming from the provider. A OpenMRS Event notifying about this will also
      * get published. The request itself will get handled in the way that the configuration template specifies it.
      * @param configName the name of the configuration that should handle the SMS
      * @param params the request params coming from the provider
