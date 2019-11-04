@@ -18,7 +18,7 @@ public class SmsEventTest {
 
 	private static final String CONFIG = "config";
 	private static final String MESSAGE = "message";
-	private static final String MOTECH_ID = "motech_id";
+	private static final String OPENMRS_ID = "openMrs_id";
 	private static final String PROVIDER_MESSAGE_ID = "provider_message_id";
 	private static final Integer FAILURE_COUNT = 2;
 
@@ -46,7 +46,7 @@ public class SmsEventTest {
 		paramsObject.put(SmsEventParams.CONFIG, CONFIG);
 		paramsObject.put(SmsEventParams.RECIPIENTS, RECIPIENTS_LIST);
 		paramsObject.put(SmsEventParams.MESSAGE, MESSAGE);
-		paramsObject.put(SmsEventParams.MOTECH_ID, MOTECH_ID);
+		paramsObject.put(SmsEventParams.OPENMRS_ID, OPENMRS_ID);
 		paramsObject.put(SmsEventParams.PROVIDER_MESSAGE_ID, PROVIDER_MESSAGE_ID);
 		paramsObject.put(SmsEventParams.FAILURE_COUNT, FAILURE_COUNT);
 		paramsObject.put(SmsEventParams.DELIVERY_TIME, DELIVERY_TIME);
@@ -56,7 +56,7 @@ public class SmsEventTest {
 		paramsString.put(SmsEventParams.CONFIG, CONFIG);
 		paramsString.put(SmsEventParams.RECIPIENTS, RECIPIENTS_LIST_AS_STRING);
 		paramsString.put(SmsEventParams.MESSAGE, MESSAGE);
-		paramsString.put(SmsEventParams.MOTECH_ID, MOTECH_ID);
+		paramsString.put(SmsEventParams.OPENMRS_ID, OPENMRS_ID);
 		paramsString.put(SmsEventParams.PROVIDER_MESSAGE_ID, PROVIDER_MESSAGE_ID);
 		paramsString.put(SmsEventParams.FAILURE_COUNT, FAILURE_COUNT.toString());
 		paramsString.put(SmsEventParams.DELIVERY_TIME, DELIVERY_TIME_AS_STRING);
@@ -71,7 +71,7 @@ public class SmsEventTest {
 		assertThat(actual.get(SmsEventParams.CONFIG), equalTo(CONFIG));
 		assertThat(actual.get(SmsEventParams.RECIPIENTS), equalTo(RECIPIENTS_LIST_AS_STRING));
 		assertThat(actual.get(SmsEventParams.MESSAGE), equalTo(MESSAGE));
-		assertThat(actual.get(SmsEventParams.MOTECH_ID), equalTo(MOTECH_ID));
+		assertThat(actual.get(SmsEventParams.OPENMRS_ID), equalTo(OPENMRS_ID));
 		assertThat(actual.get(SmsEventParams.PROVIDER_MESSAGE_ID), equalTo(PROVIDER_MESSAGE_ID));
 		assertThat(actual.get(SmsEventParams.FAILURE_COUNT), equalTo(FAILURE_COUNT.toString()));
 		assertThat(actual.get(SmsEventParams.DELIVERY_TIME), equalTo(DELIVERY_TIME_AS_STRING));
@@ -85,7 +85,7 @@ public class SmsEventTest {
 		assertThat(actual.get(SmsEventParams.CONFIG), equalTo(CONFIG));
 		assertThat(actual.get(SmsEventParams.RECIPIENTS), equalTo(RECIPIENTS_LIST));
 		assertThat(actual.get(SmsEventParams.MESSAGE), equalTo(MESSAGE));
-		assertThat(actual.get(SmsEventParams.MOTECH_ID), equalTo(MOTECH_ID));
+		assertThat(actual.get(SmsEventParams.OPENMRS_ID), equalTo(OPENMRS_ID));
 		assertThat(actual.get(SmsEventParams.PROVIDER_MESSAGE_ID), equalTo(PROVIDER_MESSAGE_ID));
 		assertThat(actual.get(SmsEventParams.FAILURE_COUNT), equalTo(FAILURE_COUNT));
 		assertThat(actual.get(SmsEventParams.DELIVERY_TIME), equalTo(DELIVERY_TIME));

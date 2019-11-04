@@ -15,7 +15,7 @@ const ID = 'ID';
 const MESSAGE_CONTENT = 'MESSAGE_CONTENT';
 const MODIFICATION_DATE = 'MODIFICATION_DATE';
 const MODIFIED_BY = 'MODIFIED_BY';
-const MOTECH_ID = 'MOTECH_ID';
+const OPENMRS_ID = 'OPENMRS_ID';
 const PHONE_NUMBER = 'PHONE_NUMBER';
 const PROVIDER_ID = 'PROVIDER_ID';
 const PROVIDER_STATUS = 'PROVIDER_STATUS';
@@ -24,7 +24,7 @@ const TIMESTAMP = 'TIMESTAMP';
 
 export const FIELDS = [ID, PHONE_NUMBER, MESSAGE_CONTENT, SMS_DIRECTION, TIMESTAMP,
   PROVIDER_ID, PROVIDER_STATUS, CONFIG, CRATION_DATE, DELIVERY_STATUS, ERROR_MESSAGE,
-  MODIFICATION_DATE, MODIFIED_BY, MOTECH_ID];
+  MODIFICATION_DATE, MODIFIED_BY, OPENMRS_ID];
 
 export const Cell = ({ columnName, value }) => {
   switch (columnName) {
@@ -67,8 +67,8 @@ export const Cell = ({ columnName, value }) => {
     case MODIFIED_BY: {
       return getColumnHeader(value.modifiedBy);
     }
-    case MOTECH_ID: {
-      return getColumnHeader(value.motechId);
+    case OPENMRS_ID: {
+      return getColumnHeader(value.openMrsId);
     }
     default:
       return getColumnHeader(value);

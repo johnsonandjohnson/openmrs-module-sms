@@ -19,7 +19,7 @@ public class Templates {
 
     /**
      * Constructs this collection from the provided templates. The templates will
-     * read their default values from the MOTECH configuration system through the provided settings facade.
+     * read their default values from the OpenMrs configuration system through the provided settings facade.
      * @param settingsManagerService the settings facade from which default values will be read
      * @param templates the collection of templates from which this object will be built
      */

@@ -26,13 +26,13 @@ import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.notification.AlertService;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.ws.rs.core.MediaType;
 
 import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
 import static org.openmrs.module.sms.api.util.SmsEvents.outboundEvent;
@@ -115,7 +115,7 @@ public class SmsHttpService {
                 handler.handle(sms, httpResponse, httpMethod.getResponseHeaders());
             } catch (IllegalStateException | IllegalArgumentException e) {
                 // exceptions generated above should only come from config/template issues, try to display something
-                // useful in the motech messages and tomcat log
+                // useful in the OpenMrs messages and tomcat log
                 alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, e.getMessage()), e);
                 throw e;
             }
@@ -200,7 +200,7 @@ public class SmsHttpService {
         Map<String, String> props = new HashMap<>();
         props.put("recipients", template.recipientsAsString(sms.getRecipients()));
         props.put("message", sms.getMessage());
-        props.put("motechId", sms.getMotechId());
+        props.put("openMrsId", sms.getOpenMrsId());
         props.put("callback", configService.getServerUrl() + "/module/sms/status/" + config.getName());
         if (sms.getCustomParams() != null) {
             props.putAll(sms.getCustomParams());
@@ -243,10 +243,10 @@ public class SmsHttpService {
 
         for (String recipient : sms.getRecipients()) {
             auditRecords.add(new SmsRecord(config.getName(), OUTBOUND, recipient, sms.getMessage(), DateUtil.now(),
-                    config.retryOrAbortStatus(failureCount), null, sms.getMotechId(), null, errorMessage));
+                    config.retryOrAbortStatus(failureCount), null, sms.getOpenMrsId(), null, errorMessage));
         }
         events.add(outboundEvent(config.retryOrAbortSubject(failureCount), config.getName(), sms.getRecipients(),
-                sms.getMessage(), sms.getMotechId(), null, sms.getFailureCount() + 1, null, null, sms.getCustomParams()));
+                sms.getMessage(), sms.getOpenMrsId(), null, sms.getFailureCount() + 1, null, null, sms.getCustomParams()));
 
     }
 

@@ -40,18 +40,18 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
 
     /**
      * Retrieves records by the ID.
-     * @param motechId the MOTECH ID
+     * @param openMrsId the OpenMRS ID
      * @return the list of matching records
      */
-    List<SmsRecord> findByMotechId(String motechId);
+    List<SmsRecord> findByOpenMrsId(String openMrsId);
 
     /**
-     * Retrieves records by both provider and MOTECH IDs.
+     * Retrieves records by both provider and OpenMRS IDs.
      * @param providerId the provider ID
-     * @param motechId the MOTECH ID
+     * @param openMrsId the OpenMRS ID
      * @return the list of matching records
      */
-    List<SmsRecord> findByProviderAndMotechId(String providerId, String motechId);
+    List<SmsRecord> findByProviderAndOpenMrsId(String providerId, String openMrsId);
 
     void deleteAll();
 
