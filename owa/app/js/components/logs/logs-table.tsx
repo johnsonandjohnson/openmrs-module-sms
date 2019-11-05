@@ -86,8 +86,8 @@ export class LogsTable extends React.PureComponent<ILogsTableProps, ILogsTableSt
         accessor: 'modifiedBy'
       },
       {
-        Header: 'Motech ID',
-        accessor: 'motechId'
+        Header: 'OpenMRS ID',
+        accessor: 'openMrsId'
       }
     ];
 

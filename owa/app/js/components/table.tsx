@@ -74,13 +74,13 @@ export default class Table extends React.PureComponent<ITableProps, IPaginationB
     ));
 
   render = () => {
-    const noDataText = <LocalizedMessage id='reactcomponents.table.noDataText' defaultMessage='No results found' />;
-    const previousText = <LocalizedMessage id='reactcomponents.table.previous' defaultMessage='Previous' />;
-    const nextText = <LocalizedMessage id='reactcomponents.table.next' defaultMessage='Next' />;
-    const loadingText = <LocalizedMessage id='reactcomponents.table.loading' defaultMessage='Loading...' />;
-    const pageText = <LocalizedMessage id='reactcomponents.table.page' defaultMessage='Page' />;
-    const ofText = <LocalizedMessage id='reactcomponents.table.of' defaultMessage='of' />;
-    const rowsText = <LocalizedMessage id='reactcomponents.table.rows' defaultMessage='rows' />;
+    const noDataText = <LocalizedMessage id="reactcomponents.table.noDataText" defaultMessage="No results found" />;
+    const previousText = <LocalizedMessage id="reactcomponents.table.previous" defaultMessage="Previous" />;
+    const nextText = <LocalizedMessage id="reactcomponents.table.next" defaultMessage="Next" />;
+    const loadingText = <LocalizedMessage id="reactcomponents.table.loading" defaultMessage="Loading..." />;
+    const pageText = <LocalizedMessage id="reactcomponents.table.page" defaultMessage="Page" />;
+    const ofText = <LocalizedMessage id="reactcomponents.table.of" defaultMessage="of" />;
+    const rowsText = <LocalizedMessage id="reactcomponents.table.rows" defaultMessage="rows" />;
 
     return (
       <div>
@@ -103,7 +103,7 @@ export default class Table extends React.PureComponent<ITableProps, IPaginationB
           rowsText={rowsText}
           loadingText={loadingText}
           ofText={ofText}
-          noDataText={<span className='sortableTable-noDataText'>{noDataText}</span>}
+          noDataText={<span className="sortableTable-noDataText">{noDataText}</span>}
           pageText={pageText}
         />
       </div>

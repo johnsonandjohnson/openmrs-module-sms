@@ -61,15 +61,17 @@ export const reset = () => ({
   type: ACTION_TYPES.RESET
 });
 
-export const getLogs = (page, size, sort, order, filters) => ({
-  type: ACTION_TYPES.FETCH_LOGS,
-  payload: axiosInstance.get(apiUrl, {
-    params: {
-      page: page + 1,
-      rows: size,
-      sortColumn: sort,
-      sortDirection: order,
-      ...filters
-    }
-  })
-});
+export const getLogs = (page, size, sort, order, filters) => async (dispatch) => {
+  await dispatch({
+    type: ACTION_TYPES.FETCH_LOGS,
+    payload: axiosInstance.get(apiUrl, {
+      params: {
+        page: page + 1,
+        rows: size,
+        sortColumn: sort,
+        sortDirection: order,
+        ...filters
+      }
+    })
+  });
+};

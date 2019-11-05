@@ -84,7 +84,7 @@ export default class LogsFilters extends React.PureComponent<ILogsFiltersProps, 
         </Row>
         <Row className="u-mb-10" sm="8">
           <Col sm="6">
-            <input className="u-fill-col" type='text' onChange={this.onPhoneNumberFilterChange} value={this.state.phoneNumber} />
+            <input className="u-fill-col" type="text" onChange={this.onPhoneNumberFilterChange} value={this.state.phoneNumber} />
           </Col>
           <Col sm="6">
             <select className="u-fill-col" onChange={this.onDateFilterFilterChange} value={this.state.timePeriod}>
