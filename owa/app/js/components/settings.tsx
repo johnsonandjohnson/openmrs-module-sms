@@ -14,7 +14,6 @@ import { Form, FormGroup, ControlLabel, FormControl, Checkbox, Button, Row, Col 
 import _ from 'lodash';
 import Accordion from './cfl-accordion';
 import { ITemplate } from '../shared/model/template.model';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import RemoveButton from './remove-button';
 import OpenMRSModal from './open-mrs-modal';
 
