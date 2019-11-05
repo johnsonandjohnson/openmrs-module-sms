@@ -1,12 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { IConfig, IProp } from '../shared/model/config.model';
-import { getConfigs, getTemplates, updateConfigs, updateState, reset } from '../reducers/settings.reducer';
-import { Form, FormGroup, ControlLabel, FormControl, Checkbox, Button } from 'react-bootstrap';
+import {
+  getConfigs,
+  getTemplates,
+  updateConfigs,
+  updateState,
+  openModal,
+  closeModal,
+  reset
+} from '../reducers/settings.reducer';
+import { Form, FormGroup, ControlLabel, FormControl, Checkbox, Button, Row, Col } from 'react-bootstrap';
 import _ from 'lodash';
 import Accordion from './cfl-accordion';
 import { ITemplate } from '../shared/model/template.model';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import RemoveButton from './remove-button';
+import OpenMRSModal from './open-mrs-modal';
 
 interface ISettingsProps extends StateProps, DispatchProps {}
 
@@ -61,6 +71,12 @@ class Settings extends React.Component <ISettingsProps, ISettingsState> {
     this.props.updateState(newConfigs, this.props.defaultConfigName);
   }
 
+  handleRemove = (configName: string) => this.props.openModal(configName);
+
+  handleClose = () => this.props.closeModal();
+
+  handleConfirm = () => this.deleteConfig(this.props.configNameToDelete);
+
   getPropsForTemplate = (templateName: string): Array<IProp> => {
     const template = this.findTemplate(templateName)
     return template && template.configurables.map(conf => ({
@@ -74,11 +90,7 @@ class Settings extends React.Component <ISettingsProps, ISettingsState> {
   setDefaultConfigName = (configName: string) => this.props.updateConfigs(this.props.configs, configName);
 
   deleteConfig = (name: string) => {
-    const newConfigs: Array<IConfig> = this.props.configs;
-    const index = newConfigs.indexOf(newConfigs.find(config => config.name === name));
-    if (index > -1) {
-      newConfigs.splice(index, 1);
-    }
+    const newConfigs = _.filter(this.props.configs, (config: IConfig) => config.name !== name);
     const defaultConfigName = this.props.defaultConfigName !== name ? this.props.defaultConfigName :
       newConfigs.length > 0 ? newConfigs[0].name : null;
     this.props.updateState(newConfigs, defaultConfigName);
@@ -151,35 +163,28 @@ class Settings extends React.Component <ISettingsProps, ISettingsState> {
   renderConfig = (config: IConfig, index: number) => {
     const isDefault = config.name === this.props.defaultConfigName;
     return (
-      <Accordion key={index} title={config.name} fasIcon={isDefault && ['fas', 'star']}>
-        {this.renderConfigForm(config, isDefault, index)}
-        <Button 
-          className="btn btn-xs" 
-          onClick={e => this.setDefaultConfigName(config.name)}
-          disabled={isDefault}
-          title={'Set as default'}
-        >
-          <FontAwesomeIcon size="1x" icon={['fas', 'star']} color="#5B57A6" />
-        </Button>
-        <Button 
-          className="btn cancel btn-xs" 
-          onClick={e => this.deleteConfig(config.name)}
-        >
-          Delete
-        </Button>
-      </Accordion>
+      <Row key={index}>
+        <Col sm={11}>
+          <Accordion key={index} title={config.name} isDefault={isDefault} border
+            setDefaultCallback={this.setDefaultConfigName}
+          >
+            {this.renderConfigForm(config, isDefault, index)}
+          </Accordion>
+        </Col>
+        <Col sm={1}>
+          <RemoveButton
+            handleRemove={e => this.handleRemove(config.name)}
+            localId={config.name}
+            tooltip="Delete SMS configuration" />
+        </Col>
+      </Row>
     );
   };
 
   renderConfigs = () => this.props.configs.map((config: IConfig, index: number) => this.renderConfig(config, index));
 
-  renderControlButtons = () => (
+  renderSaveButton = () => (
     <div className="u-mt-15">
-      <Button
-        className="btn btn-xs" 
-        onClick={this.componentDidMount}>
-          Cancel
-      </Button>
       <Button
         className="btn confirm btn-xs" 
         onClick={this.saveConfigs}>
@@ -191,17 +196,24 @@ class Settings extends React.Component <ISettingsProps, ISettingsState> {
   render() {
     const { loading } = this.props;
     return (
-    <>
-      {loading ? (
-        <div>LOADING</div>
-      ) : (
-        <>
-          {this.renderConfigs()}
-          {this.renderControlButtons()}
-        </>
-      )}
-    </>
-    )
+      <div className="body-wrapper">
+        <OpenMRSModal
+          deny={this.handleClose}
+          confirm={this.handleConfirm}
+          show={this.props.showModal}
+          title="Delete SMS configuration"
+          txt="Are you sure you want to delete this configuration?" />
+        <Row>
+          <Col xs={12} md={12}>
+            <h2>SMS Configurations</h2>
+          </Col>
+        </Row>
+        <div className="panel-body">
+          {!loading && this.renderConfigs()}
+          {this.renderSaveButton()}
+        </div>
+      </div>  
+    );
   };
 }
 
@@ -209,7 +221,9 @@ const mapStateToProps = state => ({
   configs: state.settings.configs,
   templates: state.settings.templates,
   defaultConfigName: state.settings.defaultConfigName,
-  loading: state.settings.loading
+  loading: state.settings.loading,
+  showModal: state.settings.showModal,
+  configNameToDelete: state.settings.configNameToDelete
 });
 
 const mapDispatchToProps = {
@@ -217,6 +231,8 @@ const mapDispatchToProps = {
   getTemplates,
   updateConfigs,
   updateState,
+  openModal,
+  closeModal,
   reset
 };
 

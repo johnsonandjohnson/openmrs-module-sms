@@ -8,21 +8,37 @@ interface IProps {
   title: string; 
   border?: boolean;
   open?: boolean;
-  fasIcon?: IconProp;
+  isDefault?: boolean;
+  setDefaultCallback: (configName: string) => void
 }
 
 interface IState {
   visible: boolean;
+  isHovering: boolean;
  } 
 
 export default class Accordion extends React.Component<IProps, IState> {
 
+  defaultIcon: IconProp = ['fas', 'star'];
+  nonDefaultIcon: IconProp = ['far', 'star'];
+
   constructor(props: IProps) {
     super(props);
     this.state = {
-      visible: props.open
+      visible: props.open,
+      isHovering: false
     };
   }
+
+  handleMouseHover = () => this.setState((prevState: IState) => ({
+      ...prevState,
+      isHovering: !prevState.isHovering
+    }));
+
+  handleOnEmptyStarClick = (event) => {
+    event.stopPropagation();
+    this.props.setDefaultCallback(this.props.title);
+  };
 
   render = () => {
     return (
@@ -34,6 +50,8 @@ export default class Accordion extends React.Component<IProps, IState> {
           }}
           role="button"
           tabIndex={0}
+          onMouseEnter={() => this.handleMouseHover()}
+          onMouseLeave={() => this.handleMouseHover()}
         >
           <a>
             <span>
@@ -47,8 +65,13 @@ export default class Accordion extends React.Component<IProps, IState> {
             &nbsp;&nbsp;
             {this.props.title}
             &nbsp;&nbsp;
-            {this.props.fasIcon && (
-              <FontAwesomeIcon size="1x" icon={this.props.fasIcon} />
+            {this.props.isDefault ? (
+              <FontAwesomeIcon size="1x" icon={this.defaultIcon} />
+            ) : (
+              this.state.isHovering && 
+                <span onClick={this.handleOnEmptyStarClick} title="Set as default">
+                  <FontAwesomeIcon size="1x" icon={this.nonDefaultIcon} />
+                </span>
             )}
           </a>
         </div>

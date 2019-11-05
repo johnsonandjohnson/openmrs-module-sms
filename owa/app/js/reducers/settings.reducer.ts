@@ -19,7 +19,9 @@ export const ACTION_TYPES = {
   GET_CONFIGS: "settings/GET_CONFIGS",
   GET_TEMPLATES: "settings/GET_TEMPLATES",
   UPLOAD_CONFIGS: "settings/UPLOAD_CONFIGS",
-  UPDATE_STATE: "settings/UPDATE_STATE"
+  UPDATE_STATE: "settings/UPDATE_STATE",
+  OPEN_MODAL: 'settings/OPEN_MODAL',
+  CLOSE_MODAL: 'settings/CLOSE_MODAL'
 };
 
 export interface ISettingsState {
@@ -27,13 +29,17 @@ export interface ISettingsState {
   templates: ReadonlyArray<ITemplate>;
   defaultConfigName: string;
   loading: boolean;
+  showModal: boolean;
+  configNameToDelete: string;
 }
 
 const initialState: ISettingsState = {
   configs: [] as ReadonlyArray<IConfig>,
   templates: [] as ReadonlyArray<ITemplate>,
   defaultConfigName: '',
-  loading: false
+  loading: false,
+  showModal: false,
+  configNameToDelete: null
 };
 
 export default (state: ISettingsState = initialState, action): ISettingsState => {
@@ -83,8 +89,22 @@ export default (state: ISettingsState = initialState, action): ISettingsState =>
       return {
         ...state,
         configs: action.configs,
-        defaultConfigName: action.defaultConfigName
+        defaultConfigName: action.defaultConfigName,
+        showModal: false,
+        configNameToDelete: null
       }
+    case ACTION_TYPES.OPEN_MODAL: 
+      return {
+        ...state,
+        showModal: true,
+        configNameToDelete: action.payload
+      };
+    case ACTION_TYPES.CLOSE_MODAL: 
+      return {
+        ...state,
+        showModal: false,
+        configNameToDelete: null
+      };
     default:
       return state;
   }
@@ -126,6 +146,15 @@ export const updateState = (configs: ReadonlyArray<IConfig>, defaultConfigName: 
   type: ACTION_TYPES.UPDATE_STATE,
   configs,
   defaultConfigName
+});
+
+export const openModal = (configName: string) => ({
+  type: ACTION_TYPES.OPEN_MODAL,
+  payload: configName
+});
+
+export const closeModal = () => ({
+  type: ACTION_TYPES.CLOSE_MODAL
 });
 
 const mapTemplatesToArray = payloadData =>  Object.keys(payloadData).map(key => payloadData[key]);
