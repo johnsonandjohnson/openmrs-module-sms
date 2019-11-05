@@ -201,7 +201,7 @@ export class SendSms extends React.Component {
   }
 }
 
-const mapStateToProps = state => (state.sendReducer);
+const mapStateToProps = ({ send }) => (send);
 
 const mapDispatchToProps = {
   reset,
