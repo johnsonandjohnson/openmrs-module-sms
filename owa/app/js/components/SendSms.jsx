@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import _ from 'lodash';
 
 import { sendSms, getSmsConfigs, reset } from '../reducers/sendReducer';
-import * as Yup from "yup";
+import * as Yup from 'yup';
 import { validateForm, validateField } from '../utils/validation-util';
 import ErrorDesc from './ErrorDesc';
 import * as Msg from '../utils/messages';
