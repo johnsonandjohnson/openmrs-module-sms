@@ -12,7 +12,12 @@ import {
   Col,
   Row
 } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Tile from './Tile';
+
+// Enable notification mechanism
+toast.configure();
 
 class App extends React.Component {
   render() {

@@ -11,6 +11,8 @@ import { REQUEST, SUCCESS, FAILURE } from './action-type.util'
 import axiosInstance from '../config/axios';
 import { IConfig } from '../shared/model/config.model';
 import { ITemplate } from '../shared/model/template.model';
+import { handleRequest } from '../components/toast/request-status-util';
+import { SMS_UPDATE_SUCCESS, SMS_UPDATE_FAILURE } from '../components/toast/messages';
 
 export const ACTION_TYPES = {
   RESET: "settings/RESET",
@@ -110,13 +112,14 @@ export const getTemplates = () => async (dispatch) => {
 
 export const updateConfigs = (configs: ReadonlyArray<IConfig>, defaultConfigName: string) => async (dispatch) => {
   const requestUrl = 'ws/sms/configs';
-  await dispatch({
+  const body = {
     type: ACTION_TYPES.UPLOAD_CONFIGS,
     payload: axiosInstance.post(requestUrl, {
       defaultConfigName,
       configs
     }),
-  });
+  };
+  handleRequest(dispatch, body, SMS_UPDATE_SUCCESS, SMS_UPDATE_FAILURE);
 };
 
 export const updateState = (configs: ReadonlyArray<IConfig>, defaultConfigName: string) => ({
