@@ -21,7 +21,7 @@ import java.util.List;
  * collections of audit records and events, which should be then retrieved and handled by the code using the handler.
  */
 public abstract class ResponseHandler {
-    private static final String SMS_MODULE = "motech-sms";
+    private static final String SMS_MODULE = "openmrs-sms";
     private static final Log LOGGER = LogFactory.getLog(ResponseHandler.class);
     private Template template;
     private Config config;

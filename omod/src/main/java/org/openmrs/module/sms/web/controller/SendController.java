@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 /**
- * handles requests to {server}/motech-platform-server/module/sms/send: how the Send SMS dialog sends a message
+ * handles requests to {server}/openmrs/ws/sms/send: how the Send SMS dialog sends a message
  */
 @Controller
 @RequestMapping(value = "/sms")

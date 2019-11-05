@@ -84,4 +84,21 @@
             <column name="providerId"></column>
         </createIndex>
     </changeSet>
+    <changeSet id="cfl-2019-11-04-20:00" author="Dawid Ruchniewicz">
+        <preConditions>
+            <tableExists tableName="sms_records"/>
+            <columnExists tableName="sms_records" columnName="motechId"/>
+            <indexExists indexName="sms_records_index_motechId"/>
+        </preConditions>
+        <comment>Changed the motechId column name</comment>
+        <renameColumn columnDataType="varchar(255)"
+                      newColumnName="openMrsId"
+                      oldColumnName="motechId"
+                      tableName="sms_records"
+                      />
+        <dropIndex tableName="sms_records" indexName="sms_records_index_motechId"/>
+        <createIndex tableName="sms_records" indexName="sms_records_index_openMrsId">
+            <column name="openMrsId"></column>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

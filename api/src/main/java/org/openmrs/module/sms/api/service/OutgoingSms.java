@@ -29,13 +29,13 @@ public class OutgoingSms {
      */
     private String config;
     /**
-     * If specified will schedule the message for future delivery using the MOTECH scheduler
+     * If specified will schedule the message for future delivery using the OpenMRS scheduler
      */
     private Date deliveryTime;
     /**
-     * MOTECH specific message GUID
+     * OpenMRS specific message GUID
      */
-    private String motechId;
+    private String openMrsId;
     /**
      * Provider specific message id
      */
@@ -68,7 +68,7 @@ public class OutgoingSms {
         if (smsEvent.paramsContainKey(SmsEventParams.FAILURE_COUNT)) {
             failureCount = smsEvent.getFailureCount();
         }
-        motechId = smsEvent.getMotechId();
+        openMrsId = smsEvent.getOpenMrsId();
         providerId = smsEvent.getProviderId();
         customParams = smsEvent.getCustomParams();
     }
@@ -212,7 +212,7 @@ public class OutgoingSms {
 
     /**
      * Gets the delivery time for this SMS. If specified, will schedule
-     * the message for future delivery using the MOTECH scheduler.
+     * the message for future delivery using the OpenMRS scheduler.
      * @return the delivery time for this SMS
      */
     public Date getDeliveryTime() {
@@ -221,7 +221,7 @@ public class OutgoingSms {
 
     /**
      * Checks whether this SMS has a specified delivery time. If specified, will schedule
-     * the message for future delivery using the MOTECH scheduler. If not, the message
+     * the message for future delivery using the OpenMRS scheduler. If not, the message
      * should be immediately delivered.
      * @return true if this SMS has a specific delivery time, false otherwise
      */
@@ -231,14 +231,13 @@ public class OutgoingSms {
 
     /**
      * Gets the delivery time for this SMS. If specified will schedule
-     * the message for future delivery using the MOTECH scheduler.
+     * the message for future delivery using the OpenMRS scheduler.
      * @param deliveryTime  the delivery time for this SMS
     */
     public void setDeliveryTime(Date deliveryTime) {
         this.deliveryTime = deliveryTime;
     }
 
-    // TODO: for MOTECH-1466 - This does not belong in the API
     /**
      * Gets the failure counter, used by the SMS module to keep track of the failures
      * and execute retries.
@@ -248,7 +247,6 @@ public class OutgoingSms {
         return failureCount;
     }
 
-    // TODO: for MOTECH-1466 - This does not belong in the API
     /**
      * Sets the failure counter, used by the SMS module to keep track of the failures
      * and execute retries.
@@ -259,24 +257,24 @@ public class OutgoingSms {
     }
 
 
-    public Boolean hasMotechId() {
-        return isNotBlank(motechId);
+    public Boolean hasOpenMrsId() {
+        return isNotBlank(openMrsId);
     }
 
     /**
-     * Gets the MOTECH specific message GUID of this SMS.
-     * @return the motech specific GUID for this SMS
+     * Gets the OpenMRS specific message GUID of this SMS.
+     * @return the OpenMrs specific GUID for this SMS
      */
-    public String getMotechId() {
-        return motechId;
+    public String getOpenMrsId() {
+        return openMrsId;
     }
 
     /**
-     * Sets the MOTECH specific message GUID of this SMS.
-     * @param motechId the motech specific GUID for this SMS
+     * Sets the OpenMRS specific message GUID of this SMS.
+     * @param openMrsId the OpenMrs specific GUID for this SMS
      */
-    public void setMotechId(String motechId) {
-        this.motechId = motechId;
+    public void setOpenMrsId(String openMrsId) {
+        this.openMrsId = openMrsId;
     }
 
     /**
@@ -329,7 +327,7 @@ public class OutgoingSms {
                 && Objects.equals(this.message, other.message)
                 && Objects.equals(this.deliveryTime, other.deliveryTime)
                 && Objects.equals(this.failureCount, other.failureCount)
-                && Objects.equals(this.motechId, other.motechId)
+                && Objects.equals(this.openMrsId, other.openMrsId)
                 && Objects.equals(this.providerId, other.providerId);
     }
 
@@ -341,7 +339,7 @@ public class OutgoingSms {
                 ", config='" + config + '\'' +
                 ", deliveryTime=" + deliveryTime +
                 ", failureCount=" + failureCount +
-                ", motechId='" + motechId + '\'' +
+                ", openMrsId='" + openMrsId + '\'' +
                 ", providerId='" + providerId + '\'' +
                 '}';
     }
