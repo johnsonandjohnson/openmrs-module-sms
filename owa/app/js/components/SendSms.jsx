@@ -10,7 +10,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { sendSms, getSmsConfigs, reset } from '../reducers/sendReducer';
+import { sendSms, getSmsConfigs, reset } from '../reducers/send.reducer';
+import * as Yup from 'yup';
+import { validateForm, validateField } from '../utils/validation-util';
+import ErrorDesc from './ErrorDesc';
+import * as Msg from '../utils/messages';
 
 export class SendSms extends React.Component {
   constructor(props) {
@@ -24,6 +28,15 @@ export class SendSms extends React.Component {
     this.customParamsChange = this.customParamsChange.bind(this);
     this.state = props.sendForm;
   }
+
+  validationSchema = Yup.object().shape({
+    recipients: Yup.string()
+      .matches(new RegExp('^\\d+(,\\d+)*$'), Msg.NUMBERS_OR_COMMAS_REQUIRED)
+      .required(Msg.FIELD_REQUIRED),
+    message: Yup.string()
+      .required(Msg.FIELD_REQUIRED)
+  });
+
   componentDidMount() {
     this.props.getSmsConfigs();
   }
@@ -42,8 +55,18 @@ export class SendSms extends React.Component {
     this.setState(this.props.sendForm);
   }
 
-  handleSubmit() {
-    this.props.sendSms(this.state);
+  handleSubmit(event) {
+    validateForm(this.state, this.validationSchema)
+      .then(() => {
+        event.preventDefault();
+        this.props.sendSms(this.state);
+      })
+      .catch((errors) => {
+        this.setState({
+          ...this.state,
+          errors
+        });
+      });
   }
 
   configChange(event) {
@@ -59,7 +82,7 @@ export class SendSms extends React.Component {
     return providerIdArray;
   } 
 
-  deliveryTimeChange() {
+  deliveryTimeChange(event) {
     let newDate = null;
     if (event.target.value) {
       const currentDate = new Date();
@@ -68,31 +91,65 @@ export class SendSms extends React.Component {
     this.setState({ deliveryTime: newDate });
   }
 
-  recipientsChange() {
-    this.setState({
-      recipients: event.target.value.split(',')
-    });
+  recipientsChange(event) {
+    let recipientsArray = event.target.value;
+    let form = this.state;
+    form.recipients = recipientsArray;
+
+    validateField(form, 'recipients', this.validationSchema)
+      .then(() => {
+        event.preventDefault();
+        this.setState({
+          recipients: recipientsArray.split(','),
+          errors: null
+        });
+      })
+      .catch((errors) => {
+        this.setState({
+          recipients: recipientsArray.split(','),
+          errors
+        });
+      });
   }
 
-  messageChange() {
-    this.setState({
-      message: event.target.value
-    });
+  messageChange(event) {
+    let message = event.target.value;
+    let form = this.state;
+    form.message = message;
+
+    validateField(form, 'message', this.validationSchema)
+      .then(() => {
+        event.preventDefault();
+        this.setState({
+          message,
+          errors: null
+        });
+      })
+      .catch((errors) => {
+        this.setState({
+          message,
+          errors
+        });
+      });
   }
 
-  customParamsChange() {
+  customParamsChange(event) {
     this.setState({
       customParams: event.target.value
     });
   }
 
   render() {
+    const formClass = 'form-control';
+    const errorFormClass = formClass + ' error-field';
+    const { errors } = this.state;
+
     return (
-      <div>
+      <div className="body-wrapper">
         <h1>Send SMS</h1>
         <form ref={form => this.form = form}>
           <h3>Select configuration</h3>
-          {this.props.configs.map(config => <label className='inline'>
+          {this.props.configs && this.props.configs.map(config => <label className='inline'>
           <input key={config.name} type='radio' name='configs' onChange={this.configChange} value={config.name} defaultChecked={this.props.defaultConfigName === config.name}/>
           {config.name}</label>)}
           <br />
@@ -106,12 +163,23 @@ export class SendSms extends React.Component {
           <label>
             Separate multiple phone numbers with comma
             <br />
-            <textarea rows='1' cols='50' onChange={this.recipientsChange} />
+            <textarea
+              rows='1'
+              cols='50'
+              onChange={this.recipientsChange}
+              className={errors && errors.recipients ? errorFormClass : formClass} />
+            {errors && <ErrorDesc field={errors.recipients}/> }
           </label>
           <br />
           <h3>Type the message</h3>
           <label>
-            <textarea multiline='true' rows='7' cols='50' onChange={this.messageChange} />
+            <textarea
+              multiline='true'
+              rows='7'
+              cols='50'
+              onChange={this.messageChange}
+              className={errors && errors.message ? errorFormClass : formClass} />
+            {errors && <ErrorDesc field={errors.message}/> }
           </label>
           <br />
           <h3>Add custom parameters (optional)</h3>

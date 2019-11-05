@@ -10,11 +10,17 @@
 import { combineReducers } from "redux";
 import { reducers as openmrs } from '@openmrs/react-components';
 
-import logsReducer from './logsReducer';
-import sendReducer from './sendReducer';
+import logs, { LogsState } from './logs.reducer';
+import send, { SendState } from './send.reducer';
 
-export default combineReducers({
+export interface IRootState {
+  readonly logs: LogsState;
+  readonly send: SendState;
+  readonly openmrs: any;
+}
+
+export default combineReducers<IRootState>({
   openmrs,
-  logsReducer,
-  sendReducer
-});
+  logs,
+  send
+} as any); //TODO: https://github.com/reduxjs/redux/issues/2709

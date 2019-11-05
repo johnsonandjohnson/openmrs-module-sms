@@ -14,12 +14,12 @@ import java.util.Map;
 public final class SmsEvents {
 
     /**
-     * Creates an MOTECH event which will describe an outbound SMS (already sent or to be sent).
+     * Creates an OpenMRS event which will describe an outbound SMS (already sent or to be sent).
      * @param subject the subject of the evnet
      * @param config the configuration which
      * @param recipients the recipient numbers for the SMS
      * @param message the SMS message
-     * @param motechId the MOTECH ID of the message
+     * @param openMrsId the OpenMRS ID of the message
      * @param providerMessageId the provider ID of the message
      * @param failureCount the failure counter for this message, will be used for retries
      * @param providerStatus the SMS status coming from the provider
@@ -28,14 +28,14 @@ public final class SmsEvents {
      * @return a {@link SmsEvent} describing the outbound SMS
      */
     public static SmsEvent outboundEvent(String subject, String config, //NO CHECKSTYLE ParameterNumber
-                                            List<String> recipients, String message, String motechId,
+                                            List<String> recipients, String message, String openMrsId,
                                             String providerMessageId, Integer failureCount, String providerStatus,
                                             Date timestamp, Map<String, String> customParams) {
         Map<String, Object> params = new HashMap<>();
         params.put(SmsEventParams.CONFIG, config);
         params.put(SmsEventParams.RECIPIENTS, recipients);
         params.put(SmsEventParams.MESSAGE, message);
-        params.put(SmsEventParams.MOTECH_ID, motechId);
+        params.put(SmsEventParams.OPENMRS_ID, openMrsId);
         if (providerMessageId != null) {
             params.put(SmsEventParams.PROVIDER_MESSAGE_ID, providerMessageId);
         }

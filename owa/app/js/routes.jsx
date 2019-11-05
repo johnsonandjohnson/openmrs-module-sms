@@ -10,8 +10,8 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Header } from '@openmrs/react-components';
 
-import App from './components/App';
-import Logs from './components/logs/Logs';
+import App from './components/app';
+import Logs from './components/logs/logs';
 import BreadCrumb from './components/BreadCrumb';
 import SendSms from './components/SendSms'
 

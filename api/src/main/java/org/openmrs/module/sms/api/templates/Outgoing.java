@@ -72,7 +72,7 @@ public class Outgoing {
     private String defaultRecipientSeparator;
 
     /**
-     * Reads the default values from MOTECH settings.
+     * Reads the default values from OpenMRS settings.
      */
     public void readDefaults() {
         defaultMillisecondsBetweenMessages = Integer.valueOf(Context.getAdministrationService()
