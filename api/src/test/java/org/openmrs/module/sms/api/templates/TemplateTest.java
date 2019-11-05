@@ -5,18 +5,68 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 public class TemplateTest {
+
+    private static final String PROVIDER_STATUS_TEMPLATE = "templates/provider-status-template.json";
+    private static final String NEXMO_RESPONSE_JSON = "responses/nexmo-response.json";
 
     @Test
     public void shouldGeneratePostMethod() throws IOException {
+        Template template = loadVotoTemplate();
+
+        String expectedJson = "{\"status_callback_url\":\"http://:someUrl\",\"subscribers\":[{\"phone\":\"48700123123\",\"language\":\"en\"}]}";
+
+        Map<String, String> props = new HashMap<>();
+        props.put("message", "message");
+        props.put("recipients", "1");
+        props.put("callback", "http://:someUrl");
+        props.put("subscribers", "[{\"phone\":\"48700123123\",\"language\":\"en\"}]");
+
+        HttpMethod httpMethod = template.generateRequestFor(props);
+
+        RequestEntity requestEntity = ((PostMethod) httpMethod).getRequestEntity();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        requestEntity.writeRequest(bos);
+        String json = new String(bos.toByteArray(), StandardCharsets.UTF_8);
+
+        assertEquals(expectedJson, json);
+    }
+
+    @Test
+    public void shouldExtractProviderStatus() throws IOException {
+        Template template = loadTemplateWithProviderStatus();
+        String response = loadNexmoResponse();
+
+        String providerStatus = template.getOutgoing().getResponse().extractProviderStatus(response);
+
+        assertEquals("0", providerStatus);
+    }
+
+    @Test
+    public void shouldExtractNullIfProviderStatusNotSet() throws IOException {
+        Template template = loadVotoTemplate();
+        String response = loadNexmoResponse();
+
+        String providerStatus = template.getOutgoing().getResponse().extractProviderStatus(response);
+
+        assertNull(providerStatus);
+    }
+
+    private Template loadVotoTemplate() {
         String jsonTemplate = "{\n" +
                 "        \"name\":\"Voto\",\n" +
                 "        \"configurables\": [\n" +
@@ -46,23 +96,30 @@ public class TemplateTest {
                 "        }\n" +
                 "    }";
         Gson gson = new Gson();
-        Template template = gson.fromJson(jsonTemplate, new TypeToken<Template>() { } .getType());
+        return gson.fromJson(jsonTemplate, new TypeToken<Template>() { } .getType());
+    }
 
-        String expectedJson = "{\"status_callback_url\":\"http://:someUrl\",\"subscribers\":[{\"phone\":\"48700123123\",\"language\":\"en\"}]}";
+    private Template loadTemplateWithProviderStatus() throws IOException {
+        try (InputStream templateStream = getClass().getClassLoader().getResourceAsStream(PROVIDER_STATUS_TEMPLATE)) {
 
-        Map<String, String> props = new HashMap<>();
-        props.put("message", "message");
-        props.put("recipients", "1");
-        props.put("callback", "http://:someUrl");
-        props.put("subscribers", "[{\"phone\":\"48700123123\",\"language\":\"en\"}]");
+            if (templateStream == null) {
+                throw new IOException("Cannot read template file: " + PROVIDER_STATUS_TEMPLATE);
+            }
 
-        HttpMethod httpMethod = template.generateRequestFor(props);
+            String jsonTemplate = IOUtils.toString(templateStream);
 
-        RequestEntity requestEntity = ((PostMethod) httpMethod).getRequestEntity();
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        requestEntity.writeRequest(bos);
-        String json = new String(bos.toByteArray(), "UTF-8");
+            Gson gson = new Gson();
 
-        Assert.assertEquals(expectedJson, json);
+            return gson.fromJson(jsonTemplate, new TypeToken<Template>() { } .getType());
+        }
+    }
+
+    private String loadNexmoResponse() throws IOException {
+        try (InputStream responseStream = getClass().getClassLoader().getResourceAsStream(NEXMO_RESPONSE_JSON)) {
+            if (responseStream == null) {
+                throw new IOException("Cannot read response file: " + NEXMO_RESPONSE_JSON);
+            }
+            return IOUtils.toString(responseStream);
+        }
     }
 }

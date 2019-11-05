@@ -28,6 +28,8 @@ public class GenericResponseHandler extends ResponseHandler {
     @Override
     public void handle(OutgoingSms sms, String response, Header[] headers) {
 
+        String providerStatus = getTemplateOutgoingResponse().extractProviderStatus(response);
+
         if (!getTemplateOutgoingResponse().hasSuccessResponse() ||
                 getTemplateOutgoingResponse().checkSuccessResponse(response)) {
 
@@ -38,7 +40,7 @@ public class GenericResponseHandler extends ResponseHandler {
                     sms.getRecipients().toString()));
             for (String recipient : sms.getRecipients()) {
                 getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, recipient, sms.getMessage(), DateUtil.now(),
-                        DeliveryStatuses.DISPATCHED, null, sms.getOpenMrsId(), providerMessageId, null));
+                        DeliveryStatuses.DISPATCHED, providerStatus, sms.getOpenMrsId(), providerMessageId, null));
             }
         } else {
             Integer failureCount = sms.getFailureCount() + 1;
@@ -52,7 +54,7 @@ public class GenericResponseHandler extends ResponseHandler {
             getLogger().debug(String.format("Failed to send SMS: %s", failureMessage));
             for (String recipient : sms.getRecipients()) {
                 getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, recipient, sms.getMessage(), DateUtil.now(),
-                        getConfig().retryOrAbortStatus(failureCount), null, sms.getOpenMrsId(), null, failureMessage));
+                        getConfig().retryOrAbortStatus(failureCount), providerStatus, sms.getOpenMrsId(), null, failureMessage));
             }
         }
     }
