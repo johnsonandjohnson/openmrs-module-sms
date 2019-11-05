@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * See {@link org.openmrs.module.sms.api.service.TemplateService}.
- * This implementation uses the MOTECH configuration system to store the templates.
+ * This implementation uses the OpenMRS configuration system to store the templates.
  */
 public class TemplateServiceImpl implements TemplateService {
 
