@@ -93,8 +93,9 @@ export class SendSms extends React.Component {
 
   recipientsChange(event) {
     let recipientsArray = event.target.value;
-    let form = this.state;
-    form.recipients = recipientsArray;
+    let form = {
+      recipients: recipientsArray
+    };
 
     validateField(form, 'recipients', this.validationSchema)
       .then(() => {
@@ -114,8 +115,9 @@ export class SendSms extends React.Component {
 
   messageChange(event) {
     let message = event.target.value;
-    let form = this.state;
-    form.message = message;
+    let form = {
+      message
+    };
 
     validateField(form, 'message', this.validationSchema)
       .then(() => {
@@ -142,7 +144,7 @@ export class SendSms extends React.Component {
   render() {
     const formClass = 'form-control';
     const errorFormClass = formClass + ' error-field';
-    const { errors } = this.state;
+    const errors = this.state ? this.state.errors : null;
 
     return (
       <div className="body-wrapper">
