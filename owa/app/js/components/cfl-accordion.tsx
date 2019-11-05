@@ -1,6 +1,5 @@
 import React from 'react';
 import '@openmrs/react-components/assets/css/accordion.css';
-import Arrow from '@openmrs/react-components/assets/images/arr-right.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
@@ -25,7 +24,7 @@ export default class Accordion extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      visible: props.open,
+      visible: false,
       isHovering: false
     };
   }
@@ -55,12 +54,10 @@ export default class Accordion extends React.Component<IProps, IState> {
         >
           <a>
             <span>
-              <img
+              <FontAwesomeIcon
                 className={`${this.state.visible ? 'rotate90' : ''}`}
-                height="12px"
-                src={Arrow}
-                width="12px"
-              />
+                size="1x"
+                icon={['fas', 'chevron-right',]}/>
             </span>
             &nbsp;&nbsp;
             {this.props.title}

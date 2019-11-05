@@ -56,9 +56,9 @@ class Settings extends React.Component <ISettingsProps, ISettingsState> {
 
   handlePropChange = (configName: string, propName: string, value: string, isDefault: boolean) => {
     const newConfigs: Array<IConfig> = this.props.configs.map((config: IConfig) => {
-      if (config.name === configName) {
-        config.props = config.props.map((prop: IProp) => {
-          if (prop.name === propName) {
+      if (config && config.name === configName) {
+        config.props = config.props && config.props.map((prop: IProp) => {
+          if (prop && prop.name === propName) {
             prop.value = value;
             return prop;
           }
@@ -79,13 +79,13 @@ class Settings extends React.Component <ISettingsProps, ISettingsState> {
 
   getPropsForTemplate = (templateName: string): Array<IProp> => {
     const template = this.findTemplate(templateName)
-    return template && template.configurables.map(conf => ({
+    return template && template.configurables ? template.configurables.map(conf => ({
       name: conf,
       value: null
-    }));
+    })) : [];
   }
 
-  findTemplate = (name: string): ITemplate => this.props.templates.find(template => template.name === name);
+  findTemplate = (name: string | undefined): ITemplate => this.props.templates.find(template => template.name === name);
 
   setDefaultConfigName = (configName: string) => this.props.updateConfigs(this.props.configs, configName);
 
@@ -129,11 +129,12 @@ class Settings extends React.Component <ISettingsProps, ISettingsState> {
 
   renderProps = (config: IConfig, isDefault: boolean, index: number) => {
     const selectedTemplate = this.findTemplate(config.templateName);
-    return selectedTemplate && selectedTemplate.configurables.map(conf => this.renderProp(conf, config, isDefault, index));
+    return selectedTemplate && selectedTemplate.configurables &&
+      selectedTemplate.configurables.map(conf => this.renderProp(conf, config, isDefault, index));
   };
 
   renderProp = (propName: string, config: IConfig, isDefault: boolean, index: number) => {
-    const prop: IProp = config.props.find(p => p.name === propName);
+    const prop: IProp | undefined = config && config.props && config.props.find(p => p.name === propName);
     return (
       <FormGroup controlId={`${propName}_${index}`}>
         <ControlLabel>{`${propName}:`}</ControlLabel>

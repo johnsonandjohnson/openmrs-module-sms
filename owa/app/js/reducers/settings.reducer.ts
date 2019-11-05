@@ -39,7 +39,7 @@ const initialState: ISettingsState = {
   defaultConfigName: '',
   loading: false,
   showModal: false,
-  configNameToDelete: null
+  configNameToDelete: ''
 };
 
 export default (state: ISettingsState = initialState, action): ISettingsState => {
@@ -91,7 +91,7 @@ export default (state: ISettingsState = initialState, action): ISettingsState =>
         configs: action.configs,
         defaultConfigName: action.defaultConfigName,
         showModal: false,
-        configNameToDelete: null
+        configNameToDelete: ''
       }
     case ACTION_TYPES.OPEN_MODAL: 
       return {
@@ -103,7 +103,7 @@ export default (state: ISettingsState = initialState, action): ISettingsState =>
       return {
         ...state,
         showModal: false,
-        configNameToDelete: null
+        configNameToDelete: ''
       };
     default:
       return state;
