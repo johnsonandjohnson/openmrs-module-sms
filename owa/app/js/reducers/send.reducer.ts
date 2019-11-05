@@ -26,6 +26,7 @@ const initialState = {
     recipients: [],
     message: '',
     config: '',
+    configs: [],
     deliveryTime: null,
     providerId: '',
     failureCount: 0,
@@ -33,6 +34,8 @@ const initialState = {
   },
   defaultConfigName: ''
 };
+
+export type SendState = Readonly<typeof initialState>;
 
 export default (state = initialState, action) => {
   switch (action.type) {
