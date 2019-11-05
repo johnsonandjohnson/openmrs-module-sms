@@ -91,9 +91,11 @@
             <indexExists indexName="sms_records_index_motechId"/>
         </preConditions>
         <comment>Changed the motechId column name</comment>
-        <renameColumn tableName="sms_records"
+        <renameColumn columnDataType="varchar(255)"
+                      newColumnName="openMrsId"
                       oldColumnName="motechId"
-                      newColumnName="openMrsId"/>
+                      tableName="sms_records"
+                      />
         <dropIndex tableName="sms_records" indexName="sms_records_index_motechId"/>
         <createIndex tableName="sms_records" indexName="sms_records_index_openMrsId">
             <column name="openMrsId"></column>
