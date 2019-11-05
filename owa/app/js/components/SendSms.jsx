@@ -8,8 +8,6 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import _ from 'lodash';
 
 import { sendSms, getSmsConfigs, reset } from '../reducers/sendReducer';
@@ -27,7 +25,7 @@ export class SendSms extends React.Component {
     this.state = props.sendForm;
   }
   componentDidMount() {
-    this.props.getSmsConfigs(this.props);
+    this.props.getSmsConfigs();
   }
 
   componentDidUpdate(prevProps) {
@@ -91,16 +89,6 @@ export class SendSms extends React.Component {
   render() {
     return (
       <div>
-        <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        closeOnClick
-        rtl={false}
-        pauseOnVisibilityChange
-        draggable
-        pauseOnHover
-        />
         <h1>Send SMS</h1>
         <form ref={form => this.form = form}>
           <h3>Select configuration</h3>
