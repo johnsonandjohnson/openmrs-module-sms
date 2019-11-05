@@ -6,6 +6,7 @@ import { Form, FormGroup, ControlLabel, FormControl, Checkbox, Button } from 're
 import _ from 'lodash';
 import Accordion from './cfl-accordion';
 import { ITemplate } from '../shared/model/template.model';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface ISettingsProps extends StateProps, DispatchProps {}
 
@@ -153,11 +154,12 @@ class Settings extends React.Component <ISettingsProps, ISettingsState> {
       <Accordion key={index} title={config.name} fasIcon={isDefault && ['fas', 'star']}>
         {this.renderConfigForm(config, isDefault, index)}
         <Button 
-          className="btn confirm btn-xs" 
+          className="btn btn-xs" 
           onClick={e => this.setDefaultConfigName(config.name)}
           disabled={isDefault}
+          title={'Set as default'}
         >
-          Set Default
+          <FontAwesomeIcon size="1x" icon={['fas', 'star']} color="#5B57A6" />
         </Button>
         <Button 
           className="btn cancel btn-xs" 
