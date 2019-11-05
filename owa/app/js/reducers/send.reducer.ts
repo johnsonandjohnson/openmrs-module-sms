@@ -11,8 +11,9 @@ import { REQUEST, SUCCESS, FAILURE } from './action-type.util'
 import axiosInstance from '../config/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import { SmsModel } from '../shared/model/sms.model'
+import { SmsModel } from '../shared/model/sms.model';
+import * as Msg from '../utils/messages';
+import { handleRequest } from '../utils/request-status-util';
 
 export const ACTION_TYPES = {
   RESET: "sendReducer/RESET",
@@ -50,7 +51,6 @@ export default (state = initialState, action) => {
         loading: false
       };
     case SUCCESS(ACTION_TYPES.SEND):
-      toast.success("The message was sent to provided recipient(s)!");
       return {
         ...state
       };
@@ -84,7 +84,7 @@ export const reset = () => ({
   type: ACTION_TYPES.RESET
 });
 
-export const getSmsConfigs = (state) => async (dispatch) => {
+export const getSmsConfigs = () => async (dispatch) => {
   const requestUrl = 'ws/sms/configs';
   await dispatch({
     type: ACTION_TYPES.GET_CONFIGS,
@@ -92,11 +92,13 @@ export const getSmsConfigs = (state) => async (dispatch) => {
   });
 };
 
-export function sendSms(state) {
+export const sendSms = (sms) => async (dispatch) => {
   const requestUrl = 'ws/sms/send';
-  const OutgoingSms = new SmsModel(state)
-  return({
+  const outgoingSms = new SmsModel(sms);
+  const body = {
     type: ACTION_TYPES.SEND,
-    payload: axiosInstance.post(requestUrl, OutgoingSms)
-  });
+    payload: axiosInstance.post(requestUrl, outgoingSms)
+  };
+
+  handleRequest(dispatch, body, Msg.SEND_SMS_SENDING_SUCCESS, Msg.SEND_SMS_SENDING_FAILURE);
 };
