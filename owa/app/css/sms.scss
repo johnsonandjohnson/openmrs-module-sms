@@ -85,3 +85,23 @@ header .logo img {
     border: 1px solid red !important;
     box-shadow: 0px 0px 5px red;
 }
+
+.u-mb-10 {
+    margin-bottom: 10px;
+}
+
+.u-fill-col {
+    max-width: 100%;
+    width: -webkit-fill-available;
+}
+
+select {
+    background-color: white;
+    height: 28px;
+}
+
+input, select {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}

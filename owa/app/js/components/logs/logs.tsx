@@ -9,24 +9,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Tile from './Tile';
-
-class App extends React.Component {
+import LogsTable from './logs-table';
+import {
+  Col,
+  Row
+} from 'react-bootstrap';
+export class Logs extends React.Component {
   render() {
     return (
       <div className="body-wrapper">
-        <div className="row">
-          <div className="col-md-12 col-xs-12">
-            <h2>SMS</h2>
-          </div>
-        </div>
-        <div className="panel-body">
-          <Tile name='Send' href='#/send' icon={['fas', 'paper-plane']} />
-          <Tile name='Logs' href='#/logs' icon={['fas', 'clipboard-list']} />
-        </div>
+        <h4>SMS Logs</h4>
+        <LogsTable />
       </div>
     )
   }
 }
 
-export default connect()(App);
+export const mapStateToProps = state => ({});
+
+export default connect(mapStateToProps)(Logs);

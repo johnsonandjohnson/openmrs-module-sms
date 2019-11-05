@@ -12,7 +12,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import _ from 'lodash';
 
-import { sendSms, getSmsConfigs, reset } from '../reducers/sendReducer';
+import { sendSms, getSmsConfigs, reset } from '../reducers/send.reducer';
 import * as Yup from 'yup';
 import { validateForm, validateField } from '../utils/validation-util';
 import ErrorDesc from './ErrorDesc';
@@ -147,7 +147,7 @@ export class SendSms extends React.Component {
     const { errors } = this.state;
 
     return (
-      <div>
+      <div className="body-wrapper">
         <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -161,7 +161,7 @@ export class SendSms extends React.Component {
         <h1>Send SMS</h1>
         <form ref={form => this.form = form}>
           <h3>Select configuration</h3>
-          {this.props.configs.map(config => <label className='inline'>
+          {this.props.configs && this.props.configs.map(config => <label className='inline'>
           <input key={config.name} type='radio' name='configs' onChange={this.configChange} value={config.name} defaultChecked={this.props.defaultConfigName === config.name}/>
           {config.name}</label>)}
           <br />
