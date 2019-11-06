@@ -61,6 +61,7 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "5.10.1",
+    "@types/lodash": "^4.14.144",
     "archiver": "^1.0.0",
     "awesome-typescript-loader": "^3.5.0",
     "browser-sync": "^2.11.1",
