@@ -23,7 +23,7 @@ interface ISettingsState {
   configs: Array<IConfig>;
 }
 
-class Settings extends React.Component <ISettingsProps, ISettingsState> {
+class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
 
   constructor(props: ISettingsProps) {
     super(props);
@@ -165,7 +165,7 @@ class Settings extends React.Component <ISettingsProps, ISettingsState> {
     return (
       <Row key={index}>
         <Col sm={11}>
-          <Accordion key={index} title={config.name} isDefault={isDefault} border
+          <Accordion key={index} title={config.name} default={isDefault} border
             setDefaultCallback={this.setDefaultConfigName}
           >
             {this.renderConfigForm(config, isDefault, index)}
@@ -204,7 +204,7 @@ class Settings extends React.Component <ISettingsProps, ISettingsState> {
           title="Delete SMS configuration"
           txt="Are you sure you want to delete this configuration?" />
         <Row>
-          <Col xs={12} md={12}>
+          <Col xs="12" md="12">
             <h2>SMS Configurations</h2>
           </Col>
         </Row>

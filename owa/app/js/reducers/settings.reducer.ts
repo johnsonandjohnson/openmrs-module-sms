@@ -19,7 +19,7 @@ export const ACTION_TYPES = {
   GET_CONFIGS: "settings/GET_CONFIGS",
   GET_TEMPLATES: "settings/GET_TEMPLATES",
   UPLOAD_CONFIGS: "settings/UPLOAD_CONFIGS",
-  UPDATE_STATE: "settings/UPDATE_STATE",
+  UPDATE_CONFIG_STATE: "settings/UPDATE_CONFIG_STATE",
   OPEN_MODAL: 'settings/OPEN_MODAL',
   CLOSE_MODAL: 'settings/CLOSE_MODAL'
 };
@@ -85,7 +85,7 @@ export default (state: ISettingsState = initialState, action): ISettingsState =>
     case ACTION_TYPES.RESET: {
       return initialState;
     };
-    case ACTION_TYPES.UPDATE_STATE:
+    case ACTION_TYPES.UPDATE_CONFIG_STATE:
       return {
         ...state,
         configs: action.configs,
@@ -143,7 +143,7 @@ export const updateConfigs = (configs: ReadonlyArray<IConfig>, defaultConfigName
 };
 
 export const updateState = (configs: ReadonlyArray<IConfig>, defaultConfigName: string) => ({
-  type: ACTION_TYPES.UPDATE_STATE,
+  type: ACTION_TYPES.UPDATE_CONFIG_STATE,
   configs,
   defaultConfigName
 });
