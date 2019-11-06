@@ -18,6 +18,7 @@ import './bread-crumb.scss';
 
 const LOGS_ROUTE = '/logs';
 const SEND_ROUTE = '/send';
+const SETTINGS_ROUTE = '/settings';
 const MODULE_ROUTE = '/';
 const OMRS_ROUTE = '../../';
 const MODULE_NAME = 'SMS';
@@ -83,6 +84,14 @@ class BreadCrumb extends React.Component {
           {this.renderCrumb(MODULE_ROUTE, MODULE_NAME)}
           {this.renderDelimiter()}
           {this.renderLastCrumb('Send')}
+        </div>);
+      case SETTINGS_ROUTE:
+        return (<div className="breadcrumb">
+          {this.renderHomeCrumb()}
+          {this.renderDelimiter()}
+          {this.renderCrumb(MODULE_ROUTE, MODULE_NAME)}
+          {this.renderDelimiter()}
+          {this.renderLastCrumb('Settings')}
         </div>);
       default:
         return (<div className="breadcrumb">
