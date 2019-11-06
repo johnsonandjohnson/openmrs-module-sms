@@ -12,7 +12,12 @@ import {
   Col,
   Row
 } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Tile from './Tile';
+
+// Enable notification mechanism
+toast.configure();
 
 class App extends React.Component {
   render() {
@@ -25,6 +30,7 @@ class App extends React.Component {
         </Row>
         <div className="panel-body">
           <Tile name='Send' href='#/send' icon={['fas', 'paper-plane']} />
+          <Tile name='Settings' href='#/settings' icon={['fas', 'cog']} />
           <Tile name='Logs' href='#/logs' icon={['fas', 'clipboard-list']} />
         </div>
       </div>

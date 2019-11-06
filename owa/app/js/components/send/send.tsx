@@ -197,9 +197,6 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
     const formClass = 'form-control openmrs-textarea';
     const errorFormClass = formClass + ' error-field';
     const errors = this.state ? this.state.errors : null;
-    console.log('****');
-    console.log(this.state);
-    console.log(this.props);
 
     return (
       <div className="body-wrapper">
