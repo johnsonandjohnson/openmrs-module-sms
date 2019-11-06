@@ -60,10 +60,10 @@ Build the sms module
 cd $SMS_REPO
 mvn clean install
 ```
-Replace the sms module file `CFL_REPO/cfl/web/modules/SMS_OMOD` by `SMS_REPO/omod/target/SMS_OMOD`
+Replace the sms module file `CFL_REPO/cfl/web/cfl-modules/SMS_OMOD` by `SMS_REPO/omod/target/SMS_OMOD`
 ```bash
-rm $CFL_REPO/cfl/web/modules/sms*
-mv $SMS_REPO/omod/target/$SMS_OMOD $CFL_REPO/cfl/web/modules
+rm $CFL_REPO/cfl/web/cfl-modules/sms*
+mv $SMS_REPO/omod/target/$SMS_OMOD $CFL_REPO/cfl/web/cfl-modules
 ```
 Run docker-compose
 ```bash
