@@ -72,6 +72,7 @@ header .logo img {
 
 .inline {
     display: inline-table;
+    margin: 0px 10px;
 }
 
 .error-description {
@@ -104,6 +105,12 @@ input, select {
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
             box-sizing: border-box;
+}
+
+.openmrs-textarea {
+    border: 1px solid #DDD;
+    resize: vertical;
+    color: #363463;
 }
 
 .u-mt-15 {

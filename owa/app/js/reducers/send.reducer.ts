@@ -9,31 +9,24 @@
 
 import { REQUEST, SUCCESS, FAILURE } from './action-type.util'
 import axiosInstance from '../config/axios';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { SmsModel } from '../shared/model/sms.model';
 import * as Msg from '../utils/messages';
 import { handleRequest } from '../utils/request-status-util';
+import { defaultValue } from '../shared/model/send-form.model';
 
 export const ACTION_TYPES = {
-  RESET: "sendReducer/RESET",
-  SEND: "sendReducer/SEND",
-  GET_CONFIGS: "sendReducer/GET_CONFIGS"
+  RESET: 'sendReducer/RESET',
+  SEND: 'sendReducer/SEND',
+  GET_CONFIGS: 'sendReducer/GET_CONFIGS',
+  SMS_MESSAGE_CHANGE: 'sendReducer/GET_CONFIGS'
 };
 
 const initialState = {
   configs: [],
-  sendForm: {
-    recipients: [],
-    message: '',
-    config: '',
-    configs: [],
-    deliveryTime: null,
-    providerId: '',
-    failureCount: 0,
-    customParams: null,
-  },
-  defaultConfigName: ''
+  sendForm: defaultValue,
+  defaultConfigName: '',
+  form: null
 };
 
 export type SendState = Readonly<typeof initialState>;
@@ -52,7 +45,11 @@ export default (state = initialState, action) => {
       };
     case SUCCESS(ACTION_TYPES.SEND):
       return {
-        ...state
+        ...state,
+        sendForm: {
+          ...state.sendForm,
+          message: ''
+        }
       };
     case REQUEST(ACTION_TYPES.GET_CONFIGS):
       return {
@@ -63,7 +60,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        configs: action.payload
+        configs: []
       };
     case SUCCESS(ACTION_TYPES.GET_CONFIGS):
       return {
@@ -74,6 +71,15 @@ export default (state = initialState, action) => {
       };
     case ACTION_TYPES.RESET: {
       return initialState;
+    };
+    case ACTION_TYPES.SMS_MESSAGE_CHANGE: {
+      return {
+        ...state,
+        sendForm: {
+          ...state.sendForm,
+          message: action.payload
+        }
+      };
     };
     default:
       return state;
@@ -102,3 +108,8 @@ export const sendSms = (sms) => async (dispatch) => {
 
   handleRequest(dispatch, body, Msg.SEND_SMS_SENDING_SUCCESS, Msg.SEND_SMS_SENDING_FAILURE);
 };
+
+export const handleMessageUpdate = (message) => ({
+  type: ACTION_TYPES.SMS_MESSAGE_CHANGE,
+  payload: message
+});
