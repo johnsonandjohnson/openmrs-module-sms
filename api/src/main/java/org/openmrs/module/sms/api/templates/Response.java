@@ -2,6 +2,8 @@ package org.openmrs.module.sms.api.templates;
 
 //todo: handle malformed template files (ie: resulting in exceptions in the regex parsing) in a useful way for implementers?
 
+import org.apache.commons.lang.StringUtils;
+
 import java.net.HttpURLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,6 +68,11 @@ public class Response {
     private String extractFailureMessageAndRecipient;
 
     /**
+     * The regex pattern used for extracting the raw provider status. Optional.
+     */
+    private String extractProviderStatus;
+
+    /**
      * The name of the HTTP header containing the message ID.
      */
     private String headerMessageId;
@@ -78,6 +85,7 @@ public class Response {
     private Pattern extractGeneralFailureMessagePattern;
     private Pattern extractSuccessMessageIdAndRecipientPattern;
     private Pattern extractFailureMessageAndRecipientPattern;
+    private Pattern extractProviderStatusPattern;
 
     /**
      * Checks whether the given status is a success status.
@@ -234,6 +242,36 @@ public class Response {
             return new String[] {m.group(1), m.group(2)};
         }
         return null;
+    }
+
+    /**
+     * Extracts the provider status from the response, based on the defined regex in
+     * {@link Response#extractProviderStatus}.
+     *
+     * @param response the response to parse
+     * @return the provider status as string, or null if {@link Response#extractProviderStatus} is not defined
+     */
+    public String extractProviderStatus(String response) {
+        if (extractProviderStatusPattern == null && StringUtils.isNotBlank(extractProviderStatus)) {
+            extractProviderStatusPattern = Pattern.compile(extractProviderStatus);
+        }
+
+        String providerStatus = null;
+
+        if (extractProviderStatusPattern != null) {
+            Matcher matcher = extractProviderStatusPattern.matcher(response);
+
+            if (matcher.groupCount() != 1) {
+                throw new IllegalStateException(String.format("Template error, extractProviderStatus: " +
+                        "Invalid number of search groups, expected: 1, actual: %s.", matcher.groupCount()));
+            }
+
+            if (matcher.find()) {
+                providerStatus = matcher.group(1);
+            }
+        }
+
+        return providerStatus;
     }
 
     /**

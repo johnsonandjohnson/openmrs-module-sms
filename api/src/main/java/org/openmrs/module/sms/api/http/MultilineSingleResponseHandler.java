@@ -30,6 +30,7 @@ public class MultilineSingleResponseHandler extends ResponseHandler {
     public void handle(OutgoingSms sms, String response, Header[] headers) {
 
         String messageId = getTemplateOutgoingResponse().extractSingleSuccessMessageId(response);
+        String providerStatus = getTemplateOutgoingResponse().extractProviderStatus(response);
 
         if (messageId == null) {
             Integer failureCount = sms.getFailureCount() + 1;
@@ -39,17 +40,17 @@ public class MultilineSingleResponseHandler extends ResponseHandler {
                 failureMessage = response;
             }
             getEvents().add(outboundEvent(getConfig().retryOrAbortSubject(failureCount), getConfig().getName(),
-                    sms.getRecipients(), sms.getMessage(), sms.getOpenMrsId(), null, failureCount, null, null, sms.getCustomParams()));
+                    sms.getRecipients(), sms.getMessage(), sms.getOpenMrsId(), null, failureCount, providerStatus, null, sms.getCustomParams()));
             getLogger().info(String.format("Failed to send SMS: %s", failureMessage));
             getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, sms.getRecipients().get(0),
-                    sms.getMessage(), DateUtil.now(), getConfig().retryOrAbortStatus(failureCount), null, sms.getOpenMrsId(),
+                    sms.getMessage(), DateUtil.now(), getConfig().retryOrAbortStatus(failureCount), providerStatus, sms.getOpenMrsId(),
                     null, failureMessage));
         } else {
             //todo: HIPAA concerns?
             getLogger().info(String.format("Sent messageId %s '%s' to %s", messageId, messageForLog(sms),
                     sms.getRecipients().get(0)));
             getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, sms.getRecipients().get(0),
-                    sms.getMessage(), DateUtil.now(), DeliveryStatuses.DISPATCHED, null, sms.getOpenMrsId(), messageId, null));
+                    sms.getMessage(), DateUtil.now(), DeliveryStatuses.DISPATCHED, providerStatus, sms.getOpenMrsId(), messageId, null));
         }
     }
 }
