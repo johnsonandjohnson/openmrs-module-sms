@@ -18,6 +18,7 @@ import * as Msg from '../../utils/messages';
 import { IRootState } from '../../reducers';
 import { ISendForm } from '../../shared/model/send-form.model';
 import { ISendError } from '../../shared/model/send-error.model';
+import Tooltip from '../tooltip';
 
 export interface ISendProps extends StateProps, DispatchProps {
 };
@@ -27,8 +28,6 @@ export interface ISendState extends ISendForm {
 };
 
 export class Send extends React.PureComponent<ISendProps, ISendState> {
-
-  form: any;
 
   constructor(props) {
     super(props);
@@ -63,12 +62,13 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
     }
   }
 
-  handleCancelButton() {
-    this.form.reset();
+  handleCancelButton(event) {
+    event.preventDefault();
     this.setState(this.props.sendForm);
   }
 
   handleSubmit(event) {
+    event.preventDefault();
     let form = {
       ...this.state,
       message: this.props.sendForm.message
@@ -76,7 +76,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
 
     validateForm(form, this.validationSchema)
       .then(() => {
-        this.props.sendSms(this.state);
+        this.props.sendSms(form);
       })
       .catch((errors) => {
         this.setState({
@@ -159,17 +159,19 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
 
   renderConfigs() {
     return (
-      this.props.configs.map((config: any) =>
-        <span className='inline'>
-          <input key={config.name}
-            type='radio'
-            name='configs'
-            onChange={this.configChange}
-            value={config.name}
-            defaultChecked={this.props.defaultConfigName === config.name} />
-          {config.name}
-        </span>
-      )
+      <div>
+        {this.props.configs.map((config: any) =>
+          <span className='inline'>
+            <input key={config.name}
+              type='radio'
+              name='configs'
+              onChange={this.configChange}
+              value={config.name}
+              defaultChecked={this.props.defaultConfigName === config.name} />
+            {config.name}
+          </span>
+        )}
+      </div>
     );
   }
 
@@ -179,7 +181,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
     }
   }
 
-  renderDeliveryTimeOption(label: string, value?: number) {
+  renderDeliveryTimeOption(label: string, value?: number, isCheckedByDefault: boolean = false) {
     return (
       <span className="inline">
         <input
@@ -187,7 +189,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
           name="deliveryTimeOptions"
           onChange={this.deliveryTimeChange}
           value={value}
-          defaultChecked={true} />
+          defaultChecked={isCheckedByDefault} />
         {label}
       </span>
     );
@@ -200,60 +202,53 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
 
     return (
       <div className="body-wrapper">
+        <h2>Send SMS</h2>
         <div className="panel-body">
-          <h1>Send SMS</h1>
+          <label>Select configuration</label>
+          {this.props.configs && this.renderConfigs()}
         </div>
-        <form ref={form => this.form = form}>
-          <div className="panel-body">
-            <h3>Select configuration</h3>
-            {this.props.configs && this.renderConfigs()}
-          </div>
-          <div className="panel-body">
-            <h3>Select delivery time</h3>
-            {this.renderDeliveryTimeOption('Immediately', undefined)}
+        <div className="panel-body">
+          <label>Select delivery time</label>
+          <div>
+            {this.renderDeliveryTimeOption('Immediately', undefined, true)}
             {this.renderDeliveryTimeOption('10s', 10)}
             {this.renderDeliveryTimeOption('1m', 60)}
             {this.renderDeliveryTimeOption('1h', 3600)}
           </div>
-          <div className="panel-body">
-            <h3>Add recipients' phone number</h3>
-            <span>
-              Separate multiple phone numbers with comma.
-            </span>
-            <br />
-            <textarea
-              rows={1}
-              cols={50}
-              onChange={this.recipientsChange}
-              className={errors && errors.recipients ? errorFormClass : formClass} />
-            {this.renderError('recipients')}
-          </div>
-          <div className="panel-body">
-            <h3>Type the message</h3>
-            <textarea
-              value={this.props.sendForm.message}
-              rows={7}
-              cols={50}
-              onChange={this.messageChange}
-              className={errors && errors.message ? errorFormClass : formClass} />
-            {this.renderError('message')}
-          </div>
-          <div className="panel-body">
-            <h3>Add custom parameters (optional)</h3>
-            <span>
-              Map custom parameters in key:value format. Use new line as a separator.
-            </span>
-            <textarea
-              rows={7}
-              cols={50}
-              onChange={this.customParamsChange}
-              className={formClass} />
-          </div>
-          <div className="panel-body">
-            <button className="cancel" onClick={this.handleCancelButton}> Cancel </button>
-            <button className="confirm" onClick={this.handleSubmit}> Send </button>
-          </div>
-        </form>
+        </div>
+        <div className="panel-body">
+          <label>Add recipients' phone number</label>
+          <Tooltip message="Separate multiple phone numbers with comma." />
+          <textarea
+            rows={1}
+            cols={50}
+            onChange={this.recipientsChange}
+            className={errors && errors.recipients ? errorFormClass : formClass} />
+          {this.renderError('recipients')}
+        </div>
+        <div className="panel-body">
+          <label>Type the message</label>
+          <textarea
+            value={this.props.sendForm.message}
+            rows={7}
+            cols={50}
+            onChange={this.messageChange}
+            className={errors && errors.message ? errorFormClass : formClass} />
+          {this.renderError('message')}
+        </div>
+        <div className="panel-body">
+          <label>Add custom parameters (optional)</label>
+          <Tooltip message="Map custom parameters in key:value format. Use new line as a separator." />
+          <textarea
+            rows={7}
+            cols={50}
+            onChange={this.customParamsChange}
+            className={formClass} />
+        </div>
+        <div className="panel-body">
+          <button className="cancel" onClick={this.handleCancelButton}> Cancel </button>
+          <button className="confirm" onClick={this.handleSubmit}> Send </button>
+        </div>
       </div>
     )
   }
