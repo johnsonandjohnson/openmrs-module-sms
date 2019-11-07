@@ -67,7 +67,8 @@ export class LogsTable extends React.PureComponent<ILogsTableProps, ILogsTableSt
       },
       {
         Header: 'Creation Date',
-        accessor: 'creationDate'
+        accessor: 'creationDate',
+        id: 'dateCreated'
       },
       {
         Header: 'Delivery Status',
@@ -79,11 +80,13 @@ export class LogsTable extends React.PureComponent<ILogsTableProps, ILogsTableSt
       },
       {
         Header: 'Modification Date',
-        accessor: 'modificationDate'
+        accessor: 'modificationDate',
+        id: 'dateChanged'
       },
       {
         Header: 'Modified By',
-        accessor: 'modifiedBy'
+        accessor: 'modifiedBy',
+        id: 'changedBy'
       },
       {
         Header: 'OpenMRS ID',
