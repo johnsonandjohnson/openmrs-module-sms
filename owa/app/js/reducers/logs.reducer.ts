@@ -37,8 +37,7 @@ export default (state: LogsState = initialState, action): LogsState => {
     case FAILURE(ACTION_TYPES.FETCH_LOGS):
       return {
         ...state,
-        loading: false,
-        data: action.payload
+        loading: false
       };
     case SUCCESS(ACTION_TYPES.FETCH_LOGS):
       return {
