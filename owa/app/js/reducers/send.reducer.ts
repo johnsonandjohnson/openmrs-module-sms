@@ -19,7 +19,11 @@ export const ACTION_TYPES = {
   RESET: 'sendReducer/RESET',
   SEND: 'sendReducer/SEND',
   GET_CONFIGS: 'sendReducer/GET_CONFIGS',
-  SMS_MESSAGE_CHANGE: 'sendReducer/GET_CONFIGS'
+  SMS_MESSAGE_CHANGE: 'sendReducer/SMS_MESSAGE_CHANGE',
+  SMS_RECIPIENTS_CHANGE: 'sendReducer/SMS_RECIPIENTS_CHANGE',
+  SMS_DELIVERY_TIME_CHANGE: 'sendReducer/SMS_DELIVERY_TIME_CHANGE',
+  SMS_CONFIG_CHANGE: 'sendReducer/SMS_CONFIG_CHANGE',
+  SMS_CUSTOM_PARAMS_CHANGE: 'sendReducer/SMS_CUSTOM_PARAMS_CHANGE'
 };
 
 const initialState = {
@@ -70,7 +74,13 @@ export default (state = initialState, action) => {
         defaultConfigName: action.payload.data.defaultConfigName
       };
     case ACTION_TYPES.RESET: {
-      return initialState;
+      return {
+        ...state,
+        sendForm: {
+          ...defaultValue,
+          config: state.defaultConfigName
+        }
+      };
     };
     case ACTION_TYPES.SMS_MESSAGE_CHANGE: {
       return {
@@ -78,6 +88,44 @@ export default (state = initialState, action) => {
         sendForm: {
           ...state.sendForm,
           message: action.payload
+        }
+      };
+    };
+    case ACTION_TYPES.SMS_DELIVERY_TIME_CHANGE: {
+      return {
+        ...state,
+        sendForm: {
+          ...state.sendForm,
+          deliveryTime: action.payload.deliveryTime,
+          deliveryOption: action.payload.deliveryOption ? Number(action.payload.deliveryOption) : undefined
+        }
+      };
+    };
+    case ACTION_TYPES.SMS_RECIPIENTS_CHANGE: {
+      return {
+        ...state,
+        sendForm: {
+          ...state.sendForm,
+          recipients: action.payload
+        }
+      };
+    };
+    case ACTION_TYPES.SMS_CONFIG_CHANGE: {
+      return {
+        ...state,
+        sendForm: {
+          ...state.sendForm,
+          config: action.payload.config,
+          providerId: action.payload.providerId
+        }
+      };
+    };
+    case ACTION_TYPES.SMS_CUSTOM_PARAMS_CHANGE: {
+      return {
+        ...state,
+        sendForm: {
+          ...state.sendForm,
+          customParams: action.payload
         }
       };
     };
@@ -109,7 +157,33 @@ export const sendSms = (sms) => async (dispatch) => {
   handleRequest(dispatch, body, Msg.SEND_SMS_SENDING_SUCCESS, Msg.SEND_SMS_SENDING_FAILURE);
 };
 
-export const handleMessageUpdate = (message) => ({
+export const handleMessageUpdate = (message: string) => ({
   type: ACTION_TYPES.SMS_MESSAGE_CHANGE,
   payload: message
+});
+
+export const handleRecipientsUpdate = (recipients: string) => ({
+  type: ACTION_TYPES.SMS_RECIPIENTS_CHANGE,
+  payload: recipients
+});
+
+export const handleDeliveryTimeUpdate = (deliveryTime?: string, deliveryOption?: number) => ({
+  type: ACTION_TYPES.SMS_DELIVERY_TIME_CHANGE,
+  payload: {
+    deliveryTime,
+    deliveryOption
+  }
+});
+
+export const handleConfigUpdate = (config: string, providerId: string) => ({
+  type: ACTION_TYPES.SMS_CONFIG_CHANGE,
+  payload: {
+    config,
+    providerId
+  }
+});
+
+export const handleCustomParamsUpdate = (customParams: string) => ({
+  type: ACTION_TYPES.SMS_CUSTOM_PARAMS_CHANGE,
+  payload: customParams
 });

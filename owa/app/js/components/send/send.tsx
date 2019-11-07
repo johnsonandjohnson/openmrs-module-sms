@@ -10,7 +10,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { sendSms, getSmsConfigs, reset, handleMessageUpdate } from '../../reducers/send.reducer';
+import {
+  sendSms, getSmsConfigs, reset, handleMessageUpdate,
+  handleConfigUpdate, handleDeliveryTimeUpdate,
+  handleRecipientsUpdate, handleCustomParamsUpdate
+} from '../../reducers/send.reducer';
 import * as Yup from 'yup';
 import { validateForm, validateField } from '../../utils/validation-util';
 import ErrorDesc from '../ErrorDesc';
@@ -55,28 +59,22 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
 
   componentDidUpdate(prevProps) {
     if (this.props.configs !== prevProps.configs) {
-      this.setState({
-        config: this.props.defaultConfigName,
-        providerId: this.getProviderId(this.props.defaultConfigName)[0]
-      });
+      this.props.handleConfigUpdate(this.props.defaultConfigName,
+        this.getProviderId(this.props.defaultConfigName)[0])
     }
   }
 
   handleCancelButton(event) {
     event.preventDefault();
-    this.setState(this.props.sendForm);
+    this.props.reset();
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    let form = {
-      ...this.state,
-      message: this.props.sendForm.message
-    }
 
-    validateForm(form, this.validationSchema)
+    validateForm(this.props.sendForm, this.validationSchema)
       .then(() => {
-        this.props.sendSms(form);
+        this.props.sendSms(this.props.sendForm);
       })
       .catch((errors) => {
         this.setState({
@@ -87,10 +85,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
   }
 
   configChange(event) {
-    this.setState({
-      config: event.target.value,
-      providerId: this.getProviderId(event.target.value)[0]
-    });
+    this.props.handleConfigUpdate(event.target.value, this.getProviderId(event.target.value)[0]);
   }
 
   getProviderId(selectedConfig) {
@@ -106,7 +101,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
       const currentDate = new Date();
       newDate = new Date(currentDate.getTime() + (event.target.value * 1000)).toISOString();
     }
-    this.setState({ deliveryTime: newDate });
+    this.props.handleDeliveryTimeUpdate(newDate, event.target.value);
   }
 
   recipientsChange(event) {
@@ -115,17 +110,17 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
       recipients: recipientsArray
     };
 
+    this.props.handleRecipientsUpdate(recipientsArray.split(','));
+
     validateField(form, 'recipients', this.validationSchema)
       .then(() => {
         event.preventDefault();
         this.setState({
-          recipients: recipientsArray.split(','),
           errors: undefined
         });
       })
       .catch((errors) => {
         this.setState({
-          recipients: recipientsArray.split(','),
           errors
         });
       });
@@ -152,9 +147,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
   }
 
   customParamsChange(event) {
-    this.setState({
-      customParams: event.target.value
-    });
+    this.props.handleCustomParamsUpdate(event.target.value);
   }
 
   renderConfigs() {
@@ -167,7 +160,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
               name='configs'
               onChange={this.configChange}
               value={config.name}
-              defaultChecked={this.props.defaultConfigName === config.name} />
+              checked={this.props.sendForm.config === config.name} />
             {config.name}
           </span>
         )}
@@ -181,7 +174,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
     }
   }
 
-  renderDeliveryTimeOption(label: string, value?: number, isCheckedByDefault: boolean = false) {
+  renderDeliveryTimeOption(label: string, value?: number) {
     return (
       <span className="inline">
         <input
@@ -189,7 +182,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
           name="deliveryTimeOptions"
           onChange={this.deliveryTimeChange}
           value={value}
-          defaultChecked={isCheckedByDefault} />
+          checked={this.props.sendForm.deliveryOption === value} />
         {label}
       </span>
     );
@@ -199,7 +192,6 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
     const formClass = 'form-control openmrs-textarea';
     const errorFormClass = formClass + ' error-field';
     const errors = this.state ? this.state.errors : null;
-
     return (
       <div className="body-wrapper">
         <h2>Send SMS</h2>
@@ -210,7 +202,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
         <div className="panel-body">
           <label>Select delivery time</label>
           <div>
-            {this.renderDeliveryTimeOption('Immediately', undefined, true)}
+            {this.renderDeliveryTimeOption('Immediately', undefined)}
             {this.renderDeliveryTimeOption('10s', 10)}
             {this.renderDeliveryTimeOption('1m', 60)}
             {this.renderDeliveryTimeOption('1h', 3600)}
@@ -220,6 +212,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
           <label>Add recipients' phone number</label>
           <Tooltip message="Separate multiple phone numbers with comma." />
           <textarea
+            value={this.props.sendForm.recipients ? this.props.sendForm.recipients.join(',') : ''}
             rows={1}
             cols={50}
             onChange={this.recipientsChange}
@@ -240,6 +233,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
           <label>Add custom parameters (optional)</label>
           <Tooltip message="Map custom parameters in key:value format. Use new line as a separator." />
           <textarea
+            value={this.props.sendForm.customParams ? this.props.sendForm.customParams : ''}
             rows={7}
             cols={50}
             onChange={this.customParamsChange}
@@ -260,7 +254,11 @@ const mapDispatchToProps = {
   reset,
   sendSms,
   getSmsConfigs,
-  handleMessageUpdate
+  handleMessageUpdate,
+  handleRecipientsUpdate,
+  handleConfigUpdate,
+  handleDeliveryTimeUpdate,
+  handleCustomParamsUpdate
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
