@@ -44,6 +44,11 @@
 		<url-pattern>/ws/sms/*</url-pattern>
 	</filter-mapping>
 
+	<privilege>
+		<name>SMS module Privilege</name>
+		<description>Allows user to manage SMS module</description>
+	</privilege>
+
 	<!-- AOP
 	<advice>
 		<point>org.openmrs.api.FormService</point>
