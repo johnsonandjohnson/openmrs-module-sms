@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { IConfig, IProp } from '../shared/model/config.model';
+import { ConfigUI, IProp } from '../shared/model/config.model';
 import {
   getConfigs,
   getTemplates,
@@ -8,7 +8,8 @@ import {
   updateState,
   openModal,
   closeModal,
-  reset
+  reset,
+  addNewConfig
 } from '../reducers/settings.reducer';
 import { Form, FormGroup, ControlLabel, FormControl, Checkbox, Button, Row, Col } from 'react-bootstrap';
 import _ from 'lodash';
@@ -20,7 +21,7 @@ import OpenMRSModal from './open-mrs-modal';
 interface ISettingsProps extends StateProps, DispatchProps {}
 
 interface ISettingsState {
-  configs: Array<IConfig>;
+  configs: Array<ConfigUI>;
 }
 
 class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
@@ -38,9 +39,9 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     this.props.getTemplates();
   };
 
-  handleChange = (configName: string, fieldName: string, value: any, isDefault: boolean) => {
-    const newConfigs: Array<IConfig> = this.props.configs.map((config: IConfig) => {
-      if (config.name === configName) {
+  handleChange = (localId: string, fieldName: string, value: any, isDefault: boolean) => {
+    const newConfigs: Array<ConfigUI> = this.props.configs.map((config: ConfigUI) => {
+      if (config.localId === localId) {
         config[fieldName] = value;
         if (fieldName === 'templateName') {
           config.props = this.getPropsForTemplate(value);
@@ -53,9 +54,9 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     this.props.updateState(newConfigs, shouldChangeDefaultName ? value : this.props.defaultConfigName);
   };
 
-  handlePropChange = (configName: string, propName: string, value: string, isDefault: boolean) => {
-    const newConfigs: Array<IConfig> = this.props.configs.map((config: IConfig) => {
-      if (config && config.name === configName) {
+  handlePropChange = (localId: string, propName: string, value: string, isDefault: boolean) => {
+    const newConfigs: Array<ConfigUI> = this.props.configs.map((config: ConfigUI) => {
+      if (config && config.localId === localId) {
         config.props = config.props && config.props.map((prop: IProp) => {
           if (prop && prop.name === propName) {
             prop.value = value;
@@ -70,11 +71,11 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     this.props.updateState(newConfigs, this.props.defaultConfigName);
   }
 
-  handleRemove = (configName: string) => this.props.openModal(configName);
+  handleRemove = (configLocalId: string) => this.props.openModal(configLocalId);
 
   handleClose = () => this.props.closeModal();
 
-  handleConfirm = () => this.deleteConfig(this.props.configNameToDelete);
+  handleConfirm = () => this.deleteConfig(this.props.configLocalIdToDelete);
 
   getPropsForTemplate = (templateName: string): Array<IProp> => {
     const template = this.findTemplate(templateName)
@@ -88,32 +89,35 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
 
   setDefaultConfigName = (configName: string) => this.props.updateConfigs(this.props.configs, configName);
 
-  deleteConfig = (name: string) => {
-    const newConfigs = _.filter(this.props.configs, (config: IConfig) => config.name !== name);
-    const defaultConfigName = this.props.defaultConfigName !== name ? this.props.defaultConfigName :
+  deleteConfig = (localId: string) => {
+    const newConfigs = _.filter(this.props.configs, (config: ConfigUI) => config.localId !== localId);
+    let configToDelete: ConfigUI = _.find(this.props.configs, {"localId": localId});
+    const defaultConfigName = !!configToDelete && this.props.defaultConfigName !== configToDelete.name ? this.props.defaultConfigName :
       newConfigs.length > 0 ? newConfigs[0].name : null;
     this.props.updateState(newConfigs, defaultConfigName);
   }
 
   saveConfigs = () => this.props.updateConfigs(this.props.configs, this.props.defaultConfigName);
 
-  renderInput = (config: IConfig, fieldName: string, inputType: string, label: string, isDefault: boolean, index: number) => (
+  addConfig = () => this.props.addNewConfig();
+
+  renderInput = (config: ConfigUI, fieldName: string, inputType: string, label: string, isDefault: boolean, index: number) => (
       <FormGroup controlId={`${fieldName}_${index}`}>
         <ControlLabel>{label}</ControlLabel>
         <FormControl type={inputType} name={fieldName} value={config[fieldName]} 
-          onChange={e => this.handleChange(config.name, fieldName, e.target.value, isDefault)}/>
+          onChange={e => this.handleChange(config.localId, fieldName, e.target.value, isDefault)}/>
       </FormGroup>
   );
 
-  renderCheckbox = (config: IConfig, fieldName: string, label: string, isDefault: boolean, index: number) => (
+  renderCheckbox = (config: ConfigUI, fieldName: string, label: string, isDefault: boolean, index: number) => (
       <FormGroup controlId={`${fieldName}_${index}`}>
         <ControlLabel>{label}</ControlLabel>
         <Checkbox name={fieldName} checked={config[fieldName]} 
-          onChange={e => this.handleChange(config.name, fieldName, e.target.checked, isDefault)} />
+          onChange={e => this.handleChange(config.localId, fieldName, e.target.checked, isDefault)} />
       </FormGroup>
   );
 
-  renderConfigForm = (config: IConfig, isDefault: boolean, index: number) => (
+  renderConfigForm = (config: ConfigUI, isDefault: boolean, index: number) => (
     <Form className="form" onSubmit={e => {}}>
       {this.renderInput(config, 'name', 'text', 'Name:', isDefault, index)}
       {this.renderDropdown(config, 'templateName', 'Template:', index, isDefault)}
@@ -126,24 +130,24 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     </Form>
   );
 
-  renderProps = (config: IConfig, isDefault: boolean, index: number) => {
+  renderProps = (config: ConfigUI, isDefault: boolean, index: number) => {
     const selectedTemplate = this.findTemplate(config.templateName);
     return selectedTemplate && selectedTemplate.configurables &&
       selectedTemplate.configurables.map(conf => this.renderProp(conf, config, isDefault, index));
   };
 
-  renderProp = (propName: string, config: IConfig, isDefault: boolean, index: number) => {
+  renderProp = (propName: string, config: ConfigUI, isDefault: boolean, index: number) => {
     const prop: IProp | undefined = config && config.props && config.props.find(p => p.name === propName);
     return (
       <FormGroup controlId={`${propName}_${index}`}>
         <ControlLabel>{`${propName}:`}</ControlLabel>
         <FormControl type="text" name={propName} value={prop ? prop.value : ''} 
-          onChange={e => this.handlePropChange(config.name, propName, e.target.value, isDefault)} />
+          onChange={e => this.handlePropChange(config.localId, propName, e.target.value, isDefault)} />
       </FormGroup>
     );
   };
 
-  renderDropdown = (config: IConfig, fieldName: string, label: string, index: number, isDefault: boolean) => {
+  renderDropdown = (config: ConfigUI, fieldName: string, label: string, index: number, isDefault: boolean) => {
     const templates: ReadonlyArray<ITemplate> = this.props.templates;
     return (
       <FormGroup controlId={`${fieldName}_${index}`}>
@@ -152,7 +156,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
           componentClass="select"
           name={fieldName}
           value={config.templateName}
-          onChange={e => this.handleChange(config.name, fieldName, e.target.value, isDefault)} >
+          onChange={e => this.handleChange(config.localId, fieldName, e.target.value, isDefault)} >
           <option key='empty'></option>
           {templates.map(template => <option key={template.name}>{template.name}</option>)}
         </FormControl>
@@ -160,7 +164,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     );
   };
 
-  renderConfig = (config: IConfig, index: number) => {
+  renderConfig = (config: ConfigUI, index: number) => {
     const isDefault = config.name === this.props.defaultConfigName;
     return (
       <Row key={index}>
@@ -173,15 +177,15 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
         </Col>
         <Col sm={1}>
           <RemoveButton
-            handleRemove={e => this.handleRemove(config.name)}
-            localId={config.name}
+            handleRemove={e => this.handleRemove(config.localId)}
+            localId={config.localId}
             tooltip="Delete SMS configuration" />
         </Col>
       </Row>
     );
   };
 
-  renderConfigs = () => this.props.configs.map((config: IConfig, index: number) => this.renderConfig(config, index));
+  renderConfigs = () => this.props.configs.map((config: ConfigUI, index: number) => this.renderConfig(config, index));
 
   renderSaveButton = () => (
     <div className="u-mt-15">
@@ -189,6 +193,16 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
         className="btn confirm btn-xs" 
         onClick={this.saveConfigs}>
           Save
+      </Button>
+    </div>
+  );
+
+  renderAddButton = () => (
+    <div className="u-mb-15">
+      <Button
+        className="btn confirm btn-xs" 
+        onClick={this.addConfig}>
+          Add Configuration
       </Button>
     </div>
   );
@@ -209,6 +223,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
           </Col>
         </Row>
         <div className="panel-body">
+          {this.renderAddButton()}
           {!loading && this.renderConfigs()}
           {this.renderSaveButton()}
         </div>
@@ -223,7 +238,7 @@ const mapStateToProps = state => ({
   defaultConfigName: state.settings.defaultConfigName,
   loading: state.settings.loading,
   showModal: state.settings.showModal,
-  configNameToDelete: state.settings.configNameToDelete
+  configLocalIdToDelete: state.settings.configLocalIdToDelete
 });
 
 const mapDispatchToProps = {
@@ -233,7 +248,8 @@ const mapDispatchToProps = {
   updateState,
   openModal,
   closeModal,
-  reset
+  reset,
+  addNewConfig
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

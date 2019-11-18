@@ -9,10 +9,11 @@
 
 import { REQUEST, SUCCESS, FAILURE } from './action-type.util'
 import axiosInstance from '../config/axios';
-import { IConfig } from '../shared/model/config.model';
+import { ConfigUI, IConfig } from '../shared/model/config.model';
 import { ITemplate } from '../shared/model/template.model';
 import { handleRequest } from '../components/toast/request-status-util';
 import { SMS_UPDATE_SUCCESS, SMS_UPDATE_FAILURE } from '../components/toast/messages';
+import _ from 'lodash';
 
 export const ACTION_TYPES = {
   RESET: "settings/RESET",
@@ -21,25 +22,26 @@ export const ACTION_TYPES = {
   UPLOAD_CONFIGS: "settings/UPLOAD_CONFIGS",
   UPDATE_CONFIG_STATE: "settings/UPDATE_CONFIG_STATE",
   OPEN_MODAL: 'settings/OPEN_MODAL',
-  CLOSE_MODAL: 'settings/CLOSE_MODAL'
+  CLOSE_MODAL: 'settings/CLOSE_MODAL',
+  ADD_EMPTY_CONFIG: 'settings/ADD_EMPTY_CONFIG'
 };
 
 export interface ISettingsState {
-  configs: ReadonlyArray<IConfig>;
+  configs: ReadonlyArray<ConfigUI>;
   templates: ReadonlyArray<ITemplate>;
   defaultConfigName: string;
   loading: boolean;
   showModal: boolean;
-  configNameToDelete: string;
+  configLocalIdToDelete: string;
 }
 
 const initialState: ISettingsState = {
-  configs: [] as ReadonlyArray<IConfig>,
+  configs: [] as ReadonlyArray<ConfigUI>,
   templates: [] as ReadonlyArray<ITemplate>,
   defaultConfigName: '',
   loading: false,
   showModal: false,
-  configNameToDelete: ''
+  configLocalIdToDelete: ''
 };
 
 export default (state: ISettingsState = initialState, action): ISettingsState => {
@@ -72,14 +74,14 @@ export default (state: ISettingsState = initialState, action): ISettingsState =>
       return {
         ...state,
         loading: false,
-        configs: action.payload.data.configs,
+        configs: action.payload.data.configs.map((config: IConfig) => { return new ConfigUI(config); }),
         defaultConfigName: action.payload.data.defaultConfigName
       };
     case SUCCESS(ACTION_TYPES.UPLOAD_CONFIGS):
       return {
         ...state,
         loading: false,
-        configs: action.payload.data.configs,
+        configs: action.payload.data.configs.map((config: IConfig) => { return new ConfigUI(config); }),
         defaultConfigName: action.payload.data.defaultConfigName
       }
     case ACTION_TYPES.RESET: {
@@ -91,19 +93,24 @@ export default (state: ISettingsState = initialState, action): ISettingsState =>
         configs: action.configs,
         defaultConfigName: action.defaultConfigName,
         showModal: false,
-        configNameToDelete: ''
+        configLocalIdToDelete: ''
       }
     case ACTION_TYPES.OPEN_MODAL: 
       return {
         ...state,
         showModal: true,
-        configNameToDelete: action.payload
+        configLocalIdToDelete: action.payload
       };
     case ACTION_TYPES.CLOSE_MODAL: 
       return {
         ...state,
         showModal: false,
-        configNameToDelete: ''
+        configLocalIdToDelete: ''
+      };
+    case ACTION_TYPES.ADD_EMPTY_CONFIG:
+      return {
+        ...state,
+        configs: addEmptyConfig(state.configs)
       };
     default:
       return state;
@@ -130,8 +137,9 @@ export const getTemplates = () => async (dispatch) => {
   });
 };
 
-export const updateConfigs = (configs: ReadonlyArray<IConfig>, defaultConfigName: string) => async (dispatch) => {
+export const updateConfigs = (configsUiModel: ReadonlyArray<ConfigUI>, defaultConfigName: string) => async (dispatch) => {
   const requestUrl = 'ws/sms/configs';
+  let configs: IConfig[] = configsUiModel.map((config: ConfigUI) => { return toConfigRequest(config); });
   const body = {
     type: ACTION_TYPES.UPLOAD_CONFIGS,
     payload: axiosInstance.post(requestUrl, {
@@ -142,19 +150,41 @@ export const updateConfigs = (configs: ReadonlyArray<IConfig>, defaultConfigName
   handleRequest(dispatch, body, SMS_UPDATE_SUCCESS, SMS_UPDATE_FAILURE);
 };
 
-export const updateState = (configs: ReadonlyArray<IConfig>, defaultConfigName: string) => ({
+export const toConfigRequest = (config: ConfigUI): IConfig => {
+  return <IConfig>{
+  name: config.name,
+  maxRetries: config.maxRetries,
+  excludeLastFooter: config.excludeLastFooter,
+  splitHeader: config.splitHeader,
+  splitFooter: config.splitFooter,
+  templateName: config.templateName,
+  props: config.props
+  }
+};
+
+export const addEmptyConfig = (currentConfig: ReadonlyArray<ConfigUI>) => {
+  let configs = _.cloneDeep(currentConfig);
+  configs = configs.concat(new ConfigUI());
+  return configs;
+};
+
+export const updateState = (configs: ReadonlyArray<ConfigUI>, defaultConfigName: string) => ({
   type: ACTION_TYPES.UPDATE_CONFIG_STATE,
   configs,
   defaultConfigName
 });
 
-export const openModal = (configName: string) => ({
+export const openModal = (configLocalId: string) => ({
   type: ACTION_TYPES.OPEN_MODAL,
-  payload: configName
+  payload: configLocalId
 });
 
 export const closeModal = () => ({
   type: ACTION_TYPES.CLOSE_MODAL
+});
+
+export const addNewConfig = () => ({
+  type: ACTION_TYPES.ADD_EMPTY_CONFIG
 });
 
 const mapTemplatesToArray = payloadData =>  Object.keys(payloadData).map(key => payloadData[key]);
