@@ -14,7 +14,7 @@ import App from './components/app';
 import Logs from './components/logs/logs';
 import BreadCrumb from './components/BreadCrumb';
 import Send from './components/send/send';
-import Settings from './components/settings';
+import Settings from './components/settings/index';
 
 export default (store) => (<div>
   <Header />

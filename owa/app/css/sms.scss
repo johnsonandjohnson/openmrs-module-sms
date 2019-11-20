@@ -149,3 +149,27 @@ input, select {
 .form-tooltip {
     color: #737373
 }
+
+a.button {
+    max-width: 400px;
+    text-decoration: none;
+}
+
+.import-templates {
+    font-size: 14px;
+}
+
+.modal-description {
+    font-style: italic;
+    font-size: 16px;
+    padding: 0 7px;
+}
+
+.modal-footer {
+    border-top: 0 !important;
+}
+
+.modal-header {
+    background: #00463f;
+    color: white;
+}

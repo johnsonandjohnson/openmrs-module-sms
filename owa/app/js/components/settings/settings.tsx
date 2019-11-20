@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ConfigUI, IProp } from '../shared/model/config.model';
+import { ConfigUI, IProp } from '../../shared/model/config.model';
 import {
   getConfigs,
   getTemplates,
@@ -10,13 +10,15 @@ import {
   closeModal,
   reset,
   addNewConfig
-} from '../reducers/settings.reducer';
+} from '../../reducers/settings.reducer';
 import { Form, FormGroup, ControlLabel, FormControl, Checkbox, Button, Row, Col } from 'react-bootstrap';
 import _ from 'lodash';
-import Accordion from './cfl-accordion';
-import { ITemplate } from '../shared/model/template.model';
-import RemoveButton from './remove-button';
-import OpenMRSModal from './open-mrs-modal';
+import Accordion from '../cfl-accordion';
+import { ITemplate } from '../../shared/model/template.model';
+import RemoveButton from '../remove-button';
+import OpenMRSModal from '../open-mrs-modal';
+import * as Msg from '../../utils/messages'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface ISettingsProps extends StateProps, DispatchProps {}
 
@@ -104,7 +106,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
   renderInput = (config: ConfigUI, fieldName: string, inputType: string, label: string, isDefault: boolean, index: number) => (
       <FormGroup controlId={`${fieldName}_${index}`}>
         <ControlLabel>{label}</ControlLabel>
-        <FormControl type={inputType} name={fieldName} value={config[fieldName]} 
+        <FormControl type={inputType} name={fieldName} value={config[fieldName]}
           onChange={e => this.handleChange(config.localId, fieldName, e.target.value, isDefault)}/>
       </FormGroup>
   );
@@ -112,7 +114,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
   renderCheckbox = (config: ConfigUI, fieldName: string, label: string, isDefault: boolean, index: number) => (
       <FormGroup controlId={`${fieldName}_${index}`}>
         <ControlLabel>{label}</ControlLabel>
-        <Checkbox name={fieldName} checked={config[fieldName]} 
+        <Checkbox name={fieldName} checked={config[fieldName]}
           onChange={e => this.handleChange(config.localId, fieldName, e.target.checked, isDefault)} />
       </FormGroup>
   );
@@ -141,7 +143,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     return (
       <FormGroup controlId={`${propName}_${index}`}>
         <ControlLabel>{`${propName}:`}</ControlLabel>
-        <FormControl type="text" name={propName} value={prop ? prop.value : ''} 
+        <FormControl type="text" name={propName} value={prop ? prop.value : ''}
           onChange={e => this.handlePropChange(config.localId, propName, e.target.value, isDefault)} />
       </FormGroup>
     );
@@ -152,7 +154,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     return (
       <FormGroup controlId={`${fieldName}_${index}`}>
         <ControlLabel>{label}</ControlLabel>
-        <FormControl type="select" 
+        <FormControl type="select"
           componentClass="select"
           name={fieldName}
           value={config.templateName}
@@ -188,23 +190,36 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
   renderConfigs = () => this.props.configs.map((config: ConfigUI, index: number) => this.renderConfig(config, index));
 
   renderSaveButton = () => (
-    <div className="u-mt-15">
+    <Row className="col-sm-11 u-mt-15">
       <Button
-        className="btn confirm btn-xs" 
+        className="btn confirm btn-xs"
         onClick={this.saveConfigs}>
           Save
       </Button>
-    </div>
+    </Row>
+  );
+
+  renderHeaderButtons = () => (
+    <Row className="col-sm-11 u-mb-15 d-flex flex-row align-items-stretch">
+      <span>{this.renderAddButton()}</span>
+      <span>{this.renderImportButton()}</span>
+    </Row>
   );
 
   renderAddButton = () => (
-    <div className="u-mb-15">
-      <Button
-        className="btn confirm btn-xs" 
-        onClick={this.addConfig}>
-          Add Configuration
-      </Button>
-    </div>
+    <Button
+      className="btn confirm btn-xs"
+      onClick={this.addConfig}>
+        Add Configuration
+    </Button>
+  );
+
+  renderImportButton = () => (
+    <a className="button import-templates" href="#/settings/templates/import">
+      <i className="icon-upload-alt" />
+      &nbsp;
+      {Msg.SMS_SETTINGS_IMPORT_ADDITIONAL_TEMPLATES}
+    </a>
   );
 
   render() {
@@ -223,11 +238,11 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
           </Col>
         </Row>
         <div className="panel-body">
-          {this.renderAddButton()}
+          {this.renderHeaderButtons()}
           {!loading && this.renderConfigs()}
           {this.renderSaveButton()}
         </div>
-      </div>  
+      </div>
     );
   };
 }

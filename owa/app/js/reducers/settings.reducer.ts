@@ -95,13 +95,13 @@ export default (state: ISettingsState = initialState, action): ISettingsState =>
         showModal: false,
         configLocalIdToDelete: ''
       }
-    case ACTION_TYPES.OPEN_MODAL: 
+    case ACTION_TYPES.OPEN_MODAL:
       return {
         ...state,
         showModal: true,
         configLocalIdToDelete: action.payload
       };
-    case ACTION_TYPES.CLOSE_MODAL: 
+    case ACTION_TYPES.CLOSE_MODAL:
       return {
         ...state,
         showModal: false,
@@ -187,4 +187,4 @@ export const addNewConfig = () => ({
   type: ACTION_TYPES.ADD_EMPTY_CONFIG
 });
 
-const mapTemplatesToArray = payloadData =>  Object.keys(payloadData).map(key => payloadData[key]);
+const mapTemplatesToArray = payloadData => Object.keys(payloadData).map(key => payloadData[key]);

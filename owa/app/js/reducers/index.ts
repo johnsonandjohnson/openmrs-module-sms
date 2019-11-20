@@ -13,17 +13,20 @@ import { reducers as openmrs } from '@openmrs/react-components';
 import logs, { LogsState } from './logs.reducer';
 import send, { SendState } from './send.reducer';
 import settings, { ISettingsState } from './settings.reducer';
+import fileImport, { FileImportState }from './file-import.reducer';
 
 export interface IRootState {
   readonly logs: LogsState;
   readonly send: SendState;
   readonly openmrs: any;
   readonly settings: ISettingsState;
+  readonly fileImport: FileImportState;
 }
 
 export default combineReducers<IRootState>({
   openmrs,
   logs,
   send,
-  settings
+  settings,
+  fileImport
 } as any); //TODO: https://github.com/reduxjs/redux/issues/2709

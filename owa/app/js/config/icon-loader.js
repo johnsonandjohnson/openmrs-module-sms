@@ -5,7 +5,8 @@ import {
   faHome,
   faChevronRight,
   faStar,
-  faCog
+  faCog,
+  faFileImport
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faStar as farStar
@@ -22,6 +23,7 @@ export const loadIcons = () => {
     faChevronRight,
     faStar,
     farStar,
-    faCog
+    faCog,
+    faFileImport
   );
 };
