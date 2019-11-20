@@ -3,6 +3,7 @@
 HOME_DIR=~
 SMS_REPO=$HOME_DIR/cfl/omrs-sms
 SMS_OMOD=sms-1.0.0-SNAPSHOT.omod
+SMS_OMOD_PREFIX=sms
 CFL_REPO=$HOME_DIR/cfl/cfl-openmrs
 
 MODULES_PATH=$HOME_DIR/.cfl-dev/modules
@@ -24,7 +25,7 @@ check_ownership_and_fix $MODULES_PATH &&
 cd $SMS_REPO &&
 mvn clean install &&
 
-rm -f $MODULES_PATH/callflows* &&
+rm -f $MODULES_PATH/$SMS_OMOD_PREFIX* &&
 mv $SMS_REPO/omod/target/$SMS_OMOD $MODULES_PATH &&
 
 cd $CFL_REPO/cfl/ &&
