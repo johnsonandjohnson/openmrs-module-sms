@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openmrs.module.sms.api.util.Constants;
 import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.module.sms.api.util.SmsEventParams;
-import org.openmrs.module.sms.api.util.SmsUtil;
+import org.openmrs.module.sms.api.util.SmsTaskUtil;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -53,7 +53,7 @@ public class SmsEvent {
 	}
 
 	public String generateTaskName() {
-		return SmsUtil.generateTaskName(getSubject(), getJobId());
+		return SmsTaskUtil.generateTaskName(getSubject(), getJobId());
 	}
 
 	public boolean paramsContainKey(String key) {
