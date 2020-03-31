@@ -71,7 +71,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
       return config;
     });
     this.props.updateState(newConfigs, this.props.defaultConfigName);
-  }
+  };
 
   handleRemove = (configLocalId: string) => this.props.openModal(configLocalId);
 
@@ -85,7 +85,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
       name: conf,
       value: null
     })) : [];
-  }
+  };
 
   findTemplate = (name: string | undefined): ITemplate => this.props.templates.find(template => template.name === name);
 
@@ -97,7 +97,8 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     const defaultConfigName = !!configToDelete && this.props.defaultConfigName !== configToDelete.name ? this.props.defaultConfigName :
       newConfigs.length > 0 ? newConfigs[0].name : null;
     this.props.updateState(newConfigs, defaultConfigName);
-  }
+    this.props.updateConfigs(newConfigs, defaultConfigName);
+  };
 
   saveConfigs = () => this.props.updateConfigs(this.props.configs, this.props.defaultConfigName);
 
