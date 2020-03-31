@@ -57,7 +57,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
     this.props.getSmsConfigs();
     this.props.handleRecipientsUpdate('');
     this.props.handleMessageUpdate('');
-    this.props.handleCustomParamsUpdate('');
+    this.props.handleCustomParamsUpdate(undefined);
     this.props.handleDeliveryTimeUpdate(undefined, undefined);
   }
 

@@ -183,7 +183,7 @@ export const handleConfigUpdate = (config: string, providerId: string) => ({
   }
 });
 
-export const handleCustomParamsUpdate = (customParams: string) => ({
+export const handleCustomParamsUpdate = (customParams?: string) => ({
   type: ACTION_TYPES.SMS_CUSTOM_PARAMS_CHANGE,
   payload: customParams
 });
