@@ -47,7 +47,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
 
   validationSchema = Yup.object().shape({
     recipients: Yup.string()
-      .matches(new RegExp('^\\d{1,15}(,\\d{1,15})*$'), Msg.NUMBERS_OR_COMMAS_REQUIRED)
+      .matches(new RegExp('^\\+?\\d{1,15}(,\\+?\\d{1,15})*$'), Msg.NUMBERS_OR_COMMAS_REQUIRED)
       .required(Msg.FIELD_REQUIRED),
     message: Yup.string()
       .required(Msg.FIELD_REQUIRED)
