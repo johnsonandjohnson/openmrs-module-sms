@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class SmsHttpService {
 
     private static final String SMS_MODULE = "openmrs-sms";
     private static final Log LOGGER = LogFactory.getLog(SmsHttpService.class);
+    private static final long MINUTE = 60000;
 
     private TemplateService templateService;
     private ConfigService configService;
@@ -74,18 +76,34 @@ public class SmsHttpService {
         //
         // Generate the HTTP request
         //
-        try {
-            httpMethod = prepHttpMethod(template, props, config);
-            httpStatus = commonsHttpClient.executeMethod(httpMethod);
-            httpResponse = httpMethod.getResponseBodyAsString();
-        } catch (UnknownHostException e) {
-            errorMessage = String.format("Network connectivity issues or problem with '%s' template? %s",
-                    template.getName(), e.toString());
-        } catch (IllegalArgumentException | IOException | IllegalStateException e) {
-            errorMessage = String.format("Problem with '%s' template? %s", template.getName(), e.toString());
-        } finally {
-            if (httpMethod != null) {
-                httpMethod.releaseConnection();
+        boolean shouldRetry = true;
+        int retryCount = 0;
+        while (shouldRetry) {
+            shouldRetry = false;
+            try {
+                httpMethod = prepHttpMethod(template, props, config);
+                httpStatus = commonsHttpClient.executeMethod(httpMethod);
+                httpResponse = httpMethod.getResponseBodyAsString();
+            }
+            catch (UnknownHostException e) {
+                errorMessage = String.format("Network connectivity issues or problem with '%s' template? %s",
+                        template.getName(), e.toString());
+            }
+            catch (IllegalArgumentException | IOException | IllegalStateException e) {
+                String msg = String.format("Problem with '%s' template? %s", template.getName(), e.toString());
+                if (SocketException.class.isAssignableFrom(e.getClass()) && retryCount < 3) {
+                    LOGGER.warn(msg);
+                    sleep(MINUTE);
+                    shouldRetry = true;
+                    retryCount++;
+                } else {
+                    errorMessage = msg;
+                }
+            }
+            finally {
+                if (httpMethod != null) {
+                    httpMethod.releaseConnection();
+                }
             }
         }
 
@@ -188,12 +206,7 @@ public class SmsHttpService {
         //todo: serialize access to configs, ie: one provider may allow 100 sms/min and another may allow 10...
         //This prevents us from sending more messages per second than the provider allows
         Integer milliseconds = template.getOutgoing().getMillisecondsBetweenMessages();
-        LOGGER.debug(String.format("Sleeping thread id %d for %d ms", Thread.currentThread().getId(), milliseconds));
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
+        sleep(milliseconds);
     }
 
     private Map<String, String> generateProps(OutgoingSms sms, Template template, Config config) {
@@ -276,6 +289,15 @@ public class SmsHttpService {
             authenticate(props, config);
         }
         return method;
+    }
+
+    private void sleep(long milliseconds) {
+        LOGGER.debug(String.format("Sleeping thread id %d for %d ms", Thread.currentThread().getId(), milliseconds));
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     public void setTemplateService(TemplateService templateService) {
