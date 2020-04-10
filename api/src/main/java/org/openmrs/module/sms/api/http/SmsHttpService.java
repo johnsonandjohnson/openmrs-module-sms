@@ -84,12 +84,10 @@ public class SmsHttpService {
                 httpMethod = prepHttpMethod(template, props, config);
                 httpStatus = commonsHttpClient.executeMethod(httpMethod);
                 httpResponse = httpMethod.getResponseBodyAsString();
-            }
-            catch (UnknownHostException e) {
+            } catch (UnknownHostException e) {
                 errorMessage = String.format("Network connectivity issues or problem with '%s' template? %s",
                         template.getName(), e.toString());
-            }
-            catch (IllegalArgumentException | IOException | IllegalStateException e) {
+            } catch (IllegalArgumentException | IOException | IllegalStateException e) {
                 String msg = String.format("Problem with '%s' template? %s", template.getName(), e.toString());
                 if (SocketException.class.isAssignableFrom(e.getClass()) && retryCount < 3) {
                     LOGGER.warn(msg);
@@ -99,8 +97,7 @@ public class SmsHttpService {
                 } else {
                     errorMessage = msg;
                 }
-            }
-            finally {
+            } finally {
                 if (httpMethod != null) {
                     httpMethod.releaseConnection();
                 }
