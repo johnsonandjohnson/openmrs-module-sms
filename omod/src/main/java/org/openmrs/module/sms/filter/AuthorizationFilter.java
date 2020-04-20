@@ -71,12 +71,13 @@ public class AuthorizationFilter implements Filter {
     private void performBasicAuth(String authorization) {
         // this is "Basic ${base64encode(username + ":" + password)}"
         try {
-            authorization = authorization.replace(BASIC_KEYWORD, "");
-            String decoded = new String(Base64.decodeBase64(authorization), Charset.forName("UTF-8"));
+            String decoded = new String(Base64.decodeBase64(authorization.replace(BASIC_KEYWORD, "")),
+                    Charset.forName("UTF-8"));
             String[] userAndPass = decoded.split(":");
             Context.authenticate(userAndPass[0], userAndPass[1]);
-            if (LOGGER.isDebugEnabled())
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("authenticated " + userAndPass[0]);
+            }
         } catch (ContextAuthenticationException ex) {
             Context.logout();
         } catch (Exception ex) {

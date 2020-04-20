@@ -23,15 +23,16 @@ public final class DateUtil {
     }
 
     public static Date parse(String dateTime, String pattern) {
+        String datePattern = pattern;
         if (StringUtils.isBlank(pattern)) {
-            pattern = ISO_DATE_TIME_FORMAT;
+            datePattern = ISO_DATE_TIME_FORMAT;
         }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(datePattern);
         Date result = null;
         try {
             result = simpleDateFormat.parse(dateTime);
         } catch (ParseException e) {
-            LOGGER.error(String.format("Could not parse `%s` date using `%s` pattern", dateTime, pattern));
+            LOGGER.error(String.format("Could not parse `%s` date using `%s` pattern", dateTime, datePattern));
         }
         return result;
     }

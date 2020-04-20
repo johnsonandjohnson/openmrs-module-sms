@@ -33,14 +33,14 @@ import java.util.List;
 public class SmsController {
 
     /** Logger for this class and subclasses */
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log LOG = LogFactory.getLog(SmsController.class);
 
     @Autowired
     @Qualifier("userService")
     private UserService userService;
 
     /** Success form view name */
-    private final String VIEW = "/module/sms/sms";
+    private static final String VIEW = "/module/sms/sms";
 
     /**
      * Initially called after the getUsers method to get the landing form name

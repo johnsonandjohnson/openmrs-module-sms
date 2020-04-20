@@ -13,8 +13,9 @@ public class ConfigsTest {
     private static final String NAME_ONE = "one";
     private static final String NAME_TWO = "two";
     private static final String NAME_THREE = "three";
-    private Config configOne, configTwo;
-    List<Config> configList = new ArrayList<>();
+    private Config configOne;
+    private Config configTwo;
+    private List<Config> configList = new ArrayList<>();
 
     @Before
     public void setup() {

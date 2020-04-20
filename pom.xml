@@ -114,7 +114,70 @@
     </pluginRepositories>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${checkStylePluginVersion}</version>
+                    <configuration>
+                        <configLocation>checkstyle.xml</configLocation>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <consoleOutput>true</consoleOutput>
+                        <logViolationsToConsole>true</logViolationsToConsole>
+                        <failsOnError>true</failsOnError>
+                        <enableFilesSummary>true</enableFilesSummary>
+                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                        <skip>${checkStylePluginSkip}</skip>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>verify-checkstyle</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>${pmdPluginVersion}</version>
+                    <configuration>
+                        <rulesets>
+                            <ruleset>${project.basedir}/../pmd.xml</ruleset>
+                        </rulesets>
+                        <linkXRef>false</linkXRef>
+                        <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+                        <minimumTokens>100</minimumTokens>
+                        <printFailingErrors>true</printFailingErrors>
+                        <includeTests>false</includeTests>
+                        <failOnViolation>true</failOnViolation>
+                        <skip>${pmdPluginSkip}</skip>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>validate</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                                <goal>cpd-check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>com.googlecode.maven-java-formatter-plugin</groupId>
                 <artifactId>maven-java-formatter-plugin</artifactId>
@@ -126,6 +189,16 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <checkStylePluginSkip>true</checkStylePluginSkip>
+                <pmdPluginSkip>true</pmdPluginSkip>
+            </properties>
+        </profile>
+    </profiles>
 
     <properties>
         <openmrsPlatformVersion>2.0.1</openmrsPlatformVersion>
@@ -139,5 +212,9 @@
         <guavaVersion>23.0</guavaVersion>
         <legacyVersion>1.5.0</legacyVersion>
         <javax.servlet.version>3.0.1</javax.servlet.version>
+        <checkStylePluginVersion>2.10</checkStylePluginVersion>
+        <checkStylePluginSkip>false</checkStylePluginSkip>
+        <pmdPluginVersion>3.5</pmdPluginVersion>
+        <pmdPluginSkip>false</pmdPluginSkip>
     </properties>
 </project>

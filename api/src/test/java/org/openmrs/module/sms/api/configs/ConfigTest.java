@@ -8,24 +8,24 @@ import static org.junit.Assert.assertEquals;
 
 public class ConfigTest {
 
-    private static final int failureCount = 3;
+    private static final int FAILURE_COUNT = 3;
     private Config config;
 
     @Before
     public void setup() {
         config = new Config();
-        config.setMaxRetries(failureCount);
+        config.setMaxRetries(FAILURE_COUNT);
     }
 
     @Test
     public void shouldReturnRetryThenAbortSubject() {
-        assertEquals(DeliveryStatuses.RETRYING, config.retryOrAbortSubject(failureCount - 1));
-        assertEquals(DeliveryStatuses.ABORTED, config.retryOrAbortSubject(failureCount));
+        assertEquals(DeliveryStatuses.RETRYING, config.retryOrAbortSubject(FAILURE_COUNT - 1));
+        assertEquals(DeliveryStatuses.ABORTED, config.retryOrAbortSubject(FAILURE_COUNT));
     }
 
     @Test
     public void shouldReturnRetryThenAbortStatus() {
-        assertEquals(DeliveryStatuses.RETRYING, config.retryOrAbortStatus(failureCount - 1));
-        assertEquals(DeliveryStatuses.ABORTED, config.retryOrAbortStatus(failureCount));
+        assertEquals(DeliveryStatuses.RETRYING, config.retryOrAbortStatus(FAILURE_COUNT - 1));
+        assertEquals(DeliveryStatuses.ABORTED, config.retryOrAbortStatus(FAILURE_COUNT));
     }
 }

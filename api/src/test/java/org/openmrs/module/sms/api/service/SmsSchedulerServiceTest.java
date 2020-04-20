@@ -30,8 +30,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class SmsSchedulerServiceTest {
 
-    private static String TEST_SUBJECT = "subject";
-    private static String JOB_ID_VALUE = "2";
+    private static final String TEST_SUBJECT = "subject";
+    private static final String JOB_ID_VALUE = "2";
 
     @Mock
     private SchedulerService schedulerService;

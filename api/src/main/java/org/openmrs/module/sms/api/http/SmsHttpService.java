@@ -27,9 +27,6 @@ import org.openmrs.notification.AlertService;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,33 +74,18 @@ public class SmsHttpService {
         //
         // Generate the HTTP request
         //
-        boolean shouldRetry = true;
-        int retryCount = 0;
-        while (shouldRetry) {
-            shouldRetry = false;
-            try {
-                httpMethod = prepHttpMethod(template, props, config);
-                httpStatus = commonsHttpClient.executeMethod(httpMethod);
-                httpResponse = httpMethod.getResponseBodyAsString();
-            } catch (UnknownHostException e) {
-                errorMessage = String.format("Network connectivity issues or problem with '%s' template? %s",
-                        template.getName(), e.toString());
-            } catch (IllegalArgumentException | IOException | IllegalStateException e) {
-                String msg = String.format("Problem with '%s' template? %s", template.getName(), e.toString());
-                if (SocketException.class.isAssignableFrom(e.getClass()) && retryCount < 3) {
-                    LOGGER.warn(msg);
-                    sleep(MINUTE);
-                    shouldRetry = true;
-                    retryCount++;
-                } else {
-                    errorMessage = msg;
-                }
-            } finally {
-                if (httpMethod != null) {
-                    httpMethod.releaseConnection();
-                }
-            }
-        }
+        SendSmsState sendSmsState = new SendSmsState()
+                .setCommonsHttpClient(commonsHttpClient)
+                .setTemplate(template)
+                .setHttpMethod(prepHttpMethod(template, props, config))
+                .setHttpStatus(httpStatus)
+                .setHttpResponse(httpResponse)
+                .setErrorMessage(errorMessage)
+                .build();
+        httpMethod = sendSmsState.getHttpMethod();
+        httpStatus = sendSmsState.getHttpStatus();
+        httpResponse = sendSmsState.getHttpResponse();
+        errorMessage = sendSmsState.getErrorMessage();
 
         //
         // make sure we don't talk to the SMS provider too fast (some only allow a max of n per minute calls)

@@ -32,12 +32,13 @@ public abstract class BaseOpenmrsDataDao<T extends BaseOpenmrsData> extends Hibe
      */
     protected void loadPagingTotal(PagingInfo pagingInfo, Criteria criteria) {
         if (pagingInfo != null && pagingInfo.getPage() > 0 && pagingInfo.getPageSize() > 0) {
+            Criteria paginationCriteria = criteria;
             if (criteria == null) {
-                criteria = getSession().createCriteria(this.mappedClass);
+                paginationCriteria = getSession().createCriteria(this.mappedClass);
             }
 
             if (pagingInfo.shouldLoadRecordCount()) {
-                Long count = countRows(criteria);
+                Long count = countRows(paginationCriteria);
                 pagingInfo.setTotalRecordCount(count == null ? 0 : count);
                 pagingInfo.setLoadRecordCount(false);
             }
@@ -53,17 +54,18 @@ public abstract class BaseOpenmrsDataDao<T extends BaseOpenmrsData> extends Hibe
      * @return The {@link Criteria} object with the paging settings applied.
      */
     protected Criteria createPagingCriteria(PagingInfo pagingInfo, Criteria criteria) {
+        Criteria paginationCriteria = criteria;
         if (pagingInfo != null && pagingInfo.getPage() > 0 && pagingInfo.getPageSize() > 0) {
             if (criteria == null) {
-                criteria = getSession().createCriteria(this.mappedClass);
+                paginationCriteria = getSession().createCriteria(this.mappedClass);
             }
 
-            criteria.setFirstResult((pagingInfo.getPage() - 1) * pagingInfo.getPageSize());
-            criteria.setMaxResults(pagingInfo.getPageSize());
-            criteria.setFetchSize(pagingInfo.getPageSize());
+            paginationCriteria.setFirstResult((pagingInfo.getPage() - 1) * pagingInfo.getPageSize());
+            paginationCriteria.setMaxResults(pagingInfo.getPageSize());
+            paginationCriteria.setFetchSize(pagingInfo.getPageSize());
         }
 
-        return criteria;
+        return paginationCriteria;
     }
 
     /**
