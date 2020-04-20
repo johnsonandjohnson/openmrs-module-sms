@@ -7,22 +7,22 @@ import org.openmrs.scheduler.tasks.AbstractTask;
 
 public abstract class AbstractSmsTask extends AbstractTask {
 
-	@Override
-	public void execute() {
-		try {
-			executeTask();
-		} finally {
-			shutdownTask();
-		}
-	}
+    @Override
+    public void execute() {
+        try {
+            executeTask();
+        } finally {
+            shutdownTask();
+        }
+    }
 
-	protected abstract void executeTask();
+    protected abstract void executeTask();
 
-	private void shutdownTask() {
-		try {
-			Context.getSchedulerService().shutdownTask(getTaskDefinition());
-		} catch (SchedulerException ex) {
-			throw new SmsRuntimeException(ex);
-		}
-	}
+    private void shutdownTask() {
+        try {
+            Context.getSchedulerService().shutdownTask(getTaskDefinition());
+        } catch (SchedulerException ex) {
+            throw new SmsRuntimeException(ex);
+        }
+    }
 }

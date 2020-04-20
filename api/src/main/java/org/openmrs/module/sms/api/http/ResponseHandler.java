@@ -35,8 +35,9 @@ public abstract class ResponseHandler {
 
     /**
      * Constructs an instance using the provided template and configuration.
+     *
      * @param template the template to use
-     * @param config the configuration to use
+     * @param config   the configuration to use
      */
     ResponseHandler(Template template, Config config) {
         this.template = template;
@@ -46,14 +47,16 @@ public abstract class ResponseHandler {
 
     /**
      * Handles the response for an outgoing sms.
-     * @param sms the outgoing sms
+     *
+     * @param sms      the outgoing sms
      * @param response the response from the provider, as string
-     * @param headers the response headers
+     * @param headers  the response headers
      */
     public abstract void handle(OutgoingSms sms, String response, Header[] headers);
 
     /**
      * Formats the SMS message so that it can get logged, by escaping all newline characters.
+     *
      * @param sms the outgoing sms
      * @return the message from the SMS, with newline characters escaped
      */
@@ -63,6 +66,7 @@ public abstract class ResponseHandler {
 
     /**
      * Returns SmsEvents to be sent. These events are created during parsing of responses.
+     *
      * @return the list of events to publish
      */
     public List<SmsEvent> getEvents() {
@@ -71,6 +75,7 @@ public abstract class ResponseHandler {
 
     /**
      * Returns audit records to be saved. These records are created during parsing of responses.
+     *
      * @return the list of events to publish
      */
     public List<SmsRecord> getAuditRecords() {
@@ -121,6 +126,7 @@ public abstract class ResponseHandler {
 
     /**
      * Creates a warning message using {@link AlertService}.
+     *
      * @param message the message to log
      */
     public void warn(String message) {

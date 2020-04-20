@@ -5,5 +5,5 @@ import org.openmrs.module.sms.api.event.SmsEvent;
 
 public interface SmsEventService extends OpenmrsService {
 
-	void sendEventMessage(SmsEvent event);
+    void sendEventMessage(SmsEvent event);
 }

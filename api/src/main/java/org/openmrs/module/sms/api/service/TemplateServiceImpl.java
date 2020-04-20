@@ -56,7 +56,8 @@ public class TemplateServiceImpl implements TemplateService {
         }
 
         Gson gson = new Gson();
-        String jsonText = gson.toJson(templateList, new TypeToken<List<Template>>() { } .getType());
+        String jsonText = gson.toJson(templateList, new TypeToken<List<Template>>() {
+        }.getType());
         settingsManagerService.saveRawConfig(SMS_TEMPLATE_CUSTOM_FILE_NAME, new ByteArrayResource(jsonText.getBytes()));
     }
 
@@ -84,7 +85,8 @@ public class TemplateServiceImpl implements TemplateService {
             String jsonText = IOUtils.toString(is);
             Gson gson = new Gson();
             if (StringUtils.isNotBlank(jsonText)) {
-                 templateList = gson.fromJson(jsonText, new TypeToken<List<Template>>() {}.getType());
+                templateList = gson.fromJson(jsonText, new TypeToken<List<Template>>() {
+                }.getType());
             }
         } catch (JsonParseException e) {
             throw new SmsRuntimeException("File " + fileName + " is malformed", e);

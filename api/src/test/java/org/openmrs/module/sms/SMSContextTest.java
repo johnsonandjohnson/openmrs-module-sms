@@ -7,8 +7,8 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 public class SMSContextTest extends BaseModuleContextSensitiveTest {
 
-	@Test
-	public void shouldSetupContext() {
-		Assert.assertNotNull(Context.getAdministrationService());
-	}
+    @Test
+    public void shouldSetupContext() {
+        Assert.assertNotNull(Context.getAdministrationService());
+    }
 }

@@ -17,6 +17,7 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
      * Retrieves all sms records matching the given criteria. All string fields in this lookup are matched
      * using the matches() operator, meaning they will be matched using the same rules that {@link String#matches(String)}
      * uses.
+     *
      * @param searchCriteria the search criteria
      * @return the matching records
      */
@@ -26,6 +27,7 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
      * Retrieves the total count of SMS messages matching the given criteria. All string fields in this lookup are matched
      * using the matches() operator, meaning they will be matched using the same rules that {@link String#matches(String)}
      * uses.
+     *
      * @param searchCriteria the search criteria
      * @return the matching records
      */
@@ -33,6 +35,7 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
 
     /**
      * Retrieves records by the provider ID.
+     *
      * @param providerId the provider ID
      * @return the list of matching records
      */
@@ -40,6 +43,7 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
 
     /**
      * Retrieves records by the ID.
+     *
      * @param openMrsId the OpenMRS ID
      * @return the list of matching records
      */
@@ -47,8 +51,9 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
 
     /**
      * Retrieves records by both provider and OpenMRS IDs.
+     *
      * @param providerId the provider ID
-     * @param openMrsId the OpenMRS ID
+     * @param openMrsId  the OpenMRS ID
      * @return the list of matching records
      */
     List<SmsRecord> findByProviderAndOpenMrsId(String providerId, String openMrsId);
@@ -61,7 +66,8 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
 
     /**
      * Retrieves records by the specified criteria and based on the specified paging object.
-     * @param pagingInfo  The {@link PagingInfo} object contains pageable configuration.
+     *
+     * @param pagingInfo     The {@link PagingInfo} object contains pageable configuration.
      * @param searchCriteria The {@link SmsRecordSearchCriteria} object specifying condition for criteria
      * @return The list of matching records
      */

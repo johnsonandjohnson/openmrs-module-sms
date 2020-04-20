@@ -20,8 +20,9 @@ public class Templates {
     /**
      * Constructs this collection from the provided templates. The templates will
      * read their default values from the OpenMRS configuration system through the provided settings facade.
+     *
      * @param settingsManagerService the settings facade from which default values will be read
-     * @param templates the collection of templates from which this object will be built
+     * @param templates              the collection of templates from which this object will be built
      */
     public Templates(SettingsManagerService settingsManagerService, List<Template> templates) {
         for (Template template : templates) {
@@ -32,6 +33,7 @@ public class Templates {
 
     /**
      * Returns the template with the given name.
+     *
      * @param name the name of the template
      * @return the matching template or null if no such template exists
      */
@@ -41,6 +43,7 @@ public class Templates {
 
     /**
      * Returns this collection in a form suitable for the UI.
+     *
      * @return a map where the keys are template names and values are the simplified forms of templates
      * @see TemplateForWeb
      */

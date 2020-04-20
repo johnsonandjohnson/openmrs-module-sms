@@ -6,7 +6,6 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -96,7 +95,8 @@ public class TemplateTest {
                 "        }\n" +
                 "    }";
         Gson gson = new Gson();
-        return gson.fromJson(jsonTemplate, new TypeToken<Template>() { } .getType());
+        return gson.fromJson(jsonTemplate, new TypeToken<Template>() {
+        }.getType());
     }
 
     private Template loadTemplateWithProviderStatus() throws IOException {
@@ -110,7 +110,8 @@ public class TemplateTest {
 
             Gson gson = new Gson();
 
-            return gson.fromJson(jsonTemplate, new TypeToken<Template>() { } .getType());
+            return gson.fromJson(jsonTemplate, new TypeToken<Template>() {
+            }.getType());
         }
     }
 

@@ -68,8 +68,9 @@ public class StatusController {
     /**
      * Handles a status update from a provider. This method will result in publishing a OpenMRS Event and creating
      * a record in the database.
+     *
      * @param configName the name of the configuration for the provider that is sending the update
-     * @param params params of the request sent by the provider
+     * @param params     params of the request sent by the provider
      */
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -79,7 +80,7 @@ public class StatusController {
 
         if (!configService.hasConfig(configName)) {
             String msg = String.format("Received SMS Status for '%s' config but no matching config: %s, " +
-                            "will try the default config", configName, params);
+                    "will try the default config", configName, params);
             LOGGER.error(msg);
             alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
         }

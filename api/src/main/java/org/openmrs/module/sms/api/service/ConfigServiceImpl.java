@@ -33,8 +33,7 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
             String jsonText = IOUtils.toString(is);
             Gson gson = new Gson();
             configs = gson.fromJson(jsonText, Configs.class);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new JsonIOException("Malformed " + Constants.SMS_CONFIGS_FILE_NAME + " file? " + e.toString(), e);
         }
     }

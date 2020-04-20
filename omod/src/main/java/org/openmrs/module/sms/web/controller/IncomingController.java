@@ -45,9 +45,9 @@ public class IncomingController {
 
     @Autowired
     public IncomingController(@Qualifier("sms.SmsRecordDao") SmsRecordDao smsRecordDao,
-            @Qualifier("templateService") TemplateService templateService,
-            @Qualifier("sms.configService") ConfigService configService,
-            @Qualifier("alertService") AlertService alertService) {
+                              @Qualifier("templateService") TemplateService templateService,
+                              @Qualifier("sms.configService") ConfigService configService,
+                              @Qualifier("alertService") AlertService alertService) {
         this.smsRecordDao = smsRecordDao;
         this.templateService = templateService;
         this.configService = configService;
@@ -60,8 +60,9 @@ public class IncomingController {
     /**
      * Handles an incoming SMS notification coming from the provider. A OpenMRS Event notifying about this will also
      * get published. The request itself will get handled in the way that the configuration template specifies it.
+     *
      * @param configName the name of the configuration that should handle the SMS
-     * @param params the request params coming from the provider
+     * @param params     the request params coming from the provider
      */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/{configName}")

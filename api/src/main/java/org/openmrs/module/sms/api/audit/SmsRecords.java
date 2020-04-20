@@ -31,7 +31,8 @@ public class SmsRecords implements Serializable {
 
     /**
      * Constructs an instance from the given records and count.
-     * @param count the total count of records in this context
+     *
+     * @param count   the total count of records in this context
      * @param records the subset of records
      */
     public SmsRecords(int count, List<SmsRecord> records) {

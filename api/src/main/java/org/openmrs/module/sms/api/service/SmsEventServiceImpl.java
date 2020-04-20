@@ -12,22 +12,22 @@ import java.util.Map;
 
 public class SmsEventServiceImpl extends BaseOpenmrsService implements SmsEventService {
 
-	@Override
-	public void sendEventMessage(SmsEvent event) {
-		Event.fireEvent(event.getSubject(), convertParamsToEventMessage(event.getParameters()));
-	}
+    @Override
+    public void sendEventMessage(SmsEvent event) {
+        Event.fireEvent(event.getSubject(), convertParamsToEventMessage(event.getParameters()));
+    }
 
-	private EventMessage convertParamsToEventMessage(Map<String, Object> params) {
-		EventMessage eventMessage = new EventMessage();
+    private EventMessage convertParamsToEventMessage(Map<String, Object> params) {
+        EventMessage eventMessage = new EventMessage();
 
-		for(String key : params.keySet()) {
-			if (params.get(key) instanceof Date) {
-				eventMessage.put(key, DateUtil.dateToString((Date) params.get(key)));
-			} else {
-				eventMessage.put(key, (Serializable) params.get(key));
-			}
-		}
+        for (String key : params.keySet()) {
+            if (params.get(key) instanceof Date) {
+                eventMessage.put(key, DateUtil.dateToString((Date) params.get(key)));
+            } else {
+                eventMessage.put(key, (Serializable) params.get(key));
+            }
+        }
 
-		return eventMessage;
-	}
+        return eventMessage;
+    }
 }

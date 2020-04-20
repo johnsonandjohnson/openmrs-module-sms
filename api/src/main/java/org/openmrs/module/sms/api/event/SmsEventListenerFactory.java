@@ -7,32 +7,32 @@ import java.util.List;
 
 public final class SmsEventListenerFactory {
 
-	public static void registerEventListeners() {
-		List<AbstractSmsEventListener> eventComponents = Context.getRegisteredComponents(AbstractSmsEventListener.class);
-		for (AbstractSmsEventListener eventListener : eventComponents) {
-			subscribeListener(eventListener);
-		}
-	}
+    public static void registerEventListeners() {
+        List<AbstractSmsEventListener> eventComponents = Context.getRegisteredComponents(AbstractSmsEventListener.class);
+        for (AbstractSmsEventListener eventListener : eventComponents) {
+            subscribeListener(eventListener);
+        }
+    }
 
-	public static void unRegisterEventListeners() {
-		List<AbstractSmsEventListener> eventComponents = Context.getRegisteredComponents(AbstractSmsEventListener.class);
-		for (AbstractSmsEventListener eventListener : eventComponents) {
-			unSubscribeListener(eventListener);
-		}
-	}
+    public static void unRegisterEventListeners() {
+        List<AbstractSmsEventListener> eventComponents = Context.getRegisteredComponents(AbstractSmsEventListener.class);
+        for (AbstractSmsEventListener eventListener : eventComponents) {
+            unSubscribeListener(eventListener);
+        }
+    }
 
-	private static void subscribeListener(AbstractSmsEventListener smsEventListener) {
-		for (String subject : smsEventListener.getSubjects()) {
-			Event.subscribe(subject, smsEventListener);
-		}
-	}
+    private static void subscribeListener(AbstractSmsEventListener smsEventListener) {
+        for (String subject : smsEventListener.getSubjects()) {
+            Event.subscribe(subject, smsEventListener);
+        }
+    }
 
-	private static void unSubscribeListener(AbstractSmsEventListener smsEventListener) {
-		for (String subject : smsEventListener.getSubjects()) {
-			Event.unsubscribe(subject, smsEventListener);
-		}
-	}
+    private static void unSubscribeListener(AbstractSmsEventListener smsEventListener) {
+        for (String subject : smsEventListener.getSubjects()) {
+            Event.unsubscribe(subject, smsEventListener);
+        }
+    }
 
-	private SmsEventListenerFactory() {
-	}
+    private SmsEventListenerFactory() {
+    }
 }

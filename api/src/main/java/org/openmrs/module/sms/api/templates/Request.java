@@ -58,6 +58,7 @@ public class Request {
      * Parses the current url path using the provided props. The result is stored
      * in the processedUrlPath property. Parsing will only take place if the props
      * are different from the previously used ones.
+     *
      * @param props the props used for replacing placeholders in the url path
      * @return the processed url path
      */
@@ -82,6 +83,7 @@ public class Request {
     /**
      * Sets the url path for the endpoint under which the provider receives outgoing SMS
      * messages. Can contain placeholders denoted by [propertyName].
+     *
      * @param urlPath the url path to the provider outgoing sms endpoint
      */
     public void setUrlPath(String urlPath) {
@@ -89,7 +91,6 @@ public class Request {
     }
 
     /**
-     *
      * @return the separator used to separate recipients for the SMS
      */
     public String getRecipientsSeparator() {

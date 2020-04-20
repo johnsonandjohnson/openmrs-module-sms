@@ -65,6 +65,7 @@ public class Config {
     /**
      * Gets the maximum number of retries that will be performed when sending an SMS. If there was an error when sending the
      * SMS, we will initiate a retry.
+     *
      * @return the maximum number of retries
      */
     public Integer getMaxRetries() {
@@ -74,6 +75,7 @@ public class Config {
     /**
      * Sets the maximum number of retries that will be performed when sending an SMS. If there was an error when sending the
      * SMS, we will initiate a retry.
+     *
      * @param maxRetries the maximum number of retries
      */
     public void setMaxRetries(Integer maxRetries) {
@@ -154,6 +156,7 @@ public class Config {
      * Returns an appropriate Delivery Status for the given failure count. If the failure count is higher than
      * the maximum number of retries for this configuration, then ABORTED Status is returned. Otherwise
      * RETRYING Status is returned, indicating the retries are ongoing.
+     *
      * @param failureCount the failure count to check
      * @return the delivery status matching the failure count
      */
@@ -167,6 +170,7 @@ public class Config {
     /**
      * Returns an appropriate subject for an event indicating an SMS send failure. If the failure count is higher than
      * the maximum number of retries for this configuration, then a subject indicating that to abort the SMS will be sent.
+     *
      * @param failureCount the failure count to check
      * @return the subject for the event
      */

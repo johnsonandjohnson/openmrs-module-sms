@@ -10,18 +10,18 @@ import java.util.Map;
 
 public interface SmsSettingsService extends OpenmrsService {
 
-	@Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
-	Map<String, TemplateForWeb> getTemplates();
+    @Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
+    Map<String, TemplateForWeb> getTemplates();
 
-	@Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
-	void importTemplates(String templates);
+    @Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
+    void importTemplates(String templates);
 
-	@Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
-	Configs getConfigs();
+    @Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
+    Configs getConfigs();
 
-	@Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
-	Configs setConfigs(Configs configs);
+    @Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
+    Configs setConfigs(Configs configs);
 
-	@Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
-	String getCustomUISettings();
+    @Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
+    String getCustomUISettings();
 }

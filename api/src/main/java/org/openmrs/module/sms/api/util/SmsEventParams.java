@@ -5,7 +5,8 @@ package org.openmrs.module.sms.api.util;
  */
 public final class SmsEventParams {
 
-    private SmsEventParams() { }
+    private SmsEventParams() {
+    }
 
     /**
      * Config that was used for this message

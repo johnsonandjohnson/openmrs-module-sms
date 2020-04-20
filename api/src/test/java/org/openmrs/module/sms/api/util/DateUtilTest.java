@@ -15,56 +15,56 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ DateUtil.class})
+@PrepareForTest({DateUtil.class})
 public class DateUtilTest {
 
-	@Test
-	public void shouldSuccessfullyParseDateTime() {
-		Date expected = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "Asia/Almaty");
-		Date actual = DateUtil.parse("2010-11-16T15:43:59.000+06:00");
-		assertThat(actual, equalTo(expected));
-	}
+    @Test
+    public void shouldSuccessfullyParseDateTime() {
+        Date expected = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "Asia/Almaty");
+        Date actual = DateUtil.parse("2010-11-16T15:43:59.000+06:00");
+        assertThat(actual, equalTo(expected));
+    }
 
-	@Test
-	public void shouldSuccessfullyAddDaysToDate() {
-		Date expected = createDate(2010, Calendar.MARCH, 2, 15, 43, 59, "CET");
-		Date date = createDate(2010, Calendar.FEBRUARY, 27, 15, 43, 59, "CET");
-		Date actual = DateUtil.plusDays(date, 3);
-		assertThat(actual, equalTo(expected));
-	}
+    @Test
+    public void shouldSuccessfullyAddDaysToDate() {
+        Date expected = createDate(2010, Calendar.MARCH, 2, 15, 43, 59, "CET");
+        Date date = createDate(2010, Calendar.FEBRUARY, 27, 15, 43, 59, "CET");
+        Date actual = DateUtil.plusDays(date, 3);
+        assertThat(actual, equalTo(expected));
+    }
 
-	@Test
-	public void shouldsuccessfullyConvertDateToUtcTimeZone() {
-		Date expectedUtc = createDate(2010, Calendar.NOVEMBER, 16, 14, 43, 59, "UTC");
-		Date dateCet = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "CET");
-		Date actual = DateUtil.getDateWithDefaultTimeZone(dateCet);
-		assertThat(actual, equalTo(expectedUtc));
-	}
+    @Test
+    public void shouldsuccessfullyConvertDateToUtcTimeZone() {
+        Date expectedUtc = createDate(2010, Calendar.NOVEMBER, 16, 14, 43, 59, "UTC");
+        Date dateCet = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "CET");
+        Date actual = DateUtil.getDateWithDefaultTimeZone(dateCet);
+        assertThat(actual, equalTo(expectedUtc));
+    }
 
-	@Test
-	public void shouldReturnDateWithLocalTimeZone() throws Exception {
-		Date date = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "Asia/Almaty");
-		TimeZone timeZone = TimeZone.getTimeZone("Asia/Almaty");
-		PowerMockito.mockStatic(TimeZone.class);
-		BDDMockito.given(TimeZone.getDefault()).willReturn(timeZone);
+    @Test
+    public void shouldReturnDateWithLocalTimeZone() throws Exception {
+        Date date = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "Asia/Almaty");
+        TimeZone timeZone = TimeZone.getTimeZone("Asia/Almaty");
+        PowerMockito.mockStatic(TimeZone.class);
+        BDDMockito.given(TimeZone.getDefault()).willReturn(timeZone);
 
-		String expected = "2010-11-16T15:43:59.000+06:00";
-		String actual = DateUtil.getDateWithLocalTimeZone(date);
-		assertThat(actual, equalTo(expected));
-	}
+        String expected = "2010-11-16T15:43:59.000+06:00";
+        String actual = DateUtil.getDateWithLocalTimeZone(date);
+        assertThat(actual, equalTo(expected));
+    }
 
-	@Test
-	public void shouldReturnConversionResultAsExpected() {
-		String expectedDateAsString = "2012-01-10T00:00:00.000+06:00";
-		Date actual = DateUtil.parse(expectedDateAsString);
-		assertThat(DateUtil.dateToString(actual, "Asia/Almaty"), equalTo(expectedDateAsString));
-	}
+    @Test
+    public void shouldReturnConversionResultAsExpected() {
+        String expectedDateAsString = "2012-01-10T00:00:00.000+06:00";
+        Date actual = DateUtil.parse(expectedDateAsString);
+        assertThat(DateUtil.dateToString(actual, "Asia/Almaty"), equalTo(expectedDateAsString));
+    }
 
-	private Date createDate(int year, int month, int day, int hour, int minute, int second, String timezone) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(year, month, day, hour, minute, second);
-		calendar.set(Calendar.MILLISECOND, 0);
-		calendar.setTimeZone(TimeZone.getTimeZone(timezone));
-		return calendar.getTime();
-	}
+    private Date createDate(int year, int month, int day, int hour, int minute, int second, String timezone) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day, hour, minute, second);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+        return calendar.getTime();
+    }
 }

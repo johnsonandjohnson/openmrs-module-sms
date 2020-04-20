@@ -12,31 +12,31 @@ import java.util.Map;
  */
 public class AdminList extends AdministrationSectionExt {
 
-	/**
-	 * @see org.openmrs.module.web.extension.AdministrationSectionExt#getMediaType()
-	 */
-	public Extension.MEDIA_TYPE getMediaType() {
-		return Extension.MEDIA_TYPE.html;
-	}
+    /**
+     * @see org.openmrs.module.web.extension.AdministrationSectionExt#getMediaType()
+     */
+    public Extension.MEDIA_TYPE getMediaType() {
+        return Extension.MEDIA_TYPE.html;
+    }
 
-	/**
-	 * @see org.openmrs.module.web.extension.AdministrationSectionExt#getTitle()
-	 */
-	public String getTitle() {
-		return "sms.title";
-	}
+    /**
+     * @see org.openmrs.module.web.extension.AdministrationSectionExt#getTitle()
+     */
+    public String getTitle() {
+        return "sms.title";
+    }
 
-	/**
-	 * @see org.openmrs.module.web.extension.AdministrationSectionExt#getLinks()
-	 */
-	public Map<String, String> getLinks() {
+    /**
+     * @see org.openmrs.module.web.extension.AdministrationSectionExt#getLinks()
+     */
+    public Map<String, String> getLinks() {
 
-		Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<String, String>();
 
-		map.put("module/sms/sms.form", "sms.title");
-		map.put("sms/sms.page", "sms.refapp.title");
+        map.put("module/sms/sms.form", "sms.title");
+        map.put("sms/sms.page", "sms.refapp.title");
 
-		return map;
-	}
+        return map;
+    }
 
 }

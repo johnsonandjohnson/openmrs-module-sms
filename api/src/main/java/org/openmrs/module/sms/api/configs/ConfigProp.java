@@ -23,7 +23,8 @@ public class ConfigProp {
 
     /**
      * Constructs the property using the given name and value
-     * @param name the name of the property
+     *
+     * @param name  the name of the property
      * @param value the value of the property
      */
     public ConfigProp(String name, String value) {

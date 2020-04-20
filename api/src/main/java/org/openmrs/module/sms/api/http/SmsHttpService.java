@@ -57,6 +57,7 @@ public class SmsHttpService {
     /**
      * This method allows sending outgoing sms messages through HTTP. The configuration specified in the {@link OutgoingSms}
      * object will be used for dealing with the provider.
+     *
      * @param sms the representation of the sms to send
      */
     @Transactional

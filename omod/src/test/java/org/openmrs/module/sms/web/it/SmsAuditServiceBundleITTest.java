@@ -13,34 +13,34 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Verify SmsAuditService present & functional.
  */
 public class SmsAuditServiceBundleITTest extends BaseModuleWebContextSensitiveTest {
 
-	@Autowired
-	@Qualifier("sms.SmsRecordDao")
-	private SmsRecordDao smsRecordDao;
+    @Autowired
+    @Qualifier("sms.SmsRecordDao")
+    private SmsRecordDao smsRecordDao;
 
-	@Autowired
-	@Qualifier("smsAuditService")
-	private SmsAuditService smsAuditService;
+    @Autowired
+    @Qualifier("smsAuditService")
+    private SmsAuditService smsAuditService;
 
-	@After
-	public void cleanUpDatabase() throws Exception {
-		this.deleteAllData();
-	}
+    @After
+    public void cleanUpDatabase() throws Exception {
+        this.deleteAllData();
+    }
 
-	@Test
-	public void verifyServiceFunctional() {
-		SmsRecord smsRecord = new SmsRecord("config", SmsDirection.INBOUND, "from", "message", DateUtil.now(),
-				"PENDING", "status", "mid", "pid", null);
-		smsRecordDao.create(smsRecord);
+    @Test
+    public void verifyServiceFunctional() {
+        SmsRecord smsRecord = new SmsRecord("config", SmsDirection.INBOUND, "from", "message", DateUtil.now(),
+                "PENDING", "status", "mid", "pid", null);
+        smsRecordDao.create(smsRecord);
 
-		List<SmsRecord> smsRecords = smsAuditService.findAllSmsRecords();
-		assertEquals(1, smsRecords.size());
-		assertEquals(smsRecords.get(0), smsRecord);
-	}
+        List<SmsRecord> smsRecords = smsAuditService.findAllSmsRecords();
+        assertEquals(1, smsRecords.size());
+        assertEquals(smsRecords.get(0), smsRecord);
+    }
 }

@@ -13,64 +13,64 @@ import java.util.Map;
 
 public class SmsSettingsServiceImpl extends BaseOpenmrsService implements SmsSettingsService {
 
-	private TemplateService templateService;
+    private TemplateService templateService;
 
-	private ConfigService configService;
+    private ConfigService configService;
 
-	private TemplateJsonParser templateJsonParser;
+    private TemplateJsonParser templateJsonParser;
 
-	private SettingsManagerService settingsManagerService;
+    private SettingsManagerService settingsManagerService;
 
-	@Override
-	public Map<String, TemplateForWeb> getTemplates() {
-		return templateService.allTemplatesForWeb();
-	}
+    @Override
+    public Map<String, TemplateForWeb> getTemplates() {
+        return templateService.allTemplatesForWeb();
+    }
 
-	@Override
-	public void importTemplates(String templates) {
-		templateJsonParser.importTemplates(templates);
-	}
+    @Override
+    public void importTemplates(String templates) {
+        templateJsonParser.importTemplates(templates);
+    }
 
-	@Override
-	public Configs getConfigs() {
-		return configService.getConfigs();
-	}
+    @Override
+    public Configs getConfigs() {
+        return configService.getConfigs();
+    }
 
-	@Override
-	public Configs setConfigs(Configs configs) {
-		configService.updateConfigs(configs);
-		return configService.getConfigs();
-	}
+    @Override
+    public Configs setConfigs(Configs configs) {
+        configService.updateConfigs(configs);
+        return configService.getConfigs();
+    }
 
-	@Override
-	public String getCustomUISettings() {
-		createEmptyConfigurationIfNotExists(Constants.UI_CONFIG);
-		try {
-			return IOUtils.toString(settingsManagerService.getRawConfig(Constants.UI_CONFIG));
-		} catch (IOException e) {
-			throw new SmsRuntimeException(e);
-		}
-	}
+    @Override
+    public String getCustomUISettings() {
+        createEmptyConfigurationIfNotExists(Constants.UI_CONFIG);
+        try {
+            return IOUtils.toString(settingsManagerService.getRawConfig(Constants.UI_CONFIG));
+        } catch (IOException e) {
+            throw new SmsRuntimeException(e);
+        }
+    }
 
-	private void createEmptyConfigurationIfNotExists(String filename) {
-		if (!settingsManagerService.configurationExist(filename)) {
-			settingsManagerService.createEmptyConfiguration(filename);
-		}
-	}
+    private void createEmptyConfigurationIfNotExists(String filename) {
+        if (!settingsManagerService.configurationExist(filename)) {
+            settingsManagerService.createEmptyConfiguration(filename);
+        }
+    }
 
-	public void setTemplateService(TemplateService templateService) {
-		this.templateService = templateService;
-	}
+    public void setTemplateService(TemplateService templateService) {
+        this.templateService = templateService;
+    }
 
-	public void setConfigService(ConfigService configService) {
-		this.configService = configService;
-	}
+    public void setConfigService(ConfigService configService) {
+        this.configService = configService;
+    }
 
-	public void setTemplateJsonParser(TemplateJsonParser templateJsonParser) {
-		this.templateJsonParser = templateJsonParser;
-	}
+    public void setTemplateJsonParser(TemplateJsonParser templateJsonParser) {
+        this.templateJsonParser = templateJsonParser;
+    }
 
-	public void setSettingsManagerService(SettingsManagerService settingsManagerService) {
-		this.settingsManagerService = settingsManagerService;
-	}
+    public void setSettingsManagerService(SettingsManagerService settingsManagerService) {
+        this.settingsManagerService = settingsManagerService;
+    }
 }

@@ -33,10 +33,11 @@ public class SmsLoggingRecords implements Serializable {
 
     /**
      * Constructs an sms logging view for the jq grid.
-     * @param page the page number
-     * @param rows the number of rows per page
+     *
+     * @param page         the page number
+     * @param rows         the number of rows per page
      * @param totalRecords the total number of records
-     * @param smsRecords the data to display in the grid
+     * @param smsRecords   the data to display in the grid
      */
     public SmsLoggingRecords(Integer page, Integer rows, Long totalRecords, SmsRecords smsRecords) {
         this.page = page;

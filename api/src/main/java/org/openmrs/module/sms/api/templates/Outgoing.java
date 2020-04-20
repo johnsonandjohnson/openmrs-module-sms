@@ -31,7 +31,7 @@ public class Outgoing {
     /**
      * The minimal number of milliseconds which we should wait between sending messages to the provider,
      * prevents issues with sending too many requests per second.
-    */
+     */
     private Integer millisecondsBetweenMessages;
 
     /**
@@ -132,6 +132,7 @@ public class Outgoing {
      * Returns the minimal number of milliseconds which we should wait between sending messages to the provider,
      * prevents issues with sending too many requests per second. If the value is not set, the
      * default value from the settings will be returned.
+     *
      * @return the minimal number of milliseconds between message requests sent to the provider
      */
     public Integer getMillisecondsBetweenMessages() {
@@ -144,6 +145,7 @@ public class Outgoing {
     /**
      * Sets the minimal number of milliseconds which we should wait between sending messages to the provider,
      * prevents issues with sending too many requests per second.
+     *
      * @param millisecondsBetweenMessages the number of milliseconds to wait between message requests
      */
     public void setMillisecondsBetweenMessages(Integer millisecondsBetweenMessages) {
@@ -152,6 +154,7 @@ public class Outgoing {
 
     /**
      * Not used currently.
+     *
      * @return whether we should back off exponentially between retries
      */
     public Boolean getExponentialBackOffRetries() {
@@ -160,6 +163,7 @@ public class Outgoing {
 
     /**
      * Not used currently.
+     *
      * @param exponentialBackOffRetries whether we should back off exponentially between retries
      */
     public void setExponentialBackOffRetries(Boolean exponentialBackOffRetries) {
@@ -169,6 +173,7 @@ public class Outgoing {
     /**
      * Returns the maximum size for an SMS message. If not set, the default value
      * from settings is used.
+     *
      * @return the maximum size of an SMS
      */
     public Integer getMaxSmsSize() {
@@ -188,6 +193,7 @@ public class Outgoing {
     /**
      * Returns the maximum number of recipients for an SMS message. If not set
      * the default value from settings is used.
+     *
      * @return the maximum number of SMS recipients
      */
     public Integer getMaxRecipient() {
@@ -207,6 +213,7 @@ public class Outgoing {
     /**
      * Returns the separator used to separate recipients for the SMS. If a separator
      * is not set, then the default one from settings is used.
+     *
      * @return the separator used to separate recipients for the SMS
      */
     public String getRecipientSeparator() {

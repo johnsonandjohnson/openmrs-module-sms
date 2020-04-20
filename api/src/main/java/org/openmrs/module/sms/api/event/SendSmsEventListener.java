@@ -11,18 +11,18 @@ import java.util.Map;
 
 public class SendSmsEventListener extends AbstractSmsEventListener {
 
-	private static final Log LOGGER = LogFactory.getLog(SendSmsEventListener.class);
+    private static final Log LOGGER = LogFactory.getLog(SendSmsEventListener.class);
 
-	@Override
-	public String[] getSubjects() {
-		return new String[] { SmsEventSubjects.SEND_SMS };
-	}
+    @Override
+    public String[] getSubjects() {
+        return new String[]{SmsEventSubjects.SEND_SMS};
+    }
 
-	@Override
-	protected void handleEvent(Map<String, Object> properties) {
-		LOGGER.info(String.format("Handling external event %s: %s", Arrays.toString(getSubjects()),
-				properties.get("message").toString().replace("\n", "\\n")));
-		getComponent("sms.SmsService", SmsService.class)
-				.send(new OutgoingSms(new SmsEvent(properties)));
-	}
+    @Override
+    protected void handleEvent(Map<String, Object> properties) {
+        LOGGER.info(String.format("Handling external event %s: %s", Arrays.toString(getSubjects()),
+                properties.get("message").toString().replace("\n", "\\n")));
+        getComponent("sms.SmsService", SmsService.class)
+                .send(new OutgoingSms(new SmsEvent(properties)));
+    }
 }

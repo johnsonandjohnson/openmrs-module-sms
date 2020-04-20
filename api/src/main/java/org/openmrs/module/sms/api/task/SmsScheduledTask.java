@@ -7,9 +7,9 @@ import org.openmrs.module.sms.api.service.OutgoingSms;
 
 public class SmsScheduledTask extends AbstractSmsTask {
 
-	@Override
-	public void executeTask() {
-		Context.getRegisteredComponent("sms.SmsHttpService", SmsHttpService.class)
-				.send(new OutgoingSms(new SmsEvent(SmsEvent.convertProperties(getTaskDefinition().getProperties()))));
-	}
+    @Override
+    public void executeTask() {
+        Context.getRegisteredComponent("sms.SmsHttpService", SmsHttpService.class)
+                .send(new OutgoingSms(new SmsEvent(SmsEvent.convertProperties(getTaskDefinition().getProperties()))));
+    }
 }

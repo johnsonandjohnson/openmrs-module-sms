@@ -14,17 +14,17 @@ import static junit.framework.Assert.assertNotNull;
  */
 public class IncomingControllerBundleITTest extends BaseModuleWebContextSensitiveTest {
 
-	@Autowired
-	@Qualifier("sms.SmsService")
-	private SmsService smsService;
+    @Autowired
+    @Qualifier("sms.SmsService")
+    private SmsService smsService;
 
-	@After
-	public void cleanUpDatabase() throws Exception {
-		this.deleteAllData();
-	}
+    @After
+    public void cleanUpDatabase() throws Exception {
+        this.deleteAllData();
+    }
 
-	@Test
-	public void verifyServiceFunctional() {
-		assertNotNull(smsService);
-	}
+    @Test
+    public void verifyServiceFunctional() {
+        assertNotNull(smsService);
+    }
 }

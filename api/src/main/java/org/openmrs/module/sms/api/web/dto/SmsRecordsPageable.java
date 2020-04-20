@@ -14,96 +14,97 @@ import java.util.List;
 
 public class SmsRecordsPageable implements Serializable {
 
-	private static final long serialVersionUID = 4554144138502087590L;
+    private static final long serialVersionUID = 4554144138502087590L;
 
-	private Integer pageIndex;
+    private Integer pageIndex;
 
-	private Integer pageSize;
+    private Integer pageSize;
 
-	private Integer totalRecords;
+    private Integer totalRecords;
 
-	private List<SmsRecordDTO> rows;
+    private List<SmsRecordDTO> rows;
 
-	public SmsRecordsPageable() { }
+    public SmsRecordsPageable() {
+    }
 
-	public SmsRecordsPageable(PagingInfo page, SmsRecords smsRecords) {
-		this.pageIndex = page.getPage();
-		this.pageSize = page.getPageSize();
-		this.totalRecords = smsRecords.getCount();
-		this.rows = convertSmsRecordsToDTO(smsRecords.getRecords());
-	}
+    public SmsRecordsPageable(PagingInfo page, SmsRecords smsRecords) {
+        this.pageIndex = page.getPage();
+        this.pageSize = page.getPageSize();
+        this.totalRecords = smsRecords.getCount();
+        this.rows = convertSmsRecordsToDTO(smsRecords.getRecords());
+    }
 
-	public Integer getPageIndex() {
-		return pageIndex;
-	}
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
 
-	public void setPageIndex(Integer pageIndex) {
-		this.pageIndex = pageIndex;
-	}
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
 
-	public Integer getPageSize() {
-		return pageSize;
-	}
+    public Integer getPageSize() {
+        return pageSize;
+    }
 
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
-	}
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
 
-	public Integer getTotalRecords() {
-		return totalRecords;
-	}
+    public Integer getTotalRecords() {
+        return totalRecords;
+    }
 
-	public void setTotalRecords(Integer totalRecords) {
-		this.totalRecords = totalRecords;
-	}
+    public void setTotalRecords(Integer totalRecords) {
+        this.totalRecords = totalRecords;
+    }
 
-	public List<SmsRecordDTO> getRows() {
-		return rows;
-	}
+    public List<SmsRecordDTO> getRows() {
+        return rows;
+    }
 
-	public void setRows(List<SmsRecordDTO> rows) {
-		this.rows = rows;
-	}
+    public void setRows(List<SmsRecordDTO> rows) {
+        this.rows = rows;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
 
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-		return EqualsBuilder.reflectionEquals(this, o);
-	}
+        return EqualsBuilder.reflectionEquals(this, o);
+    }
 
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
 
-	private List<SmsRecordDTO> convertSmsRecordsToDTO(List<SmsRecord> records) {
-		List<SmsRecordDTO> result = new ArrayList<>();
-		for (SmsRecord record : records) {
-			result.add(new SmsRecordDTOBuilder()
-					.setId(record.getId())
-					.setErrorMessage(record.getErrorMessage())
-					.setProviderStatus(record.getProviderStatus())
-					.setOpenMrsId(record.getOpenMrsId())
-					.setProviderId(record.getProviderId())
-					.setDeliveryStatus(record.getDeliveryStatus())
-					.setMessageContent(record.getMessageContent())
-					.setTimestamp(DateUtil.dateToString(record.getTimestamp()))
-					.setConfig(record.getConfig())
-					.setSmsDirection(record.getSmsDirection())
-					.setPhoneNumber(record.getPhoneNumber())
-					.setModificationDate(DateUtil.dateToString(record.getDateChanged()))
-					.setCreationDate(DateUtil.dateToString(record.getDateCreated()))
-					.setModifiedBy(record.getChangedBy())
-					.setCreator(record.getCreator())
-					.createSmsRecordDTO());
-		}
-		return result;
-	}
+    private List<SmsRecordDTO> convertSmsRecordsToDTO(List<SmsRecord> records) {
+        List<SmsRecordDTO> result = new ArrayList<>();
+        for (SmsRecord record : records) {
+            result.add(new SmsRecordDTOBuilder()
+                    .setId(record.getId())
+                    .setErrorMessage(record.getErrorMessage())
+                    .setProviderStatus(record.getProviderStatus())
+                    .setOpenMrsId(record.getOpenMrsId())
+                    .setProviderId(record.getProviderId())
+                    .setDeliveryStatus(record.getDeliveryStatus())
+                    .setMessageContent(record.getMessageContent())
+                    .setTimestamp(DateUtil.dateToString(record.getTimestamp()))
+                    .setConfig(record.getConfig())
+                    .setSmsDirection(record.getSmsDirection())
+                    .setPhoneNumber(record.getPhoneNumber())
+                    .setModificationDate(DateUtil.dateToString(record.getDateChanged()))
+                    .setCreationDate(DateUtil.dateToString(record.getDateCreated()))
+                    .setModifiedBy(record.getChangedBy())
+                    .setCreator(record.getCreator())
+                    .createSmsRecordDTO());
+        }
+        return result;
+    }
 }

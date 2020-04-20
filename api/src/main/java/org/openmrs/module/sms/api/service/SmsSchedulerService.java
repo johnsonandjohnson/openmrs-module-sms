@@ -8,5 +8,5 @@ import java.util.Date;
 
 public interface SmsSchedulerService extends OpenmrsService {
 
-	void safeScheduleRunOnceJob(SmsEvent event, Date startTime, AbstractSmsTask task);
+    void safeScheduleRunOnceJob(SmsEvent event, Date startTime, AbstractSmsTask task);
 }

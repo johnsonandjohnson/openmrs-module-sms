@@ -30,68 +30,68 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class SmsSchedulerServiceTest {
 
-	private static String TEST_SUBJECT = "subject";
-	private static String JOB_ID_VALUE = "2";
+    private static String TEST_SUBJECT = "subject";
+    private static String JOB_ID_VALUE = "2";
 
-	@Mock
-	private SchedulerService schedulerService;
+    @Mock
+    private SchedulerService schedulerService;
 
-	@InjectMocks
-	private SmsSchedulerService smsSchedulerService = new SmsSchedulerServiceImpl();
+    @InjectMocks
+    private SmsSchedulerService smsSchedulerService = new SmsSchedulerServiceImpl();
 
-	private ArgumentCaptor<TaskDefinition> taskDefinitionCaptor;
-	private SmsEvent smsEvent;
+    private ArgumentCaptor<TaskDefinition> taskDefinitionCaptor;
+    private SmsEvent smsEvent;
 
-	@Before
-	public void setUp() {
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put(Constants.PARAM_JOB_ID, JOB_ID_VALUE);
-		smsEvent = new SmsEvent(TEST_SUBJECT, parameters);
+    @Before
+    public void setUp() {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(Constants.PARAM_JOB_ID, JOB_ID_VALUE);
+        smsEvent = new SmsEvent(TEST_SUBJECT, parameters);
 
-		taskDefinitionCaptor = ArgumentCaptor.forClass(TaskDefinition.class);
-	}
+        taskDefinitionCaptor = ArgumentCaptor.forClass(TaskDefinition.class);
+    }
 
-	@Test
-	public void shouldProperlyScheduleTask() throws Exception {
-		when(schedulerService.getTaskByName(TEST_SUBJECT + "-" + JOB_ID_VALUE)).thenReturn(new TaskDefinition());
+    @Test
+    public void shouldProperlyScheduleTask() throws Exception {
+        when(schedulerService.getTaskByName(TEST_SUBJECT + "-" + JOB_ID_VALUE)).thenReturn(new TaskDefinition());
 
-		smsSchedulerService.safeScheduleRunOnceJob(smsEvent, DateUtil.now(), new SmsScheduledTask());
+        smsSchedulerService.safeScheduleRunOnceJob(smsEvent, DateUtil.now(), new SmsScheduledTask());
 
-		verify(schedulerService).shutdownTask(any(TaskDefinition.class));
-		verify(schedulerService).scheduleTask(taskDefinitionCaptor.capture());
+        verify(schedulerService).shutdownTask(any(TaskDefinition.class));
+        verify(schedulerService).scheduleTask(taskDefinitionCaptor.capture());
 
-		TaskDefinition captured = taskDefinitionCaptor.getValue();
-		assertThat(captured.getName(), equalTo(TEST_SUBJECT + "-" + JOB_ID_VALUE));
-		assertThat(captured.getTaskClass(), equalTo(SmsScheduledTask.class.getName()));
-		assertThat(captured.getStartTime(), notNullValue());
-		assertThat(captured.getStartOnStartup(), equalTo(false));
-		assertThat(captured.getRepeatInterval(), equalTo(0L));
+        TaskDefinition captured = taskDefinitionCaptor.getValue();
+        assertThat(captured.getName(), equalTo(TEST_SUBJECT + "-" + JOB_ID_VALUE));
+        assertThat(captured.getTaskClass(), equalTo(SmsScheduledTask.class.getName()));
+        assertThat(captured.getStartTime(), notNullValue());
+        assertThat(captured.getStartOnStartup(), equalTo(false));
+        assertThat(captured.getRepeatInterval(), equalTo(0L));
 
-		Map<String, String> properties = new HashMap<>();
-		properties.put(Constants.PARAM_JOB_ID, JOB_ID_VALUE);
-		assertThat(captured.getProperties(), equalTo(properties));
-	}
+        Map<String, String> properties = new HashMap<>();
+        properties.put(Constants.PARAM_JOB_ID, JOB_ID_VALUE);
+        assertThat(captured.getProperties(), equalTo(properties));
+    }
 
-	@Test
-	public void shouldScheduleEvenIfUnScheduleFailed() throws Exception {
-		when(schedulerService.getTaskByName(TEST_SUBJECT + "-" + JOB_ID_VALUE)).thenReturn(new TaskDefinition());
-		doThrow(SchedulerException.class).when(schedulerService).shutdownTask(any(TaskDefinition.class));
+    @Test
+    public void shouldScheduleEvenIfUnScheduleFailed() throws Exception {
+        when(schedulerService.getTaskByName(TEST_SUBJECT + "-" + JOB_ID_VALUE)).thenReturn(new TaskDefinition());
+        doThrow(SchedulerException.class).when(schedulerService).shutdownTask(any(TaskDefinition.class));
 
-		smsSchedulerService.safeScheduleRunOnceJob(smsEvent, DateUtil.now(), new SmsScheduledTask());
+        smsSchedulerService.safeScheduleRunOnceJob(smsEvent, DateUtil.now(), new SmsScheduledTask());
 
-		verify(schedulerService).shutdownTask(any(TaskDefinition.class));
-		verify(schedulerService).scheduleTask(any(TaskDefinition.class));
-	}
+        verify(schedulerService).shutdownTask(any(TaskDefinition.class));
+        verify(schedulerService).scheduleTask(any(TaskDefinition.class));
+    }
 
-	@Test(expected = SmsRuntimeException.class)
-	public void shouldThrowExceptionIfScheduleFailed() throws Exception {
-		when(schedulerService.getTaskByName(TEST_SUBJECT + "-" + JOB_ID_VALUE)).thenReturn(new TaskDefinition());
-		doThrow(SchedulerException.class).when(schedulerService).shutdownTask(any(TaskDefinition.class));
-		doThrow(SchedulerException.class).when(schedulerService).scheduleTask(any(TaskDefinition.class));
+    @Test(expected = SmsRuntimeException.class)
+    public void shouldThrowExceptionIfScheduleFailed() throws Exception {
+        when(schedulerService.getTaskByName(TEST_SUBJECT + "-" + JOB_ID_VALUE)).thenReturn(new TaskDefinition());
+        doThrow(SchedulerException.class).when(schedulerService).shutdownTask(any(TaskDefinition.class));
+        doThrow(SchedulerException.class).when(schedulerService).scheduleTask(any(TaskDefinition.class));
 
-		smsSchedulerService.safeScheduleRunOnceJob(smsEvent, DateUtil.now(), new SmsScheduledTask());
+        smsSchedulerService.safeScheduleRunOnceJob(smsEvent, DateUtil.now(), new SmsScheduledTask());
 
-		verify(schedulerService).shutdownTask(any(TaskDefinition.class));
-		verify(schedulerService).scheduleTask(any(TaskDefinition.class));
-	}
+        verify(schedulerService).shutdownTask(any(TaskDefinition.class));
+        verify(schedulerService).scheduleTask(any(TaskDefinition.class));
+    }
 }

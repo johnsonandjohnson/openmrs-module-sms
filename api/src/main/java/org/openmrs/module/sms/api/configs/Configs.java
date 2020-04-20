@@ -30,10 +30,12 @@ public class Configs {
     /**
      * Creates a new instance, used by Jackson.
      */
-    public Configs() { }
+    public Configs() {
+    }
 
     /**
      * Returns the default configuration, users can make one of the configurations default.
+     *
      * @return the default configuration, never null
      * @throws IllegalStateException if no default configuration is set
      */
@@ -47,6 +49,7 @@ public class Configs {
 
     /**
      * Checks whether there are no configurations available.
+     *
      * @return true if there are no configurations, false otherwise
      */
     @JsonIgnore
@@ -56,6 +59,7 @@ public class Configs {
 
     /**
      * Returns the name of the default configuration.
+     *
      * @return the name of the default configuration or null if it was not set
      */
     public String getDefaultConfigName() {
@@ -64,7 +68,8 @@ public class Configs {
 
     /**
      * Sets the name of the default configuration.
-     * @param name  the name of the default configuration
+     *
+     * @param name the name of the default configuration
      */
     public void setDefaultConfigName(String name) {
         defaultConfigName = name;
@@ -86,6 +91,7 @@ public class Configs {
 
     /**
      * Fetches the config with the given name.
+     *
      * @param name the name of the config
      * @return the config with the given name, never null
      * @throws IllegalArgumentException if a configuration with the given name does not exist
@@ -101,6 +107,7 @@ public class Configs {
 
     /**
      * Checks whether a configuration with the given name exists.
+     *
      * @param name the name of the configuration
      * @return true if it exists, false otherwise
      */
@@ -115,9 +122,10 @@ public class Configs {
 
     /**
      * Returns the config with the given name, or the default config if the provided name is null or empty.
+     *
      * @param name the name of the desired configuration, or null/empty string for the default configuration
      * @return the matching configuration
-     * @throws IllegalStateException if a blank string is provided and there is no default configuration
+     * @throws IllegalStateException    if a blank string is provided and there is no default configuration
      * @throws IllegalArgumentException if a configuration with the given name does not exist
      */
     public Config getConfigOrDefault(String name) {

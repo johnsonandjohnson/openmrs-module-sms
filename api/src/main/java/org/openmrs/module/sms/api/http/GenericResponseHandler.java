@@ -18,8 +18,9 @@ public class GenericResponseHandler extends ResponseHandler {
 
     /**
      * Constructs an instance using the provided template and configuration.
+     *
      * @param template the template to use
-     * @param config the configuration to use
+     * @param config   the configuration to use
      */
     GenericResponseHandler(Template template, Config config) {
         super(template, config);

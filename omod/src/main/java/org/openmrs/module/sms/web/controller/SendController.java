@@ -8,7 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 
@@ -27,6 +32,7 @@ public class SendController {
 
     /**
      * Sends an outgoing sms.
+     *
      * @param outgoingSms the definition of the SMS to send
      * @return a message describing that the SMS was sent
      * @see OutgoingSms
@@ -42,6 +48,7 @@ public class SendController {
 
     /**
      * Handles an exception in the controller. The message of the exception will be returned as the HTTP body.
+     *
      * @param e the exception to handle
      * @return the message from the exception, to be treated as the response body
      */

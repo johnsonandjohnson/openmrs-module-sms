@@ -10,7 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -34,6 +40,7 @@ public class SmsSettingsController {
 
     /**
      * Returns all the templates for the UI.
+     *
      * @return a map of templates, keys are template names
      */
     @RequestMapping(value = "/templates", method = RequestMethod.GET)
@@ -44,6 +51,7 @@ public class SmsSettingsController {
 
     /**
      * Imports templates from the uploaded file.
+     *
      * @param file the file containing the templates
      * @throws IOException if there was a problem reading the file
      */
@@ -59,6 +67,7 @@ public class SmsSettingsController {
 
     /**
      * Retrieves all configurations for the UI.
+     *
      * @return all configurations in the system
      */
     @RequestMapping(value = "/configs", method = RequestMethod.GET)
@@ -69,6 +78,7 @@ public class SmsSettingsController {
 
     /**
      * Saves the provided configurations, overriding old ones.
+     *
      * @param configs all configurations to save
      * @return the newly saved configurations
      */
@@ -81,6 +91,7 @@ public class SmsSettingsController {
 
     /**
      * Handles exceptions, returns their message as the response body.
+     *
      * @param e the exception to handle
      * @return the exception message
      */

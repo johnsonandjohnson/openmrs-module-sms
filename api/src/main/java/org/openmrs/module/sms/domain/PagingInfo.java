@@ -5,79 +5,81 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class PagingInfo {
 
-	private int page;
-	private int pageSize;
-	private Long totalRecordCount;
-	private boolean loadRecordCount;
+    private int page;
+    private int pageSize;
+    private Long totalRecordCount;
+    private boolean loadRecordCount;
 
-	public PagingInfo() {}
+    public PagingInfo() {
+    }
 
-	/**
-	 * Creates a new {@link PagingInfo} instance.
-	 * @param page The 1-based number of the page being requested.
-	 * @param pageSize The number of records to include on each page.
-	 */
-	public PagingInfo(int page, int pageSize) {
-		this.page = page;
-		this.pageSize = pageSize;
+    /**
+     * Creates a new {@link PagingInfo} instance.
+     *
+     * @param page     The 1-based number of the page being requested.
+     * @param pageSize The number of records to include on each page.
+     */
+    public PagingInfo(int page, int pageSize) {
+        this.page = page;
+        this.pageSize = pageSize;
 
-		this.loadRecordCount = true;
-	}
+        this.loadRecordCount = true;
+    }
 
-	public int getPage() {
-		return page;
-	}
+    public int getPage() {
+        return page;
+    }
 
-	public void setPage(int page) {
-		this.page = page;
-	}
+    public void setPage(int page) {
+        this.page = page;
+    }
 
-	public int getPageSize() {
-		return pageSize;
-	}
+    public int getPageSize() {
+        return pageSize;
+    }
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
 
-	public Long getTotalRecordCount() {
-		return totalRecordCount;
-	}
+    public Long getTotalRecordCount() {
+        return totalRecordCount;
+    }
 
-	public void setTotalRecordCount(Long totalRecordCount) {
-		this.totalRecordCount = totalRecordCount;
+    public void setTotalRecordCount(Long totalRecordCount) {
+        this.totalRecordCount = totalRecordCount;
 
-		// If the total records is set to anything other than null, than don't reload the count
-		this.loadRecordCount = totalRecordCount == null;
-	}
+        // If the total records is set to anything other than null, than don't reload the count
+        this.loadRecordCount = totalRecordCount == null;
+    }
 
-	public boolean shouldLoadRecordCount() {
-		return loadRecordCount;
-	}
+    public boolean shouldLoadRecordCount() {
+        return loadRecordCount;
+    }
 
-	public void setLoadRecordCount(boolean loadRecordCount) {
-		this.loadRecordCount = loadRecordCount;
-	}
+    public void setLoadRecordCount(boolean loadRecordCount) {
+        this.loadRecordCount = loadRecordCount;
+    }
 
-	public Boolean hasMoreResults() {
-		return (page * pageSize) < totalRecordCount;
-	}
+    public Boolean hasMoreResults() {
+        return (page * pageSize) < totalRecordCount;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
 
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-		return EqualsBuilder.reflectionEquals(this, o);
-	}
+        return EqualsBuilder.reflectionEquals(this, o);
+    }
 
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
 }

@@ -19,6 +19,7 @@ public class TemplateForWeb {
 
     /**
      * Constructs this DTO from the provided {@link Template} object.
+     *
      * @param template the backing template
      */
     public TemplateForWeb(Template template) {

@@ -314,6 +314,7 @@ public class GridSettings {
     /**
      * Converts these grid settings to a {@link SmsRecordSearchCriteria} object, which
      * contains type safe information and should be used for building database criteria.
+     *
      * @return the newly created search crtieria
      */
     public SmsRecordSearchCriteria toSmsRecordSearchCriteria() {
@@ -323,8 +324,8 @@ public class GridSettings {
             order = reverse ? Order.desc(sortColumn) : Order.asc(sortColumn);
         }
 
-        Set<SmsDirection> directions  = getSmsDirectionFromSettings();
-        Set<String> deliveryStatuses  = getDeliveryStatusFromSettings();
+        Set<SmsDirection> directions = getSmsDirectionFromSettings();
+        Set<String> deliveryStatuses = getDeliveryStatusFromSettings();
         Interval range = createRangeFromSettings();
         SmsRecordSearchCriteria criteria = new SmsRecordSearchCriteria()
                 .withSmsDirections(directions)
@@ -345,6 +346,7 @@ public class GridSettings {
     /**
      * Converts these grid settings to a {@link PagingInfo} object, which
      * contains the paging configuration.
+     *
      * @return the newly created paging information
      */
     public PagingInfo toPageInfo() {
@@ -375,7 +377,7 @@ public class GridSettings {
         Set<String> smsDeliveryStatus = new HashSet<>();
         if (StringUtils.isNotBlank(deliveryStatus)) {
             if (deliveryStatus.contains(",")) {
-                smsDeliveryStatus =  new HashSet<>(Arrays.asList(deliveryStatus.split(",")));
+                smsDeliveryStatus = new HashSet<>(Arrays.asList(deliveryStatus.split(",")));
             } else {
                 smsDeliveryStatus = Collections.singleton(deliveryStatus);
             }

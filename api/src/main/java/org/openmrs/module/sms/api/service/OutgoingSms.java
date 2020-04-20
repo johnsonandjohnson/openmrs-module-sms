@@ -57,6 +57,7 @@ public class OutgoingSms {
 
     /**
      * Constructs an instance using the field map from the provided event.
+     *
      * @param smsEvent
      * @see SmsEventParams
      */
@@ -75,9 +76,10 @@ public class OutgoingSms {
 
     /**
      * Creates a new instance using the provided parameters.
-     * @param config use this config to send the SMS, otherwise use the default config
-     * @param recipients one or more recipients
-     * @param message the message to send
+     *
+     * @param config       use this config to send the SMS, otherwise use the default config
+     * @param recipients   one or more recipients
+     * @param message      the message to send
      * @param deliveryTime the expected delivery time of the sms
      */
     public OutgoingSms(String config, List<String> recipients, String message, Date deliveryTime) {
@@ -89,9 +91,10 @@ public class OutgoingSms {
 
     /**
      * Creates a new instance using the provided parameters.
-     * @param config use this config to send the SMS, otherwise use the default config
-     * @param recipient the recipient of the SMS
-     * @param message the message to send
+     *
+     * @param config       use this config to send the SMS, otherwise use the default config
+     * @param recipient    the recipient of the SMS
+     * @param message      the message to send
      * @param deliveryTime the expected delivery time of the sms
      */
     public OutgoingSms(String config, String recipient, String message, Date deliveryTime) {
@@ -100,9 +103,10 @@ public class OutgoingSms {
 
     /**
      * Creates a new instance using the provided parameters.
-     * @param config use this config to send the SMS, otherwise use the default config
+     *
+     * @param config     use this config to send the SMS, otherwise use the default config
      * @param recipients the recipients of the SMS
-     * @param message the message to send
+     * @param message    the message to send
      */
     public OutgoingSms(String config, List<String> recipients, String message) {
         this.recipients = recipients;
@@ -116,8 +120,9 @@ public class OutgoingSms {
 
     /**
      * Creates a new instance using the provided parameters.
-     * @param recipients the recipients of the SMS
-     * @param message the message to send
+     *
+     * @param recipients   the recipients of the SMS
+     * @param message      the message to send
      * @param deliveryTime the expected delivery time of the sms
      */
     public OutgoingSms(List<String> recipients, String message, Date deliveryTime) {
@@ -128,8 +133,9 @@ public class OutgoingSms {
 
     /**
      * Creates a new instance using the provided parameters.
-     * @param recipient the recipient of the SMS
-     * @param message the message to send
+     *
+     * @param recipient    the recipient of the SMS
+     * @param message      the message to send
      * @param deliveryTime the expected delivery time of the sms
      */
     public OutgoingSms(String recipient, String message, Date deliveryTime) {
@@ -138,8 +144,9 @@ public class OutgoingSms {
 
     /**
      * Creates a new instance using the provided parameters.
+     *
      * @param recipients the recipients of the SMS
-     * @param message the message to send
+     * @param message    the message to send
      */
     public OutgoingSms(List<String> recipients, String message) {
         this.recipients = recipients;
@@ -148,8 +155,9 @@ public class OutgoingSms {
 
     /**
      * Creates a new instance using the provided parameters.
+     *
      * @param recipient the recipient of the SMS
-     * @param message the message to send
+     * @param message   the message to send
      */
     public OutgoingSms(String recipient, String message) {
         this(Collections.singletonList(recipient), message);
@@ -157,6 +165,7 @@ public class OutgoingSms {
 
     /**
      * If specified, use this config to send the SMS, otherwise use the default config.
+     *
      * @return the config that will be used for sending this SMS
      */
     public String getConfig() {
@@ -166,6 +175,7 @@ public class OutgoingSms {
     /**
      * Checks if this SMS specifies a config for sending the SMS, or whether the default
      * configuration should be used.
+     *
      * @return true if there's a config specified for this SMS, false if the default config is to be used
      */
     public Boolean hasConfig() {
@@ -174,6 +184,7 @@ public class OutgoingSms {
 
     /**
      * If specified, use this config to send the SMS, otherwise use the default config.
+     *
      * @param config the config that will be used for sending this SMS
      */
     public void setConfig(String config) {
@@ -182,6 +193,7 @@ public class OutgoingSms {
 
     /**
      * Gets the recipients for this message. An SMS can have one or more recipients.
+     *
      * @return the recipients fo the SMS
      */
     public List<String> getRecipients() {
@@ -190,6 +202,7 @@ public class OutgoingSms {
 
     /**
      * Gets the recipients for this message. An SMS can have one or more recipients.
+     *
      * @param recipients the recipients fo the SMS
      */
     public void setRecipients(List<String> recipients) {
@@ -213,6 +226,7 @@ public class OutgoingSms {
     /**
      * Gets the delivery time for this SMS. If specified, will schedule
      * the message for future delivery using the OpenMRS scheduler.
+     *
      * @return the delivery time for this SMS
      */
     public Date getDeliveryTime() {
@@ -223,6 +237,7 @@ public class OutgoingSms {
      * Checks whether this SMS has a specified delivery time. If specified, will schedule
      * the message for future delivery using the OpenMRS scheduler. If not, the message
      * should be immediately delivered.
+     *
      * @return true if this SMS has a specific delivery time, false otherwise
      */
     public Boolean hasDeliveryTime() {
@@ -232,8 +247,9 @@ public class OutgoingSms {
     /**
      * Gets the delivery time for this SMS. If specified will schedule
      * the message for future delivery using the OpenMRS scheduler.
-     * @param deliveryTime  the delivery time for this SMS
-    */
+     *
+     * @param deliveryTime the delivery time for this SMS
+     */
     public void setDeliveryTime(Date deliveryTime) {
         this.deliveryTime = deliveryTime;
     }
@@ -241,6 +257,7 @@ public class OutgoingSms {
     /**
      * Gets the failure counter, used by the SMS module to keep track of the failures
      * and execute retries.
+     *
      * @return the internal failure counter for this SMS
      */
     public Integer getFailureCount() {
@@ -250,7 +267,8 @@ public class OutgoingSms {
     /**
      * Sets the failure counter, used by the SMS module to keep track of the failures
      * and execute retries.
-     * @param failureCount  the internal failure counter for this SMS
+     *
+     * @param failureCount the internal failure counter for this SMS
      */
     public void setFailureCount(Integer failureCount) {
         this.failureCount = failureCount;
@@ -263,6 +281,7 @@ public class OutgoingSms {
 
     /**
      * Gets the OpenMRS specific message GUID of this SMS.
+     *
      * @return the OpenMrs specific GUID for this SMS
      */
     public String getOpenMrsId() {
@@ -271,6 +290,7 @@ public class OutgoingSms {
 
     /**
      * Sets the OpenMRS specific message GUID of this SMS.
+     *
      * @param openMrsId the OpenMrs specific GUID for this SMS
      */
     public void setOpenMrsId(String openMrsId) {

@@ -56,6 +56,7 @@ public class Template {
 
     /**
      * Generates an HTTP request for an outgoing SMS from the provided properties.
+     *
      * @param props the properties used for building the request
      * @return the HTTP request to execute
      */
@@ -80,7 +81,7 @@ public class Template {
                 StringRequestEntity requestEntity;
                 try {
                     requestEntity = new StringRequestEntity(json, MediaType.APPLICATION_JSON, "UTF-8");
-                } catch  (UnsupportedEncodingException e) {
+                } catch (UnsupportedEncodingException e) {
                     throw new IllegalStateException(String.format("Template error: %s: invalid json", name), e);
                 }
                 ((PostMethod) httpMethod).setRequestEntity(requestEntity);
@@ -98,6 +99,7 @@ public class Template {
 
     /**
      * Formats the recipient list into a single string that can be understood by the provider.
+     *
      * @param recipients the list of recipients
      * @return the recipient string for the provider
      */
@@ -164,7 +166,7 @@ public class Template {
     private NameValuePair[] addQueryParameters(Map<String, String> props) {
         List<NameValuePair> queryStringValues = new ArrayList<>();
         Map<String, String> queryParameters = outgoing.getRequest().getQueryParameters();
-        for (Map.Entry< String, String > entry : queryParameters.entrySet()) {
+        for (Map.Entry<String, String> entry : queryParameters.entrySet()) {
             String value = placeHolderOrLiteral(entry.getValue(), props);
             queryStringValues.add(new NameValuePair(entry.getKey(), value));
         }
@@ -173,7 +175,7 @@ public class Template {
 
     private Map<String, String> getJsonParameters(Map<String, String> bodyParameters, Map<String, String> props) {
         Map<String, String> ret = new HashMap<>();
-        for (Map.Entry<String, String> entry: bodyParameters.entrySet()) {
+        for (Map.Entry<String, String> entry : bodyParameters.entrySet()) {
             String value = placeHolderOrLiteral(entry.getValue(), props);
             ret.put(entry.getKey(), value);
         }
@@ -182,7 +184,7 @@ public class Template {
 
     private void addBodyParameters(PostMethod postMethod, Map<String, String> props) {
         Map<String, String> bodyParameters = outgoing.getRequest().getBodyParameters();
-        for (Map.Entry<String, String> entry: bodyParameters.entrySet()) {
+        for (Map.Entry<String, String> entry : bodyParameters.entrySet()) {
             String value = placeHolderOrLiteral(entry.getValue(), props);
             postMethod.setParameter(entry.getKey(), value);
         }

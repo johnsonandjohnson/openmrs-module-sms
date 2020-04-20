@@ -120,6 +120,7 @@ public class Incoming {
 
     /**
      * Checks whether a regex pattern for extracting senders is set.
+     *
      * @return true if this object has a pattern for extracting senders, false otherwise
      */
     public Boolean hasSenderRegex() {
@@ -128,6 +129,7 @@ public class Incoming {
 
     /**
      * Extracts the sender from the given string using the sender regex.
+     *
      * @param s the string to parse
      * @return the sender of the message
      */
@@ -151,6 +153,7 @@ public class Incoming {
 
     /**
      * Checks whether a regex pattern for extracting recipients is set.
+     *
      * @return true if this object has a pattern for extracting recipients, false otherwise
      */
     public Boolean hasRecipientRegex() {
@@ -159,6 +162,7 @@ public class Incoming {
 
     /**
      * Extracts the recipient from the given string using the sender regex.
+     *
      * @param s the string to parse
      * @return the recipient of the message
      */

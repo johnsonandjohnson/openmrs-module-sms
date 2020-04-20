@@ -59,6 +59,7 @@ public class SmsLoggingRecord {
     /**
      * Constructs an instance of SmsLoggingRecord from an {@link SmsRecord}. In other words
      * it converts the domain object to the view object.
+     *
      * @param record the domain representation of the record
      */
     public SmsLoggingRecord(SmsRecord record) {

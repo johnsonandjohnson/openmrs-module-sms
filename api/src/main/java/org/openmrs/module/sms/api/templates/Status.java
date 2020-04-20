@@ -30,6 +30,7 @@ public class Status {
 
     /**
      * Checks whether the provider sends a message ID in the status.
+     *
      * @return true if we have a key for message IDs, false otherwise
      */
     public boolean hasMessageIdKey() {
@@ -52,6 +53,7 @@ public class Status {
 
     /**
      * Checks whether this provider sends a status string.
+     *
      * @return true if we have a key for the status field, false otherwise
      */
     public boolean hasStatusKey() {
@@ -74,6 +76,7 @@ public class Status {
 
     /**
      * Checks whether we know how the success status will look like.
+     *
      * @return true if we have an expected success status, false otherwise
      */
     public boolean hasStatusSuccess() {
@@ -96,6 +99,7 @@ public class Status {
 
     /**
      * Checks whether we know how the failure status will look like.
+     *
      * @return true if we have an expected failure status, false otherwise
      */
     public Boolean hasStatusFailure() {

@@ -5,7 +5,8 @@ package org.openmrs.module.sms.api.util;
  */
 public final class SmsEventSubjects {
 
-    private SmsEventSubjects() { }
+    private SmsEventSubjects() {
+    }
 
     public static final String PENDING = "outbound_sms_pending";
     public static final String RETRYING = "outbound_sms_retrying";

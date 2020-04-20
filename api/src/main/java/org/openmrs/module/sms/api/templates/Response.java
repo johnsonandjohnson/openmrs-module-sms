@@ -89,6 +89,7 @@ public class Response {
 
     /**
      * Checks whether the given status is a success status.
+     *
      * @param status the status to check
      * @return true if this is a success status, false otherwise
      */
@@ -108,6 +109,7 @@ public class Response {
 
     /**
      * Checks whether the given response is a success response.
+     *
      * @param response the response to check
      * @return true if it is a success response, false otherwise
      */
@@ -142,6 +144,7 @@ public class Response {
 
     /**
      * Extracts the single line success message ID from the response.
+     *
      * @param response the response to parse
      * @return the extracted ID
      */
@@ -162,6 +165,7 @@ public class Response {
 
     /**
      * Extracts the single failure message from the response.
+     *
      * @param response the response to parse
      * @return the failure message
      */
@@ -184,6 +188,7 @@ public class Response {
 
     /**
      * Extracts the general failure message from the response.
+     *
      * @param response the response to parse
      * @return the extracted failure message
      */
@@ -206,6 +211,7 @@ public class Response {
 
     /**
      * Extracts the success message ID and recipient from the response.
+     *
      * @param response the response to parse
      * @return a string array, where the success message ID is the first element and the recipient is the second one
      */
@@ -219,13 +225,14 @@ public class Response {
                     "Invalid number of search groups, expected: 2, actual: %s.", m.groupCount()));
         }
         if (m.find()) {
-            return new String[] {m.group(1), m.group(2)};
+            return new String[]{m.group(1), m.group(2)};
         }
         return null;
     }
 
     /**
      * Extracts the failure message  and recipient from the response.
+     *
      * @param response the response to parse
      * @return a string array, where the failure message is the first element and the recipient is the second one
      */
@@ -239,7 +246,7 @@ public class Response {
                     "Invalid number of search groups, expected: 2, actual: %s.", m.groupCount()));
         }
         if (m.find()) {
-            return new String[] {m.group(1), m.group(2)};
+            return new String[]{m.group(1), m.group(2)};
         }
         return null;
     }

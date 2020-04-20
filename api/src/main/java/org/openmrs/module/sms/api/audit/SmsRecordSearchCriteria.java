@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-
 /**
  * Helper used to generate a database lookup from log filter UI
  */
@@ -69,6 +68,7 @@ public class SmsRecordSearchCriteria {
 
     /**
      * Sets the sms directions which should be included in the query.
+     *
      * @param smsDirections the set of directions (inbound, outbound)
      * @return this instance of the search criteria
      */
@@ -79,6 +79,7 @@ public class SmsRecordSearchCriteria {
 
     /**
      * Sets the phone number part of the search.
+     *
      * @param phoneNumber the phone number which received or sent the SMS
      * @return this instance of the search criteria
      */
@@ -89,6 +90,7 @@ public class SmsRecordSearchCriteria {
 
     /**
      * Sets the configuration name part of the search.
+     *
      * @param config the config name associated with the SMS
      * @return this instance of the search criteria
      */
@@ -99,6 +101,7 @@ public class SmsRecordSearchCriteria {
 
     /**
      * Sets the OpenMRS ID part of the search query.
+     *
      * @param openMrsId the ID used by OpenMRS to identify this SMS message
      * @return this instance of the search criteria
      */
@@ -109,6 +112,7 @@ public class SmsRecordSearchCriteria {
 
     /**
      * Sets the provider ID part of the search query.
+     *
      * @param providerId the ID used by the provider to identify this SMS message
      * @return this instance of the search criteria
      */
@@ -119,6 +123,7 @@ public class SmsRecordSearchCriteria {
 
     /**
      * Sets the message content part of this search query.
+     *
      * @param messageContent the content of the SMS
      * @return this instance of the search criteria
      */
@@ -129,6 +134,7 @@ public class SmsRecordSearchCriteria {
 
     /**
      * Sets the error message part of this search query.
+     *
      * @param errorMessage the error message for the SMS
      * @return this instance of the search criteria
      */
@@ -139,6 +145,7 @@ public class SmsRecordSearchCriteria {
 
     /**
      * Sets the expected timestamp for the messages retrieved by this query.
+     *
      * @param timestamp the timestamp of the messages
      * @return this instance of the search criteria
      */
@@ -149,6 +156,7 @@ public class SmsRecordSearchCriteria {
 
     /**
      * Sets the expected timestamp range into which the messages retrieved by this query must fall into.
+     *
      * @param timestampRange the timestamp range into which the messages must fall into
      * @return this instance of the search criteria
      */
@@ -164,6 +172,7 @@ public class SmsRecordSearchCriteria {
 
     /**
      * Sets the delivery statuses the SMS messages retrieved by this search must match.
+     *
      * @param deliveryStatuses the set of delivery status that will be taken into consideration when executing the query
      * @return this instance of the search criteria
      */
@@ -172,7 +181,7 @@ public class SmsRecordSearchCriteria {
         return this;
     }
 
-    public SmsRecordSearchCriteria withOrder(Order order){
+    public SmsRecordSearchCriteria withOrder(Order order) {
         this.order = order;
         return this;
     }

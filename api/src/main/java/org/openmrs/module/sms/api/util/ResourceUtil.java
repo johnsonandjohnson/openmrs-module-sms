@@ -23,6 +23,7 @@ public final class ResourceUtil {
         }
     }
 
-    private ResourceUtil() { }
+    private ResourceUtil() {
+    }
 
 }
