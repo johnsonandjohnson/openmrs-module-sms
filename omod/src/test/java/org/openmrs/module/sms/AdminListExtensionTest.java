@@ -25,6 +25,8 @@ import static org.hamcrest.Matchers.not;
  */
 public class AdminListExtensionTest {
 
+    public static final String EXPECTED_TITLE = "sms.title";
+
     /**
      * Get the links for the extension class
      */
@@ -36,6 +38,13 @@ public class AdminListExtensionTest {
 
         assertThat(links, is(notNullValue()));
         assertThat(links.size(), is(not(0)));
+    }
+
+    @Test
+    public void getTitle() {
+        AdminList ext = new AdminList();
+        String actual = ext.getTitle();
+        assertThat(actual, is(EXPECTED_TITLE));
     }
 
     /**

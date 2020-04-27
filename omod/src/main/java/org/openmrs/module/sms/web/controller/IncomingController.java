@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.Date;
 import java.util.Map;
 
 import static org.openmrs.module.sms.api.audit.SmsDirection.INBOUND;
@@ -102,36 +101,12 @@ public class IncomingController {
         return sender;
     }
 
-    private String getRecipient(Map<String, String> params, Template template) {
-        String recipient = null;
-        if (params.containsKey(template.getIncoming().getRecipientKey())) {
-            recipient = params.get(template.getIncoming().getRecipientKey());
-            if (template.getIncoming().hasRecipientRegex()) {
-                recipient = template.getIncoming().extractRecipient(recipient);
-            }
-        }
-        return recipient;
-    }
-
     private String getMessage(Map<String, String> params, Template template) {
         return params.get(template.getIncoming().getMessageKey());
     }
 
     private String getMsgId(Map<String, String> params, Template template) {
         return params.get(template.getIncoming().getMsgIdKey());
-    }
-
-    private Date getTimestamp(Map<String, String> params, Template template) {
-        if (params.containsKey(template.getIncoming().getTimestampKey())) {
-            String dt = params.get(template.getIncoming().getTimestampKey());
-            //todo: some providers may send timestamps in a different way, deal it it if/when we see that
-            // replace "yyyy-mm-dd hh:mm:ss" with "yyyy-mm-ddThh:mm:ss" (note the T)
-            if (dt.matches("(\\d\\d\\d\\d|\\d\\d)-\\d\\d?-\\d\\d? \\d\\d?:\\d\\d?:\\d\\d?")) {
-                dt = dt.replace(" ", "T");
-            }
-            return DateUtil.parse(dt);
-        }
-        return DateUtil.now();
     }
 
     private String getStatus(Map<String, String> params, Template template) {

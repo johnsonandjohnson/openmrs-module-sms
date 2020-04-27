@@ -61,10 +61,6 @@ public class PagingInfo {
         this.loadRecordCount = loadRecordCount;
     }
 
-    public Boolean hasMoreResults() {
-        return (page * pageSize) < totalRecordCount;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

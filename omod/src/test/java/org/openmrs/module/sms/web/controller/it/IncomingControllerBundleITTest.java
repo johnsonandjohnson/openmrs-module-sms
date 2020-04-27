@@ -1,14 +1,14 @@
-package org.openmrs.module.sms.web.it;
+package org.openmrs.module.sms.web.controller.it;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.Configs;
-import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.service.ConfigService;
+import org.openmrs.module.sms.api.service.SmsService;
 import org.openmrs.module.sms.api.service.TemplateService;
+import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,49 +18,46 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
-import java.util.UUID;
-
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Verify StatusController present & functional.
+ * Verify IncomingController present & functional.
  */
 @WebAppConfiguration
-public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveTest {
+public class IncomingControllerBundleITTest extends BaseModuleWebContextSensitiveTest {
 
     private static final String CONFIG_NAME = "sample-it-config";
 
-    private MockMvc mockMvc;
+    private static final String MISSING_CONFIG_NAME = "missing-config";
 
-    private Configs backupConfigs;
+    private static final String TEMPLATE_NAME = "Plivo";
 
     @Autowired
     @Qualifier("sms.configService")
     private ConfigService configService;
 
     @Autowired
-    @Qualifier("sms.SmsRecordDao")
-    private SmsRecordDao smsRecordDao;
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+    @Qualifier("sms.SmsService")
+    private SmsService smsService;
 
     @Autowired
     @Qualifier("templateService")
     private TemplateService templateService;
 
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    private MockMvc mockMvc;
+
+    private Configs backupConfigs;
+
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }
-
-    @After
-    public void cleanUpDatabase() throws Exception {
-        this.deleteAllData();
     }
 
     @Before
@@ -69,7 +66,7 @@ public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveT
         backupConfigs = configService.getConfigs();
         Config config = new Config();
         config.setName(CONFIG_NAME);
-        config.setTemplateName("Plivo");
+        config.setTemplateName(TEMPLATE_NAME);
 
         Configs configs = new Configs();
         configs.setConfigs(singletonList(config));
@@ -79,25 +76,37 @@ public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveT
     }
 
     @After
+    public void cleanUpDatabase() throws Exception {
+        this.deleteAllData();
+    }
+
+    @After
     public void restoreConfigs() {
         configService.updateConfigs(backupConfigs);
     }
 
     @Test
-    public void verifyControllerFunctional() throws Exception {
-        //Create & send a CDR status callback
-        String messageId = UUID.randomUUID().toString();
+    public void verifyControllerFunctional() {
+        assertNotNull(smsService);
+    }
 
-        mockMvc.perform(get(String.format("/sms/status/%s", CONFIG_NAME))
-                .param("Status", "sent")
-                .param("From", "+12065551212")
-                .param("To", "+12065551313")
-                .param("MessageUUID", messageId))
+    @Test
+    public void handleIncomingControllerFunctionalMissingConfig() throws Exception {
+        mockMvc.perform(get(String.format("/sms/incoming/%s", MISSING_CONFIG_NAME)))
+                .andExpect(status().is(HttpStatus.OK.value()))
+                .andExpect(content().string(""));
+    }
+
+    @Test
+    public void handleIncomingControllerFunctionalExistsConfig() throws Exception {
+        prepareTemplate();
+        mockMvc.perform(get(String.format("/sms/incoming/%s", CONFIG_NAME))
+                .param("From", "testSender"))
                 .andExpect(status().is(HttpStatus.OK.value()));
+    }
 
-        //Verify we logged this
-        List<SmsRecord> smsRecords = smsRecordDao.getAll(true);
-        assertEquals(1, smsRecords.size());
-        assertEquals(smsRecords.get(0).getDeliveryStatus(), "sent");
+    private void prepareTemplate() {
+        Template template = templateService.getTemplate(TEMPLATE_NAME);
+        template.getIncoming().setSenderRegex("(.*)");
     }
 }

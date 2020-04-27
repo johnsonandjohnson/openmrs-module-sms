@@ -1,6 +1,7 @@
 package org.openmrs.module.sms.api.dao.impl;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.audit.SmsRecordSearchCriteria;
@@ -28,7 +29,7 @@ public class SmsRecordDaoImpl extends BaseOpenmrsDataDao<SmsRecord> implements S
     public long countFindByCriteria(SmsRecordSearchCriteria searchCriteria) {
         Criteria crit = getSession().createCriteria(this.mappedClass);
         searchCriteria.loadSearchCriteria(crit);
-
+        crit.setProjection(Projections.rowCount());
         Number count = (Number) crit.uniqueResult();
         return count.longValue();
     }

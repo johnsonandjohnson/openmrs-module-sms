@@ -1,4 +1,4 @@
-package org.openmrs.module.sms.web.it;
+package org.openmrs.module.sms.web.controller.it;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
