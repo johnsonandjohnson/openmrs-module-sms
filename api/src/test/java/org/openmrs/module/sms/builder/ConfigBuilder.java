@@ -55,4 +55,67 @@ public class ConfigBuilder extends AbstractBuilder<Config> {
     public Config buildAsNew() {
         return build();
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public ConfigBuilder withName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Integer getMaxRetries() {
+        return maxRetries;
+    }
+
+    public ConfigBuilder withMaxRetries(Integer maxRetries) {
+        this.maxRetries = maxRetries;
+        return this;
+    }
+
+    public Boolean getExcludeLastFooter() {
+        return excludeLastFooter;
+    }
+
+    public ConfigBuilder withExcludeLastFooter(Boolean excludeLastFooter) {
+        this.excludeLastFooter = excludeLastFooter;
+        return this;
+    }
+
+    public String getSplitHeader() {
+        return splitHeader;
+    }
+
+    public ConfigBuilder withSplitHeader(String splitHeader) {
+        this.splitHeader = splitHeader;
+        return this;
+    }
+
+    public String getSplitFooter() {
+        return splitFooter;
+    }
+
+    public ConfigBuilder withSplitFooter(String splitFooter) {
+        this.splitFooter = splitFooter;
+        return this;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public ConfigBuilder withTemplateName(String templateName) {
+        this.templateName = templateName;
+        return this;
+    }
+
+    public List<ConfigProp> getProps() {
+        return props;
+    }
+
+    public ConfigBuilder withProps(List<ConfigProp> props) {
+        this.props = props;
+        return this;
+    }
 }

@@ -3,17 +3,19 @@ package org.openmrs.module.sms.builder;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.Configs;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class ConfigsBuilder extends AbstractBuilder<Configs> {
 
+    private static final String NEXMO_GENERIC = "nexmo-generic";
+    private static final String NEXMO_MULTILINE = "nexmo-multiline";
     private List<Config> configs;
     private String defaultConfigName;
 
     public ConfigsBuilder() {
         Config config = new ConfigBuilder().buildAsNew();
-        this.configs = Collections.singletonList(config);
+        this.configs = buildConfigs(config);
         this.defaultConfigName = config.getName();
     }
 
@@ -28,6 +30,18 @@ public class ConfigsBuilder extends AbstractBuilder<Configs> {
     @Override
     public Configs buildAsNew() {
         return build();
+    }
+
+    private List<Config> buildConfigs(Config defaultConfig) {
+        Config genericConfig = new ConfigBuilder()
+                .withName(NEXMO_GENERIC)
+                .withTemplateName(NEXMO_GENERIC)
+                .buildAsNew();
+        Config multilineConfig = new ConfigBuilder()
+                .withName(NEXMO_MULTILINE)
+                .withTemplateName(NEXMO_MULTILINE)
+                .buildAsNew();
+        return Arrays.asList(defaultConfig, genericConfig, multilineConfig);
     }
 
     public List<Config> getConfigs() {

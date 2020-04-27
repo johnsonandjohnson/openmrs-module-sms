@@ -30,6 +30,7 @@ public class SmsHttpServiceTest extends ContextSensitiveWithActivatorTest {
             "\"status\": \"0\",\n      \"remaining-balance\": \"3.14159265\",\n      \"message-price\": " +
             "\"0.03330000\",\n      \"network\": \"12345\",\n      \"client-ref\": \"my-personal-reference\",\n " +
             "     \"account-ref\": \"customer1234\"\n          }";
+    private static final String NEXMO_GENERIC = "nexmo-generic";
 
     @Autowired
     @Qualifier("sms.SmsHttpService")
@@ -103,6 +104,26 @@ public class SmsHttpServiceTest extends ContextSensitiveWithActivatorTest {
         prepareFailureAnswer();
         OutgoingSms sms = new OutgoingSmsBuilder().build();
         smsHttpService.send(sms);
+    }
+
+    @Test
+    public void sendSuccessMessageWithGenericHandler() {
+        String message = UUID.randomUUID().toString();
+        prepareSuccessAnswer(true);
+        OutgoingSms sms = new OutgoingSmsBuilder()
+                .withConfig(NEXMO_GENERIC)
+                .withMessage(message)
+                .build();
+        smsHttpService.send(sms);
+        SmsRecord expected = new SmsRecordBuilder()
+                .withConfig(NEXMO_GENERIC)
+                .withMessageContent(message)
+                .withProviderStatus(null)
+                .withOpenMrsId(null)
+                .build();
+        SmsRecord actual = smsRecordDao
+                .findByCriteria(new SmsRecordSearchCriteria().withMessageContent(message)).get(0);
+        assertSmsRecord(expected, actual);
     }
 
     private void prepareSuccessAnswer(boolean withMessageId) {

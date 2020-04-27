@@ -28,7 +28,7 @@ public class SmsSettingsServiceImplTest extends BaseModuleContextSensitiveTest {
     private static final int THIRD_ELEMENT = 2;
     private static final String SMS_TEMPLATES_JSON = "sms-templates.json";
     private static final int EXPECTED_EMPTY_CONFIGS_SIZE = 0;
-    private static final int EXPECTED_CONFIGS_SIZE = 1;
+    private static final int EXPECTED_CONFIGS_SIZE = 3;
 
     @Autowired
     @Qualifier("sms.SettingsService")

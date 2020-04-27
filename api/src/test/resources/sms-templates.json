@@ -49,5 +49,55 @@
       "msgIdKey": "moMsgId",
       "timestampKey": "timestamp"
     }
+  },
+  {
+    "name": "nexmo-generic",
+    "configurables": [
+      "from",
+      "api_key",
+      "api_secret"
+    ],
+    "outgoing": {
+      "maxSmsSize": "160",
+      "maxRecipient": "1",
+      "millisecondsBetweenMessages": "1000",
+      "exponentialBackOffRetries": "true",
+      "hasAuthentication": "false",
+      "request": {
+        "type": "POST",
+        "urlPath": "https://rest.nexmo.com/sms/json",
+        "recipientsSeparator": ",",
+        "millisecondsBetweenMessages": "1000",
+        "bodyParameters": {
+          "api_key": "[api_key]",
+          "api_secret": "[api_secret]",
+          "from": "[from]",
+          "to": "[recipients]",
+          "text": "[message]"
+        }
+      },
+      "response": {
+        "multiLineRecipientResponse": "true",
+        "singleRecipientResponse": "false",
+        "extractSingleSuccessMessageId": "\"message-id\": \"([0-9a-zA-Z]+)\"",
+        "extractSingleFailureMessage": "^ERR: (.*)$",
+        "extractSuccessMessageIdAndRecipient": "^ID: ([0-9a-zA-Z]+) To: ([0-9]+)$",
+        "extractProviderStatus": "^.*\"status\": \"(.*)\".*$",
+        "extractFailureMessageAndRecipient": "^.*\"error-text\": \"(.*)(\")$"
+      }
+    },
+    "status": {
+      "messageIdKey": "apiMsgId",
+      "statusKey": "status",
+      "statusSuccess": "003|004|008",
+      "statusFailure": "005|006|007|009|010|012|014"
+    },
+    "incoming": {
+      "messageKey": "text",
+      "senderKey": "from",
+      "recipientKey": "to",
+      "msgIdKey": "moMsgId",
+      "timestampKey": "timestamp"
+    }
   }
 ]
