@@ -177,3 +177,23 @@ a.button {
 .-pageSizeOptions select {
     padding: 0 !important;
 }
+
+.note-container {
+    .note-content {
+        display: flex;
+    }
+
+    .message {
+        align-items: center;
+        display: flex;
+    }
+
+    .toast-item-image {
+        width: initial;
+        height: initial;
+        position: initial !important;
+        top: initial;
+        margin-top: initial;
+        left: initial;
+    }
+}

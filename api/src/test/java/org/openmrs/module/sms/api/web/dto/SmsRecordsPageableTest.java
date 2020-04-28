@@ -1,11 +1,16 @@
 package org.openmrs.module.sms.api.web.dto;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.openmrs.api.AdministrationService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.audit.SmsRecords;
 import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.module.sms.builder.SmsRecordsBuilder;
 import org.openmrs.module.sms.domain.PagingInfo;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +18,24 @@ import java.util.List;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.mock;
+import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Context.class})
 public class SmsRecordsPageableTest {
 
     public static final int PAGE = 1;
     public static final int PAGE_SIZE = 231;
 
     @Test
-    public void convertSmsRecordsToDTO() {
+    public void convertSmsRecordsToDTO() throws Exception {
+        mockStatic(Context.class);
+        AdministrationService administrationService = mock(AdministrationService.class);
+        doReturn("").when(administrationService).getGlobalProperty(anyObject());
+        doReturn(administrationService).when(Context.class, "getAdministrationService");
         PagingInfo pagingInfo = new PagingInfo();
         pagingInfo.setPage(PAGE);
         pagingInfo.setPageSize(PAGE_SIZE);
@@ -72,7 +87,7 @@ public class SmsRecordsPageableTest {
         dto.setProviderId(smsRecord.getProviderId());
         dto.setDeliveryStatus(smsRecord.getDeliveryStatus());
         dto.setMessageContent(smsRecord.getMessageContent());
-        dto.setTimestamp(DateUtil.dateToString(smsRecord.getTimestamp()));
+        dto.setTimestamp(DateUtil.getDateWithLocalTimeZone(smsRecord.getTimestamp()));
         dto.setConfig(smsRecord.getConfig());
         dto.setSmsDirection(smsRecord.getSmsDirection().name());
         dto.setPhoneNumber(smsRecord.getPhoneNumber());

@@ -4,7 +4,6 @@ package org.openmrs.module.sms.api.audit;
 //todo: 'senderNumber' & 'recipientNumber' instead of 'phoneNumber'?
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.openmrs.module.sms.api.util.DateUtil;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -191,7 +190,7 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
      * @return the timestamp for this SMS
      */
     public Date getTimestamp() {
-        return DateUtil.getDateWithDefaultTimeZone(timestamp);
+        return timestamp;
     }
 
     /**

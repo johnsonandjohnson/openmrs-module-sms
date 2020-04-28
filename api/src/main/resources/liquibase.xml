@@ -101,4 +101,16 @@
             <column name="openMrsId"></column>
         </createIndex>
     </changeSet>
+
+    <changeSet id="cfl-2020-04-27-13:00" author="Arkadiusz Lalo">
+        <preConditions>
+            <tableExists tableName="sms_records"/>
+            <columnExists tableName="sms_records" columnName="timestamp"/>
+        </preConditions>
+        <comment>Changed the timestamp datatype from date to datetime</comment>
+        <sql>
+            ALTER TABLE sms_records
+            MODIFY COLUMN timestamp datetime;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

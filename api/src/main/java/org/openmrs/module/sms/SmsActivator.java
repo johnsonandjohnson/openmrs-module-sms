@@ -1,7 +1,9 @@
 package org.openmrs.module.sms;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.GlobalProperty;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
 import org.openmrs.module.DaemonToken;
@@ -9,6 +11,7 @@ import org.openmrs.module.DaemonTokenAware;
 import org.openmrs.module.sms.api.event.AbstractSmsEventListener;
 import org.openmrs.module.sms.api.event.SmsEventListenerFactory;
 import org.openmrs.module.sms.api.service.TemplateServiceImpl;
+import org.openmrs.module.sms.api.util.Constants;
 
 import java.util.List;
 
@@ -25,6 +28,7 @@ public class SmsActivator extends BaseModuleActivator implements DaemonTokenAwar
     @Override
     public void started() {
         LOGGER.info("Started Sms");
+        createDefaultUserTimezone();
         SmsEventListenerFactory.registerEventListeners();
         Context.getRegisteredComponent("templateService", TemplateServiceImpl.class).loadTemplates();
     }
@@ -52,6 +56,23 @@ public class SmsActivator extends BaseModuleActivator implements DaemonTokenAwar
         List<AbstractSmsEventListener> eventComponents = Context.getRegisteredComponents(AbstractSmsEventListener.class);
         for (AbstractSmsEventListener eventListener : eventComponents) {
             eventListener.setDaemonToken(daemonToken);
+        }
+    }
+
+    private void createDefaultUserTimezone() {
+        createGlobalSettingIfNotExists(Constants.DEFAULT_USER_TIMEZONE,
+                Constants.DEFAULT_USER_TIMEZONE_DEFAULT_VALUE,
+                Constants.DEFAULT_USER_TIMEZONE_DESCRIPTION);
+    }
+
+    private void createGlobalSettingIfNotExists(String key, String value, String description) {
+        String existingSetting = Context.getAdministrationService().getGlobalProperty(key);
+        if (StringUtils.isBlank(existingSetting)) {
+            GlobalProperty gp = new GlobalProperty(key, value, description);
+            Context.getAdministrationService().saveGlobalProperty(gp);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(String.format("SMS Module created '%s' global property with value - %s", key, value));
+            }
         }
     }
 }

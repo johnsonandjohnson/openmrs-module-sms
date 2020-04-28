@@ -3,9 +3,11 @@ package org.openmrs.module.sms.api.util;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.context.Context;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -49,34 +51,45 @@ public final class DateUtil {
     }
 
     public static Date getDateWithDefaultTimeZone(Date timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(DEFAULT_TIME_ZONE));
         calendar.setTime(timestamp);
         return calendar.getTime();
     }
 
     public static String getDateWithLocalTimeZone(Date timestamp) {
+        if (timestamp == null) {
+            return StringUtils.EMPTY;
+        }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_TIME_FORMAT);
         simpleDateFormat.setTimeZone(getLocalTimeZone());
         return simpleDateFormat.format(timestamp);
     }
 
-    public static String dateToString(Date date, String timeZone) {
+    public static String dateToString(Date date, TimeZone timeZone) {
         if (date == null) {
             return null;
         }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_TIME_FORMAT);
-        if (StringUtils.isNotBlank(timeZone)) {
-            simpleDateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
+        if (timeZone != null) {
+            simpleDateFormat.setTimeZone(timeZone);
         }
         return simpleDateFormat.format(date);
     }
 
     public static String dateToString(Date date) {
-        return dateToString(date, DEFAULT_TIME_ZONE);
+        return dateToString(date, TimeZone.getTimeZone(DEFAULT_TIME_ZONE));
     }
 
     public static TimeZone getLocalTimeZone() {
-        return TimeZone.getDefault();
+        String userTimeZoneName = Context.getAdministrationService()
+                .getGlobalProperty(Constants.DEFAULT_USER_TIMEZONE);
+        if (StringUtils.isNotBlank(userTimeZoneName)) {
+            return TimeZone.getTimeZone(ZoneId.of(userTimeZoneName));
+        }
+        return TimeZone.getTimeZone(DEFAULT_TIME_ZONE);
     }
 
     private DateUtil() {

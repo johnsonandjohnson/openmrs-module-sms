@@ -14,6 +14,7 @@ import logs, { LogsState } from './logs.reducer';
 import send, { SendState } from './send.reducer';
 import settings, { ISettingsState } from './settings.reducer';
 import fileImport, { FileImportState }from './file-import.reducer';
+import timezone, {TimezoneState} from "./timezone.reducer";
 
 export interface IRootState {
   readonly logs: LogsState;
@@ -21,6 +22,7 @@ export interface IRootState {
   readonly openmrs: any;
   readonly settings: ISettingsState;
   readonly fileImport: FileImportState;
+  readonly timezone: TimezoneState;
 }
 
 export default combineReducers<IRootState>({
@@ -28,5 +30,6 @@ export default combineReducers<IRootState>({
   logs,
   send,
   settings,
-  fileImport
+  fileImport,
+  timezone
 } as any); //TODO: https://github.com/reduxjs/redux/issues/2709

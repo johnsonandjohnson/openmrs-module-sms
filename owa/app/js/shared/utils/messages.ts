@@ -6,24 +6,6 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-import React from 'react';
-import { connect } from 'react-redux';
 
-import LogsTable from './logs-table';
-import Timezone from "../timezone/timezone";
-
-export class Logs extends React.Component {
-  render() {
-    return (
-      <div className="body-wrapper">
-        <h4>SMS Logs</h4>
-        <Timezone />
-        <LogsTable />
-      </div>
-    )
-  }
-}
-
-export const mapStateToProps = state => ({});
-
-export default connect(mapStateToProps)(Logs);
+// Messages displayed on the frontend
+export const DIFFERENT_TIMEZONE = 'Your local timezone is different than the one configured for this system. Time is shown according to: ';
