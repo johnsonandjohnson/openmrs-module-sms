@@ -4,8 +4,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.configs.Configs;
+import org.openmrs.module.sms.api.exception.ValidationException;
 import org.openmrs.module.sms.api.service.SmsSettingsService;
 import org.openmrs.module.sms.api.templates.TemplateForWeb;
+import org.openmrs.module.sms.api.validate.ValidationComponent;
+import org.openmrs.module.sms.api.web.ErrorResponse;
+import org.openmrs.module.sms.api.web.ValidationErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -33,10 +37,16 @@ import java.util.Map;
 public class SmsSettingsController {
 
     private static final Log LOGGER = LogFactory.getLog(SendController.class);
+    private static final String ERR_BAD_PARAM = "system.param";
+    private static final String VALIDATION_ERROR_OCCURS = "Check the form and send it again.";
 
     @Autowired
     @Qualifier("sms.SettingsService")
     private SmsSettingsService smsSettingsService;
+
+    @Autowired
+    @Qualifier("sms.validationComponent")
+    private ValidationComponent validationComponent;
 
     /**
      * Returns all the templates for the UI.
@@ -86,6 +96,7 @@ public class SmsSettingsController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Configs setConfigs(@RequestBody Configs configs) {
+        validationComponent.validate(configs);
         return smsSettingsService.setConfigs(configs);
     }
 
@@ -108,5 +119,18 @@ public class SmsSettingsController {
     @ResponseBody
     public String getCustomUISettings() throws IOException {
         return smsSettingsService.getCustomUISettings();
+    }
+
+    /**
+     * Exception handler for validation bad request - Http status code of 400
+     *
+     * @param e the exception throw
+     * @return a error response
+     */
+    @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleException(ValidationException e) {
+        return new ValidationErrorResponse(ERR_BAD_PARAM, VALIDATION_ERROR_OCCURS, e.getConstraintViolations());
     }
 }

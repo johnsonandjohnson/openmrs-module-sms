@@ -19,6 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+//CHECKSTYLE:OFF: MagicNumber
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({DateUtil.class, Context.class, TimeZone.class})
 public class DateUtilTest {
@@ -80,3 +81,4 @@ public class DateUtilTest {
         return calendar.getTime();
     }
 }
+//CHECKSTYLE:ON: MagicNumber

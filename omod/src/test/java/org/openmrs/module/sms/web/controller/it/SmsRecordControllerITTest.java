@@ -27,6 +27,7 @@ import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+//CHECKSTYLE:OFF: MagicNumber
 @WebAppConfiguration
 public class SmsRecordControllerITTest extends BaseModuleWebContextSensitiveTest {
 
@@ -177,3 +178,4 @@ public class SmsRecordControllerITTest extends BaseModuleWebContextSensitiveTest
         return calendar.getTime();
     }
 }
+//CHECKSTYLE:ON: MagicNumber

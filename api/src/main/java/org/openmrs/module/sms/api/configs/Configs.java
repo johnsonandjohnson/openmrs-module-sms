@@ -1,6 +1,7 @@
 package org.openmrs.module.sms.api.configs;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.openmrs.module.sms.api.validate.annotation.ValidConfigs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
 /**
  * Represents all configs as well as the default config, sms-config.json
  */
+@ValidConfigs
 public class Configs {
 
     /**

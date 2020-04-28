@@ -28,6 +28,7 @@ public final class SmsEvents {
      * @param customParams      custom parameters for the provider
      * @return a {@link SmsEvent} describing the outbound SMS
      */
+    //CHECKSTYLE:OFF: ParameterNumber
     public static SmsEvent outboundEvent(String subject, String config, //NO CHECKSTYLE ParameterNumber
                                          List<String> recipients, String message, String openMrsId,
                                          String providerMessageId, Integer failureCount, String providerStatus,
@@ -58,6 +59,7 @@ public final class SmsEvents {
         }
         return new SmsEvent(subject, params);
     }
+    //CHECKSTYLE:ON: ParameterNumber
 
     private SmsEvents() {
     }

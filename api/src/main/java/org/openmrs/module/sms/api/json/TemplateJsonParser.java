@@ -24,7 +24,7 @@ public class TemplateJsonParser {
     public void importTemplates(String jsonText) {
         Gson gson = new Gson();
         List<Template> templateList = gson.fromJson(jsonText, new TypeToken<List<Template>>() {
-        }.getType());
+        } .getType());
         templateService.importTemplates(templateList);
     }
 
@@ -36,7 +36,7 @@ public class TemplateJsonParser {
     public void importTemplate(String jsonText) {
         Gson gson = new Gson();
         Template template = gson.fromJson(jsonText, new TypeToken<Template>() {
-        }.getType());
+        } .getType());
         templateService.importTemplate(template);
     }
 

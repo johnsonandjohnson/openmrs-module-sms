@@ -11,6 +11,8 @@ import java.io.Serializable;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import static org.openmrs.module.sms.api.util.Constants.SMS_DEFAULT_RETRY_COUNT;
+
 public class SendSmsState implements Serializable {
 
     private static final long serialVersionUID = 2632585637814840133L;
@@ -82,7 +84,7 @@ public class SendSmsState implements Serializable {
                         template.getName(), e.toString());
             } catch (IllegalArgumentException | IOException | IllegalStateException e) {
                 String msg = String.format("Problem with '%s' template? %s", template.getName(), e.toString());
-                if (SocketException.class.isAssignableFrom(e.getClass()) && retryCount < 3) {
+                if (SocketException.class.isAssignableFrom(e.getClass()) && retryCount < SMS_DEFAULT_RETRY_COUNT) {
                     LOGGER.warn(msg);
                     sleep(MINUTE);
                     shouldRetry = true;

@@ -179,5 +179,12 @@
     <bean id="sms.statusSmsEventListener" class="org.openmrs.module.sms.api.event.StatusSmsEventListener"/>
 
     <bean id="sms.sendSmsEventListener" class="org.openmrs.module.sms.api.event.SendSmsEventListener"/>
+    <bean id="springValidationFactory" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"
+          primary="true"/>
+    <bean id="sms.validationComponent" class="org.openmrs.module.sms.api.validate.ValidationComponent" >
+        <property name="factory">
+            <ref local="springValidationFactory"/>
+        </property>
+    </bean>
 
 </beans>

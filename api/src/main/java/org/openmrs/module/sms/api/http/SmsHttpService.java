@@ -215,6 +215,7 @@ public class SmsHttpService {
         return props;
     }
 
+    //CHECKSTYLE:OFF: ParameterNumber
     private void handleFailure(Integer httpStatus, String priorErrorMessage, //NO CHECKSTYLE ParameterNumber
                                Integer failureCount, Response templateResponse, String httpResponse, Config config,
                                OutgoingSms sms, List<SmsRecord> auditRecords, List<SmsEvent> events) {
@@ -242,6 +243,7 @@ public class SmsHttpService {
                 sms.getMessage(), sms.getOpenMrsId(), null, sms.getFailureCount() + 1, null, null, sms.getCustomParams()));
 
     }
+    //CHECKSTYLE:ON: ParameterNumber
 
     private ResponseHandler createResponseHandler(Template template, Response templateResponse, Config config,
                                                   OutgoingSms sms) {

@@ -42,6 +42,7 @@ public class SmsRecordDTO implements Serializable {
     public SmsRecordDTO() {
     }
 
+    //CHECKSTYLE:OFF: ParameterNumber
     public SmsRecordDTO(Integer id, String errorMessage, String providerStatus, String openMrsId, String providerId,
                         String deliveryStatus, String messageContent, String timestamp, String config, String smsDirection,
                         String phoneNumber, String modificationDate, String creationDate, String modifiedBy, String creator) {
@@ -61,6 +62,7 @@ public class SmsRecordDTO implements Serializable {
         this.modifiedBy = modifiedBy;
         this.creator = creator;
     }
+    //CHECKSTYLE:ON: ParameterNumber
 
     public Integer getId() {
         return id;

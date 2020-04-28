@@ -65,6 +65,7 @@ public class SmsController {
                          BindingResult errors) {
 
         if (errors.hasErrors()) {
+            LOG.debug(errors);
             // return error view
         }
 

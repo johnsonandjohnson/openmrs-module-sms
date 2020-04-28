@@ -83,6 +83,7 @@ public class AuthorizationFilter implements Filter {
         } catch (Exception ex) {
             // This filter never stops execution. If the user failed to
             // authenticate, that will be caught later.
+            LOGGER.error("Authentication failure");
         }
     }
 }

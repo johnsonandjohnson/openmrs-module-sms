@@ -26,7 +26,7 @@ import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Context.class})
+@PrepareForTest( {Context.class} )
 public class SmsScheduledTaskTest {
 
     private static final String OTHER_PROP = "other";

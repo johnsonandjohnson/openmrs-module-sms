@@ -37,9 +37,13 @@ public final class Constants {
     public static final String SMS_DEFAULT_RECIPIENT_SEPARATOR_VALUE = ",";
 
     public static final String DEFAULT_USER_TIMEZONE = "sms.defaultUserTimezone";
+
     public static final String DEFAULT_USER_TIMEZONE_DEFAULT_VALUE = "Etc/GMT";
+
     public static final String DEFAULT_USER_TIMEZONE_DESCRIPTION = "The timezone which represents end user timezone." +
             " The sms module use this value to interpreted time on UI";
+
+    public static final int SMS_DEFAULT_RETRY_COUNT = 3;
 
     private Constants() {
     }

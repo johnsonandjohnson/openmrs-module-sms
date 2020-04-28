@@ -111,7 +111,7 @@ public class TemplateTest {
             Gson gson = new Gson();
 
             return gson.fromJson(jsonTemplate, new TypeToken<Template>() {
-            }.getType());
+            } .getType());
         }
     }
 
