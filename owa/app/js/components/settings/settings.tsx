@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ConfigUI, IProp } from '../../shared/model/config.model';
+import {ConfigUI, IConfig, IProp} from '../../shared/model/config.model';
 import {
   getConfigs,
   getTemplates,
@@ -11,35 +11,89 @@ import {
   reset,
   addNewConfig
 } from '../../reducers/settings.reducer';
+import * as Yup from 'yup';
+import { validateForm, validateField } from '../../utils/validation-util';
 import { Form, FormGroup, ControlLabel, FormControl, Checkbox, Button, Row, Col } from 'react-bootstrap';
 import _ from 'lodash';
 import Accordion from '../cfl-accordion';
 import { ITemplate } from '../../shared/model/template.model';
 import RemoveButton from '../remove-button';
 import OpenMRSModal from '../open-mrs-modal';
+import ErrorDesc from '../ErrorDesc';
 import * as Msg from '../../utils/messages'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { errorToast } from '../../utils/toast-display-util';
 
 interface ISettingsProps extends StateProps, DispatchProps {}
 
 interface ISettingsState {
-  configs: Array<ConfigUI>;
-}
+  configs: Array<ConfigUI>,
+  errors?: IConfig
+};
 
 class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
 
   constructor(props: ISettingsProps) {
     super(props);
+    this.handleSubmitConfigs = this.handleSubmitConfigs.bind(this);
     this.state = {
       configs: props.configs
     }
   };
+
+  validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .required(Msg.FIELD_REQUIRED)
+      .test('unique check', Msg.CONFIG_FORM_NAME_IS_NOT_UNIQUE, nameToValidate => {
+          const { configs } = this.props;
+          return _(configs)
+              .filter(configForm => configForm.name === nameToValidate)
+              .size() === 1;
+        }),
+    templateName: Yup.string()
+      .required(Msg.FIELD_REQUIRED),
+    maxRetries: Yup.string()
+      .matches(new RegExp('^[0-9]\\d*$'), Msg.POSITIVE_NUMBERS_REQUIRED)
+      .required(Msg.FIELD_REQUIRED),
+    splitHeader: Yup.string()
+      .required(Msg.FIELD_REQUIRED),
+    splitFooter: Yup.string()
+      .required(Msg.FIELD_REQUIRED)
+  });
 
   componentDidMount = () => {
     this.props.reset();
     this.props.getConfigs();
     this.props.getTemplates();
   };
+
+  handleSubmitConfigs = (event) => {
+    event.preventDefault();
+
+    const { updateConfigs, configs, defaultConfigName } = this.props;
+    const newConfigs = _.clone(configs);
+
+    const validationPromises = newConfigs.map(configFormData => {
+      return validateForm(configFormData, this.validationSchema)
+          .then(() => {
+            configFormData.errors = null;
+          })
+          .catch((errors) => {
+            configFormData.errors = errors;
+            this.setState({
+              errors: errors
+            })
+            return Promise.reject()
+          })
+    });
+    Promise.all(validationPromises)
+        .then(() => {
+          updateConfigs(newConfigs, defaultConfigName);
+        })
+        .catch(() => {
+          errorToast(Msg.GENERIC_INVALID_FORM);
+        })
+  }
 
   handleChange = (localId: string, fieldName: string, value: any, isDefault: boolean) => {
     const newConfigs: Array<ConfigUI> = this.props.configs.map((config: ConfigUI) => {
@@ -52,8 +106,23 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
       }
       return config;
     });
+
     const shouldChangeDefaultName = isDefault && fieldName === 'name';
-    this.props.updateState(newConfigs, shouldChangeDefaultName ? value : this.props.defaultConfigName);
+    let form = {};
+    form[fieldName] = value;
+
+    validateField(form, fieldName, this.validationSchema)
+        .then(() => {
+          this.props.updateState(newConfigs, shouldChangeDefaultName ? value : this.props.defaultConfigName);
+          this.setState({
+            errors: undefined
+          });
+        })
+        .catch((errors) => {
+          this.setState({
+            errors
+          });
+        });
   };
 
   handlePropChange = (localId: string, propName: string, value: string, isDefault: boolean) => {
@@ -104,13 +173,19 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
 
   addConfig = () => this.props.addNewConfig();
 
-  renderInput = (config: ConfigUI, fieldName: string, inputType: string, label: string, isDefault: boolean, index: number) => (
-      <FormGroup controlId={`${fieldName}_${index}`}>
+  renderInput = (config: ConfigUI, fieldName: string, inputType: string, label: string, isDefault: boolean, index: number) => {
+    return (
+    <FormGroup controlId={`${fieldName}_${index}`}>
         <ControlLabel>{label}</ControlLabel>
-        <FormControl type={inputType} name={fieldName} value={config[fieldName]}
-          onChange={e => this.handleChange(config.localId, fieldName, e.target.value, isDefault)}/>
-      </FormGroup>
-  );
+        <FormControl
+            type={inputType}
+            name={fieldName}
+            value={config[fieldName]}
+            onChange={e => this.handleChange(config.localId, fieldName, e.target.value, isDefault)} />
+      {this.renderError(fieldName)}
+    </FormGroup>
+    );
+  };
 
   renderCheckbox = (config: ConfigUI, fieldName: string, label: string, isDefault: boolean, index: number) => (
       <FormGroup controlId={`${fieldName}_${index}`}>
@@ -152,6 +227,9 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
 
   renderDropdown = (config: ConfigUI, fieldName: string, label: string, index: number, isDefault: boolean) => {
     const templates: ReadonlyArray<ITemplate> = this.props.templates;
+    const formClass = 'form-control openmrs-textarea';
+    const errorFormClass = formClass + ' error-field';
+    const errors = this.state ? this.state.errors : null;
     return (
       <FormGroup controlId={`${fieldName}_${index}`}>
         <ControlLabel>{label}</ControlLabel>
@@ -162,7 +240,9 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
           onChange={e => this.handleChange(config.localId, fieldName, e.target.value, isDefault)} >
           <option key='empty'></option>
           {templates.map(template => <option key={template.name}>{template.name}</option>)}
+          className={errors ? errorFormClass : formClass}
         </FormControl>
+        {this.renderError(fieldName)}
       </FormGroup>
     );
   };
@@ -194,8 +274,8 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     <Row className="col-sm-11 u-mt-15">
       <Button
         className="btn confirm btn-xs"
-        onClick={this.saveConfigs}>
-          Save
+        onClick={this.handleSubmitConfigs}>
+        Save
       </Button>
     </Row>
   );
@@ -222,6 +302,12 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
       {Msg.SMS_SETTINGS_IMPORT_ADDITIONAL_TEMPLATES}
     </a>
   );
+
+  renderError(fieldName: string) {
+    if (this.state.errors) {
+      return <ErrorDesc field={this.state.errors[fieldName]} />
+    }
+  }
 
   render() {
     const { loading } = this.props;
