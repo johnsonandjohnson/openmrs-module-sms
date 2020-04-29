@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Component
 public class ConfigsValidator implements ConstraintValidator<ValidConfigs, Configs> {
@@ -21,7 +20,14 @@ public class ConfigsValidator implements ConstraintValidator<ValidConfigs, Confi
     private static final String MAX_RETRIES_PATH = "configs[%d].maxRetries";
     private static final String SPLIT_HEADER_PATH = "configs[%d].splitHeader";
     private static final String SPLIT_FOOTER_PATH = "configs[%d].splitFooter";
-    private static final Pattern ALPHA_NUMERIC = Pattern.compile("^[a-zA-Z0-9]+$");
+
+    private static final String ERROR_EMPTY_CONFIG_NAME = "Empty config name";
+    private static final String ERROR_NAME_IS_DUPLICATED = "%s name is duplicated";
+    private static final String ERROR_TEMPLATE_NAME_NOT_SET = "Template name not set";
+    private static final String ERROR_MAX_RETRIES_NOT_SET = "Max retries not set";
+    private static final String ERROR_MAX_RETRIES_NUMBER_CANNOT_BE_NEGATIVE = "Max retries number cannot be negative";
+    private static final String ERROR_SPLIT_HEADER_NOT_SET = "Split header not set";
+    private static final String ERROR_SPLIT_FOOTER_NOT_SET = "Split footer not set";
 
     @Autowired
     private ConfigService configService;
@@ -58,15 +64,14 @@ public class ConfigsValidator implements ConstraintValidator<ValidConfigs, Confi
 
     private boolean isNameValid(Config validatedConfig, int index, List<Config> configList, ConstraintValidatorContext ctx) {
         boolean isValid = true;
-        if (StringUtils.isEmpty(validatedConfig.getName())
-                || !ALPHA_NUMERIC.matcher(validatedConfig.getName()).matches()) {
-            addErrorToContext(ctx, getPath(NAME_PATH, index), "Invalid config name");
+        if (StringUtils.isEmpty(validatedConfig.getName())) {
+            addErrorToContext(ctx, getPath(NAME_PATH, index), ERROR_EMPTY_CONFIG_NAME);
             isValid = false;
         }
         for (Config config : configList) {
             if (validatedConfig != config
                     && StringUtils.equals(validatedConfig.getName(), config.getName())) {
-                addErrorToContext(ctx, getPath(NAME_PATH, index), String.format("%s name is duplicated",
+                addErrorToContext(ctx, getPath(NAME_PATH, index), String.format(ERROR_NAME_IS_DUPLICATED,
                         validatedConfig.getName()));
                 isValid = false;
             }
@@ -77,7 +82,7 @@ public class ConfigsValidator implements ConstraintValidator<ValidConfigs, Confi
 
     private boolean isTemplateValid(Config config, int index, ConstraintValidatorContext ctx) {
         if (StringUtils.isBlank(config.getTemplateName())) {
-            addErrorToContext(ctx, getPath(TEMPLATE_PATH, index), "Template name not set");
+            addErrorToContext(ctx, getPath(TEMPLATE_PATH, index), ERROR_TEMPLATE_NAME_NOT_SET);
             return false;
         }
         return true;
@@ -85,12 +90,12 @@ public class ConfigsValidator implements ConstraintValidator<ValidConfigs, Confi
 
     private boolean isMaxRetriesValid(Config config, int index, ConstraintValidatorContext ctx) {
         if (config.getMaxRetries() == null) {
-            addErrorToContext(ctx, getPath(MAX_RETRIES_PATH, index), "Max retries not set");
+            addErrorToContext(ctx, getPath(MAX_RETRIES_PATH, index), ERROR_MAX_RETRIES_NOT_SET);
             return false;
         }
 
         if (config.getMaxRetries() < 0) {
-            addErrorToContext(ctx, getPath(MAX_RETRIES_PATH, index), "Max retries number cannot be negative");
+            addErrorToContext(ctx, getPath(MAX_RETRIES_PATH, index), ERROR_MAX_RETRIES_NUMBER_CANNOT_BE_NEGATIVE);
             return false;
         }
         return true;
@@ -98,7 +103,7 @@ public class ConfigsValidator implements ConstraintValidator<ValidConfigs, Confi
 
     private boolean isSplitHeaderValid(Config config, int index, ConstraintValidatorContext ctx) {
         if (StringUtils.isBlank(config.getSplitHeader())) {
-            addErrorToContext(ctx, getPath(SPLIT_HEADER_PATH, index), "Split header not set");
+            addErrorToContext(ctx, getPath(SPLIT_HEADER_PATH, index), ERROR_SPLIT_HEADER_NOT_SET);
             return false;
         }
         return true;
@@ -106,7 +111,7 @@ public class ConfigsValidator implements ConstraintValidator<ValidConfigs, Confi
 
     private boolean isSplitFooterValid(Config config, int index, ConstraintValidatorContext ctx) {
         if (StringUtils.isBlank(config.getSplitFooter())) {
-            addErrorToContext(ctx, getPath(SPLIT_FOOTER_PATH, index), "Split footer not set");
+            addErrorToContext(ctx, getPath(SPLIT_FOOTER_PATH, index), ERROR_SPLIT_FOOTER_NOT_SET);
             return false;
         }
         return true;
