@@ -13,15 +13,17 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import UrlPattern from 'url-pattern';
 
 import './bread-crumb.scss';
 
-const LOGS_ROUTE = '/logs';
-const SEND_ROUTE = '/send';
-const SETTINGS_ROUTE = '/settings';
 const MODULE_ROUTE = '/';
 const OMRS_ROUTE = '../../';
 const MODULE_NAME = 'SMS';
+
+const LOGS_ROUTE = new UrlPattern('/logs*');
+const SEND_ROUTE = new UrlPattern('/send*');
+const SETTINGS_ROUTE = new UrlPattern('/settings*');
 
 class BreadCrumb extends React.Component {
   constructor(props) {
@@ -66,39 +68,38 @@ class BreadCrumb extends React.Component {
   }
 
   buildBreadCrumb = () => {
-    const { current } = this.state;
+    const path = this.state.current.toLowerCase();
 
-    switch (current) {
-      case LOGS_ROUTE:
-        return (<div className="breadcrumb">
+    if (!!LOGS_ROUTE.match(path)){
+      return (<div className="breadcrumb">
           {this.renderHomeCrumb()}
           {this.renderDelimiter()}
           {this.renderCrumb(MODULE_ROUTE, MODULE_NAME)}
           {this.renderDelimiter()}
           {this.renderLastCrumb('Logs')}
-        </div>);
-      case SEND_ROUTE:
-        return (<div className="breadcrumb">
+      </div>);
+    } else if (!!SEND_ROUTE.match(path)) {
+      return (<div className="breadcrumb">
           {this.renderHomeCrumb()}
           {this.renderDelimiter()}
           {this.renderCrumb(MODULE_ROUTE, MODULE_NAME)}
           {this.renderDelimiter()}
           {this.renderLastCrumb('Send')}
-        </div>);
-      case SETTINGS_ROUTE:
-        return (<div className="breadcrumb">
+      </div>);
+    } else if (!!SETTINGS_ROUTE.match(path)) {
+      return (<div className="breadcrumb">
           {this.renderHomeCrumb()}
           {this.renderDelimiter()}
           {this.renderCrumb(MODULE_ROUTE, MODULE_NAME)}
           {this.renderDelimiter()}
           {this.renderLastCrumb('Settings')}
-        </div>);
-      default:
-        return (<div className="breadcrumb">
+      </div>);
+    } else {
+      return (<div className="breadcrumb">
           {this.renderHomeCrumb()}
           {this.renderDelimiter()}
           {this.renderLastCrumb(MODULE_NAME)}
-        </div>);
+      </div>);
     }
   }
 
