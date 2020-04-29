@@ -70,7 +70,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
   handleSubmitConfigs = (event) => {
     event.preventDefault();
 
-    const { updateConfigs, configs, defaultConfigName } = this.props;
+    const { updateConfigs, configs } = this.props;
     const newConfigs = _.clone(configs);
 
     const validationPromises = newConfigs.map(configFormData => {
@@ -88,7 +88,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     });
     Promise.all(validationPromises)
         .then(() => {
-          updateConfigs(newConfigs, defaultConfigName);
+          updateConfigs(newConfigs);
         })
         .catch(() => {
           errorToast(Msg.GENERIC_INVALID_FORM);
@@ -99,6 +99,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     const newConfigs: Array<ConfigUI> = this.props.configs.map((config: ConfigUI) => {
       if (config.localId === localId) {
         config[fieldName] = value;
+        config.isDefault = isDefault;
         if (fieldName === 'templateName') {
           config.props = this.getPropsForTemplate(value);
         }
@@ -107,13 +108,12 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
       return config;
     });
 
-    const shouldChangeDefaultName = isDefault && fieldName === 'name';
     let form = {};
     form[fieldName] = value;
 
     validateField(form, fieldName, this.validationSchema)
         .then(() => {
-          this.props.updateState(newConfigs, shouldChangeDefaultName ? value : this.props.defaultConfigName);
+          this.props.updateState(newConfigs);
           this.setState({
             errors: undefined
           });
@@ -135,11 +135,12 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
           }
           return prop;
         });
+        config.isDefault = isDefault;
         return config;
       }
       return config;
     });
-    this.props.updateState(newConfigs, this.props.defaultConfigName);
+    this.props.updateState(newConfigs);
   };
 
   handleRemove = (configLocalId: string) => this.props.openModal(configLocalId);
@@ -158,18 +159,21 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
 
   findTemplate = (name: string | undefined): ITemplate => this.props.templates.find(template => template.name === name);
 
-  setDefaultConfigName = (configName: string) => this.props.updateConfigs(this.props.configs, configName);
+  setAsDefault = (newDefaultConfig: ConfigUI) =>  {
+    const newConfigs: Array<ConfigUI> = this.props.configs.map((configUI: ConfigUI) => {
+      configUI.isDefault = configUI.localId === newDefaultConfig.localId;
+      return configUI;
+    });
+    this.props.updateConfigs(newConfigs);
+  }
 
   deleteConfig = (localId: string) => {
     const newConfigs = _.filter(this.props.configs, (config: ConfigUI) => config.localId !== localId);
-    let configToDelete: ConfigUI = _.find(this.props.configs, {"localId": localId});
-    const defaultConfigName = !!configToDelete && this.props.defaultConfigName !== configToDelete.name ? this.props.defaultConfigName :
-      newConfigs.length > 0 ? newConfigs[0].name : null;
-    this.props.updateState(newConfigs, defaultConfigName);
-    this.props.updateConfigs(newConfigs, defaultConfigName);
+    this.props.updateState(newConfigs);
+    this.props.updateConfigs(newConfigs);
   };
 
-  saveConfigs = () => this.props.updateConfigs(this.props.configs, this.props.defaultConfigName);
+  saveConfigs = () => this.props.updateConfigs(this.props.configs);
 
   addConfig = () => this.props.addNewConfig();
 
@@ -248,12 +252,12 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
   };
 
   renderConfig = (config: ConfigUI, index: number) => {
-    const isDefault = config.name === this.props.defaultConfigName;
+    const isDefault = config.isDefault;
     return (
       <Row key={index}>
         <Col sm={11}>
-          <Accordion key={index} title={config.name} default={isDefault} border
-            setDefaultCallback={this.setDefaultConfigName}
+          <Accordion key={index} title={config.name} config={config} border
+            setDefaultCallback={this.setAsDefault}
           >
             {this.renderConfigForm(config, isDefault, index)}
           </Accordion>
@@ -338,6 +342,7 @@ const mapStateToProps = state => ({
   configs: state.settings.configs,
   templates: state.settings.templates,
   defaultConfigName: state.settings.defaultConfigName,
+  defaultConfigLocalId: state.settings.defaultConfigLocalId,
   loading: state.settings.loading,
   showModal: state.settings.showModal,
   configLocalIdToDelete: state.settings.configLocalIdToDelete

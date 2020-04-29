@@ -16,6 +16,7 @@ export interface IProp {
 }
 
 export class ConfigUI {
+  isDefault: boolean;
   localId: string;
   name: string;
   maxRetries?: number;
@@ -25,11 +26,12 @@ export class ConfigUI {
   templateName?: string;
   props?: Array<IProp>;
 
-  constructor(model?: IConfig) {
+  constructor(model?: IConfig, defaultName?: string) {
     this.init();
     if (!!model) {
       this.mergeWithModel(model);
     }
+    this.isDefault = !!defaultName ? this.name === defaultName : false;
   }
 
   init = () => {

@@ -29,7 +29,6 @@ export const ACTION_TYPES = {
 export interface ISettingsState {
   configs: ReadonlyArray<ConfigUI>;
   templates: ReadonlyArray<ITemplate>;
-  defaultConfigName: string;
   loading: boolean;
   showModal: boolean;
   configLocalIdToDelete: string;
@@ -38,7 +37,6 @@ export interface ISettingsState {
 const initialState: ISettingsState = {
   configs: [] as ReadonlyArray<ConfigUI>,
   templates: [] as ReadonlyArray<ITemplate>,
-  defaultConfigName: '',
   loading: false,
   showModal: false,
   configLocalIdToDelete: ''
@@ -74,15 +72,13 @@ export default (state: ISettingsState = initialState, action): ISettingsState =>
       return {
         ...state,
         loading: false,
-        configs: action.payload.data.configs.map((config: IConfig) => { return new ConfigUI(config); }),
-        defaultConfigName: action.payload.data.defaultConfigName
+        configs: mapConfigsToConfigsUI(action.payload.data)
       };
     case SUCCESS(ACTION_TYPES.UPLOAD_CONFIGS):
       return {
         ...state,
         loading: false,
-        configs: action.payload.data.configs.map((config: IConfig) => { return new ConfigUI(config); }),
-        defaultConfigName: action.payload.data.defaultConfigName
+        configs: mapConfigsToConfigsUI(action.payload.data)
       }
     case ACTION_TYPES.RESET: {
       return initialState;
@@ -91,7 +87,6 @@ export default (state: ISettingsState = initialState, action): ISettingsState =>
       return {
         ...state,
         configs: action.configs,
-        defaultConfigName: action.defaultConfigName,
         showModal: false,
         configLocalIdToDelete: ''
       }
@@ -137,8 +132,10 @@ export const getTemplates = () => async (dispatch) => {
   });
 };
 
-export const updateConfigs = (configsUiModel: ReadonlyArray<ConfigUI>, defaultConfigName: string) => async (dispatch) => {
+export const updateConfigs = (configsUiModel: ReadonlyArray<ConfigUI>) => async (dispatch) => {
   const requestUrl = 'ws/sms/configs';
+  const defaultConfig = configsUiModel.find(c => c.isDefault);
+  const defaultConfigName = !!defaultConfig ? defaultConfig.name : null;
   let configs: IConfig[] = configsUiModel.map((config: ConfigUI) => { return toConfigRequest(config); });
   const body = {
     type: ACTION_TYPES.UPLOAD_CONFIGS,
@@ -168,10 +165,9 @@ export const addEmptyConfig = (currentConfig: ReadonlyArray<ConfigUI>) => {
   return configs;
 };
 
-export const updateState = (configs: ReadonlyArray<ConfigUI>, defaultConfigName: string) => ({
+export const updateState = (configs: ReadonlyArray<ConfigUI>) => ({
   type: ACTION_TYPES.UPDATE_CONFIG_STATE,
-  configs,
-  defaultConfigName
+  configs
 });
 
 export const openModal = (configLocalId: string) => ({
@@ -188,3 +184,9 @@ export const addNewConfig = () => ({
 });
 
 const mapTemplatesToArray = payloadData => Object.keys(payloadData).map(key => payloadData[key]);
+
+const mapConfigsToConfigsUI = (data) => {
+  return data.configs.map((config: IConfig) => {
+    return new ConfigUI(config, data.defaultConfigName);
+  });
+}

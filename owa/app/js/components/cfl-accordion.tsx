@@ -2,13 +2,14 @@ import React from 'react';
 import '@openmrs/react-components/assets/css/accordion.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { ConfigUI } from "../shared/model/config.model";
 
 interface IProps {
-  title: string; 
+  title: string;
+  config: ConfigUI
   border?: boolean;
   open?: boolean;
-  default?: boolean;
-  setDefaultCallback: (configName: string) => void
+  setDefaultCallback: (config: ConfigUI) => void
 }
 
 interface IState {
@@ -36,7 +37,7 @@ export default class Accordion extends React.PureComponent<IProps, IState> {
 
   handleOnEmptyStarClick = (event) => {
     event.stopPropagation();
-    this.props.setDefaultCallback(this.props.title);
+    this.props.setDefaultCallback(this.props.config);
   };
 
   render = () => {
@@ -62,7 +63,7 @@ export default class Accordion extends React.PureComponent<IProps, IState> {
             &nbsp;&nbsp;
             {this.props.title}
             &nbsp;&nbsp;
-            {this.props.default ? (
+            {this.props.config.isDefault ? (
               <FontAwesomeIcon size="1x" icon={this.defaultIcon} />
             ) : (
               this.state.hovering && 
