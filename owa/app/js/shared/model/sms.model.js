@@ -7,6 +7,8 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 
+import _ from 'lodash';
+
 export class SmsModel {
   constructor(smsState) {
     this.recipients = smsState.recipients;
@@ -15,6 +17,14 @@ export class SmsModel {
     this.deliveryTime = smsState.deliveryTime;
     this.providerId = smsState.providerId;
     this.failureCount = smsState.failureCount;
-    this.customParams = smsState.customParams;
+    this.buildCustomParams(smsState.customParams)
+  }
+
+  buildCustomParams(customParamsString) {
+    this.customParams = {};
+    _.map(_.split(customParamsString, '\n'), (entry) => {
+      const keyValue = _.split(entry, ':');
+      this.customParams[keyValue[0]] = keyValue[1];
+    });
   }
 }

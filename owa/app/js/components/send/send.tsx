@@ -50,7 +50,9 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
       .matches(new RegExp('^\\+?\\d{1,15}(,\\+?\\d{1,15})*$'), Msg.NUMBERS_OR_COMMAS_REQUIRED)
       .required(Msg.FIELD_REQUIRED),
     message: Yup.string()
-      .required(Msg.FIELD_REQUIRED)
+      .required(Msg.FIELD_REQUIRED),
+    customParams: Yup.string()
+        .matches(new RegExp("^(((\\S+):(\\S*)){0,1}\\n{0,1})*$"), Msg.CUSTOM_PARAMS_FORMAT)
   });
 
   componentDidMount() {
@@ -151,7 +153,23 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
   }
 
   customParamsChange(event) {
-    this.props.handleCustomParamsUpdate(event.target.value);
+    let customParams = event.target.value;
+    let form = {
+      customParams
+    };
+    this.props.handleCustomParamsUpdate(customParams);
+    validateField(form, 'customParams', this.validationSchema)
+        .then(() => {
+          event.preventDefault();
+          this.setState({
+            errors: undefined
+          });
+        })
+        .catch((errors) => {
+          this.setState({
+            errors
+          });
+        });
   }
 
   renderConfigs() {
@@ -241,7 +259,8 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
             rows={7}
             cols={50}
             onChange={this.customParamsChange}
-            className={formClass} />
+            className={errors && errors.customParams ? errorFormClass : formClass} />
+          {this.renderError('customParams')}
         </div>
         <div className="panel-body">
           <button className="cancel" onClick={this.handleCancelButton}> Cancel </button>

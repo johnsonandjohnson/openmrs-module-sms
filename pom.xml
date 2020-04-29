@@ -193,6 +193,7 @@
                 <version>${surefireVersion}</version>
                 <configuration>
                     <argLine>-Dlog4j.configuration=file:src/test/resources/log4j.properties</argLine>
+                    <reuseForks>false</reuseForks>
                 </configuration>
             </plugin>
         </plugins>

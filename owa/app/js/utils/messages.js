@@ -3,6 +3,7 @@
 export const FIELD_REQUIRED = 'This field is required';
 export const NUMBERS_OR_COMMAS_REQUIRED = 'Only valid phone numbers separated by commas can be used in this field';
 export const POSITIVE_NUMBERS_REQUIRED = 'Only positive numbers can be used';
+export const CUSTOM_PARAMS_FORMAT = 'Map custom parameters in key:value format. Use new line as a separator.';
 
 // Generic messages
 export const GENERIC_FAILURE = 'An error occurred.';
