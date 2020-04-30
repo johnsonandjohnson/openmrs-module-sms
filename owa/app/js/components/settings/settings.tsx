@@ -28,7 +28,8 @@ interface ISettingsProps extends StateProps, DispatchProps {}
 
 interface ISettingsState {
   configs: Array<ConfigUI>,
-  errors?: IConfig
+  errors?: IConfig,
+  newEntry?: HTMLDivElement | null;
 };
 
 class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
@@ -37,7 +38,8 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     super(props);
     this.handleSubmitConfigs = this.handleSubmitConfigs.bind(this);
     this.state = {
-      configs: props.configs
+      configs: props.configs,
+      newEntry: undefined
     }
   };
 
@@ -67,6 +69,22 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     this.props.getConfigs();
     this.props.getTemplates();
   };
+
+  getOffsetTop(element) {
+    let offsetTop = 0;
+    while(element) {
+      offsetTop += element.offsetTop;
+      element = element.offsetParent;
+    }
+    return offsetTop;
+  }
+
+  focusDiv() {
+    if (this.state.newEntry) {
+      window.scrollTo({left: 0, top: this.getOffsetTop(this.state.newEntry), behavior: 'smooth'});
+      this.setState({ newEntry: undefined });
+    }
+  }
 
   handleSubmitConfigs = (event) => {
     event.preventDefault();
@@ -263,7 +281,12 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
           <Accordion key={index} title={config.name} config={config} border
             setDefaultCallback={this.setAsDefault}
           >
+           <div ref={(div) => {
+             this.setState({ newEntry: div })
+           }}>
             {this.renderConfigForm(config, isDefault, index)}
+            {this.focusDiv()}
+           </div>
           </Accordion>
         </Col>
         <Col sm={1}>

@@ -25,7 +25,7 @@ export default class Accordion extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      visible: false,
+      visible: !this.props.title,
       hovering: false
     };
   }
