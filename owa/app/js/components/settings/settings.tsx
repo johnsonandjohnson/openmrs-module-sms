@@ -58,7 +58,8 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     splitHeader: Yup.string()
       .required(Msg.FIELD_REQUIRED),
     splitFooter: Yup.string()
-      .required(Msg.FIELD_REQUIRED)
+      .required(Msg.FIELD_REQUIRED),
+    excludeLastFooter: Yup.bool()
   });
 
   componentDidMount = () => {
