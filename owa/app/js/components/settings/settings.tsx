@@ -102,6 +102,9 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
         config.isDefault = isDefault;
         if (fieldName === 'templateName') {
           config.props = this.getPropsForTemplate(value);
+          config.props.map((prop: IProp) => {
+            prop.value = "";
+          });
         }
         return config;
       }
