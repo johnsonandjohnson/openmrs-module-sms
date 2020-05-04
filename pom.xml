@@ -12,8 +12,11 @@
     <artifactId>sms</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Sms</name>
-    <description>SMS module</description>
+    <name>SMS module</name>
+    <description>
+        The SMS module allows to integrate with the API of SMS providers through the HTTP(s) protocol.
+        Can be used both to send outgoing messages, as well as to receive inbound messages.
+    </description>
 
     <scm>
         <connection>scm:git:git@bitbucket.org:soldevelo/omrs-sms.git</connection>
@@ -26,6 +29,26 @@
         <module>omod</module>
         <module>owa</module>
     </modules>
+
+    <properties>
+        <openmrsPlatformVersion>2.0.1</openmrsPlatformVersion>
+        <javaCompilerSource>1.8</javaCompilerSource>
+        <javaCompilerTarget>1.8</javaCompilerTarget>
+        <commonsCodecVersion>1.5</commonsCodecVersion>
+        <eventVersion>2.6.0</eventVersion>
+        <gsonVersion>1.7.1</gsonVersion>
+        <httpClientVersion>3.1.0</httpClientVersion>
+        <jsr311ApiVersion>1.1</jsr311ApiVersion>
+        <guavaVersion>23.0</guavaVersion>
+        <legacyVersion>1.5.0</legacyVersion>
+        <javax.servlet.version>3.0.1</javax.servlet.version>
+        <checkStylePluginVersion>2.10</checkStylePluginVersion>
+        <checkStylePluginSkip>false</checkStylePluginSkip>
+        <pmdPluginVersion>3.5</pmdPluginVersion>
+        <pmdPluginSkip>false</pmdPluginSkip>
+        <jacocoVersion>0.8.2</jacocoVersion>
+        <surefireVersion>2.17</surefireVersion>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -271,24 +294,4 @@
             </properties>
         </profile>
     </profiles>
-
-    <properties>
-        <openmrsPlatformVersion>2.0.1</openmrsPlatformVersion>
-        <javaCompilerSource>1.8</javaCompilerSource>
-        <javaCompilerTarget>1.8</javaCompilerTarget>
-        <commonsCodecVersion>1.5</commonsCodecVersion>
-        <eventVersion>2.6.0</eventVersion>
-        <gsonVersion>1.7.1</gsonVersion>
-        <httpClientVersion>3.1.0</httpClientVersion>
-        <jsr311ApiVersion>1.1</jsr311ApiVersion>
-        <guavaVersion>23.0</guavaVersion>
-        <legacyVersion>1.5.0</legacyVersion>
-        <javax.servlet.version>3.0.1</javax.servlet.version>
-        <checkStylePluginVersion>2.10</checkStylePluginVersion>
-        <checkStylePluginSkip>false</checkStylePluginSkip>
-        <pmdPluginVersion>3.5</pmdPluginVersion>
-        <pmdPluginSkip>false</pmdPluginSkip>
-        <jacocoVersion>0.8.2</jacocoVersion>
-        <surefireVersion>2.17</surefireVersion>
-    </properties>
 </project>
