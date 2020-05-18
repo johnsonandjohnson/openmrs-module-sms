@@ -90,6 +90,25 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
       });
   }
 
+  validateFormFields(formData?) {
+    if (!formData) {
+      formData = this.props.sendForm;
+    }
+
+    validateForm(formData, this.validationSchema)
+        .then(() => {
+          this.setState({
+            errors: undefined
+          });
+        })
+        .catch((errors) => {
+          this.setState({
+            ...this.state,
+            errors
+          });
+        });
+  }
+
   configChange(event) {
     this.props.handleConfigUpdate(event.target.value, this.getProviderId(event.target.value)[0]);
   }
@@ -112,64 +131,29 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
 
   recipientsChange(event) {
     let recipientsArray = event.target.value;
-    let form = {
-      recipients: recipientsArray
-    };
-
     this.props.handleRecipientsUpdate(recipientsArray.split(','));
-
-    validateField(form, 'recipients', this.validationSchema)
-      .then(() => {
-        event.preventDefault();
-        this.setState({
-          errors: undefined
-        });
-      })
-      .catch((errors) => {
-        this.setState({
-          errors
-        });
-      });
+    let form = {
+        ... this.props.sendForm, recipients: recipientsArray
+    };
+    this.validateFormFields(form);
   }
 
   messageChange(event) {
     let message = event.target.value;
-    let form = {
-      message
-    };
     this.props.handleMessageUpdate(message);
-
-    validateField(form, 'message', this.validationSchema)
-      .then(() => {
-        this.setState({
-          errors: undefined
-        });
-      })
-      .catch((errors) => {
-        this.setState({
-          errors
-        });
-      });
+    let form = {
+      ... this.props.sendForm, message
+    };
+    this.validateFormFields(form);
   }
 
   customParamsChange(event) {
     let customParams = event.target.value;
-    let form = {
-      customParams
-    };
     this.props.handleCustomParamsUpdate(customParams);
-    validateField(form, 'customParams', this.validationSchema)
-        .then(() => {
-          event.preventDefault();
-          this.setState({
-            errors: undefined
-          });
-        })
-        .catch((errors) => {
-          this.setState({
-            errors
-          });
-        });
+    let form = {
+      ... this.props.sendForm, customParams
+    };
+    this.validateFormFields(form);
   }
 
   renderConfigs() {
