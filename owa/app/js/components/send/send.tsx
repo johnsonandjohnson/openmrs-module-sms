@@ -177,13 +177,18 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
       <div>
         {this.props.configs.map((config: any) =>
           <span className='inline'>
-            <input key={config.name}
+            <input
+              id={"radio-" + config.name}
+              key={config.name}
               type='radio'
               name='configs'
               onChange={this.configChange}
               value={config.name}
               checked={this.props.sendForm.config === config.name} />
-            {config.name}
+              <label
+                htmlFor={"radio-" + config.name}
+                className="radio-label">{config.name}
+              </label>
           </span>
         )}
       </div>
