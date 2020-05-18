@@ -157,6 +157,9 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
           }
           return prop;
         });
+        if(config.props && !_.find(config.props, {name: propName})) {
+          config.props.push({name: propName, value: value});
+        }
         config.isDefault = isDefault;
         return config;
       }
