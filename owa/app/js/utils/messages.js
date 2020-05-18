@@ -18,6 +18,15 @@ export const SEND_SMS_SENDING_FAILURE = 'The message could not be sent to the pr
 // SMS settings
 export const SMS_SETTINGS_IMPORT_ADDITIONAL_TEMPLATES = 'Import additional configuration templates';
 
+// SMS Send page
+export const SELECT_CONFIGURATION = 'Select configuration';
+export const SELECT_DELIVERY_TIME = 'Select delivery time';
+export const ADD_RECIPIENT_NUMBER = 'Add recipient(s) phone number';
+export const TYPE_MESSAGE = 'Type the message';
+export const ADD_CUSTOM_PARAMETERS = 'Add custom parameters (optional)';
+export const ADD_RECIPIENT_TOOLTIP = 'Separate multiple phone numbers with comma.';
+export const ADD_CUSTOM_PARAMETERS_TOOLTIP = 'Map custom parameters in key:value format. Use new line as a separator.';
+
 // Import modal messages
 export const IMPORT_FILE_MODAL_CONFIRM = 'Import';
 export const IMPORT_FILE_MODAL_CLOSE = 'Close';

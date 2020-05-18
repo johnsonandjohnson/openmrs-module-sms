@@ -222,11 +222,11 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
       <div className="body-wrapper">
         <h2>Send SMS</h2>
         <div className="panel-body">
-          <label>Select configuration</label>
+          <label>{Msg.SELECT_CONFIGURATION}</label>
           {this.props.configs && this.renderConfigs()}
         </div>
         <div className="panel-body">
-          <label>Select delivery time</label>
+          <label>{Msg.SELECT_DELIVERY_TIME}</label>
           <div>
             {this.renderDeliveryTimeOption('Immediately', undefined)}
             {this.renderDeliveryTimeOption('10s', 10)}
@@ -235,8 +235,8 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
           </div>
         </div>
         <div className="panel-body">
-          <label>Add recipients' phone number</label>
-          <Tooltip message="Separate multiple phone numbers with comma." />
+          <label>{Msg.ADD_RECIPIENT_NUMBER}</label>
+          <Tooltip message={Msg.ADD_RECIPIENT_TOOLTIP} />
           <textarea
             value={this.props.sendForm.recipients ? this.props.sendForm.recipients.join(',') : ''}
             rows={1}
@@ -246,7 +246,7 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
           {this.renderError('recipients')}
         </div>
         <div className="panel-body">
-          <label>Type the message</label>
+          <label>{Msg.TYPE_MESSAGE}</label>
           <textarea
             value={this.props.sendForm.message}
             rows={7}
@@ -256,8 +256,8 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
           {this.renderError('message')}
         </div>
         <div className="panel-body">
-          <label>Add custom parameters (optional)</label>
-          <Tooltip message="Map custom parameters in key:value format. Use new line as a separator." />
+          <label>{Msg.ADD_CUSTOM_PARAMETERS}</label>
+          <Tooltip message={Msg.ADD_CUSTOM_PARAMETERS_TOOLTIP} />
           <textarea
             value={this.props.sendForm.customParams ? this.props.sendForm.customParams : ''}
             rows={7}
