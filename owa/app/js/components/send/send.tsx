@@ -200,12 +200,16 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
     return (
       <span className="inline">
         <input
+          id={"radio-" + value}
           type="radio"
           name="deliveryTimeOptions"
           onChange={this.deliveryTimeChange}
           value={value}
           checked={this.props.sendForm.deliveryOption === value} />
-        {label}
+          <label
+            htmlFor={"radio-" + value}
+            className="radio-label">{label}
+          </label>
       </span>
     );
   }
