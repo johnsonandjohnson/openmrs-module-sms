@@ -71,6 +71,10 @@ export class LogsTable extends React.PureComponent<ILogsTableProps, ILogsTableSt
         id: 'dateCreated'
       },
       {
+        Header: 'Created By',
+        accessor: 'creator'
+      },
+      {
         Header: 'Delivery Status',
         accessor: 'deliveryStatus'
       },

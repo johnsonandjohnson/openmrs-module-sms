@@ -18,8 +18,7 @@ public class SmsLoggingRecord {
     private String phoneNumber;
 
     /**
-     * Whether this is an inbound or an outbound SMS.
-     * Whether this is an inbound or an outbound SMS.
+     * Determines if SMS is an inbound or an outbound.
      */
     private String smsDirection;
 
