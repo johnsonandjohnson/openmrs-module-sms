@@ -42,7 +42,9 @@ public class SmsHttpService {
 
     private static final String SMS_MODULE = "openmrs-sms";
     private static final Log LOGGER = LogFactory.getLog(SmsHttpService.class);
-    private static final long MINUTE = 60000;
+    private static final String NOTIFICATION_FORMAT = "%s - %s";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
 
     private TemplateService templateService;
     private ConfigService configService;
@@ -114,7 +116,7 @@ public class SmsHttpService {
             } catch (IllegalStateException | IllegalArgumentException e) {
                 // exceptions generated above should only come from config/template issues, try to display something
                 // useful in the openmrs messages and tomcat log
-                alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, e.getMessage()), e);
+                alertService.notifySuperUsers(String.format(NOTIFICATION_FORMAT, SMS_MODULE, e.getMessage()), e);
                 throw e;
             }
             events = handler.getEvents();
@@ -163,21 +165,21 @@ public class SmsHttpService {
     }
 
     private void authenticate(Map<String, String> props, Config config) {
-        if (props.containsKey("username") && props.containsKey("password")) {
-            String u = props.get("username");
-            String p = props.get("password");
+        if (props.containsKey(USERNAME) && props.containsKey(PASSWORD)) {
+            String u = props.get(USERNAME);
+            String p = props.get(PASSWORD);
             commonsHttpClient.getParams().setAuthenticationPreemptive(true);
             commonsHttpClient.getState().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(u, p));
         } else {
             String message;
-            if (props.containsKey("username")) {
+            if (props.containsKey(USERNAME)) {
                 message = String.format("Config %s: missing password", config.getName());
-            } else if (props.containsKey("password")) {
+            } else if (props.containsKey(PASSWORD)) {
                 message = String.format("Config %s: missing username", config.getName());
             } else {
                 message = String.format("Config %s: missing username and password", config.getName());
             }
-            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, message), null);
+            alertService.notifySuperUsers(String.format(NOTIFICATION_FORMAT, SMS_MODULE, message), null);
             throw new IllegalStateException(message);
         }
     }
@@ -224,7 +226,7 @@ public class SmsHttpService {
         if (httpStatus == null) {
             String msg = String.format("Delivery to SMS provider failed: %s", errorMessage);
             LOGGER.error(msg);
-            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
+            alertService.notifySuperUsers(String.format(NOTIFICATION_FORMAT, SMS_MODULE, msg), null);
         } else {
             errorMessage = templateResponse.extractGeneralFailureMessage(httpResponse);
             if (errorMessage == null) {

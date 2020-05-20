@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -44,6 +45,7 @@ public class StatusController {
     private static final String SMS_MODULE = "openmrs-sms";
 
     private static final Log LOGGER = LogFactory.getLog(StatusController.class);
+    private static final String NOTIFICATION_TEMPLATE = "%s - %s";
 
     private AlertService alertService;
     private SmsAuditService smsAuditService;
@@ -74,7 +76,7 @@ public class StatusController {
      */
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    @RequestMapping(value = "/{configName}")
+    @RequestMapping(value = "/{configName}", method = RequestMethod.GET)
     public void handle(@PathVariable String configName, @RequestParam Map<String, String> params) {
         LOGGER.info(String.format("SMS Status - configName = %s, params = %s", configName, params));
 
@@ -82,7 +84,7 @@ public class StatusController {
             String msg = String.format("Received SMS Status for '%s' config but no matching config: %s, " +
                     "will try the default config", configName, params);
             LOGGER.error(msg);
-            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
+            alertService.notifySuperUsers(String.format(NOTIFICATION_TEMPLATE, SMS_MODULE, msg), null);
         }
         Config config = configService.getConfigOrDefault(configName);
         Template template = templateService.getTemplate(config.getTemplateName());
@@ -95,13 +97,13 @@ public class StatusController {
                 String msg = String.format("We have a message id, but don't know how to extract message status, this is most likely a template error. Config: %s, Parameters: %s",
                         configName, params);
                 LOGGER.error(msg);
-                alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
+                alertService.notifySuperUsers(String.format(NOTIFICATION_TEMPLATE, SMS_MODULE, msg), null);
             }
         } else {
             String msg = String.format("Status message received from provider, but no template support! Config: %s, Parameters: %s",
                     configName, params);
             LOGGER.error(msg);
-            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
+            alertService.notifySuperUsers(String.format(NOTIFICATION_TEMPLATE, SMS_MODULE, msg), null);
         }
     }
 
@@ -164,19 +166,27 @@ public class StatusController {
             String msg = String.format("Received status update but couldn't find a log record with matching " +
                     "ProviderMessageId or openMrsId: %s", providerMessageId);
             LOGGER.error(msg);
-            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
+            alertService.notifySuperUsers(String.format(NOTIFICATION_TEMPLATE, SMS_MODULE, msg), null);
         }
 
+        smsRecord = getSmsRecord(configName, providerMessageId, statusString, existingSmsRecord);
+
+        return smsRecord;
+    }
+
+    private SmsRecord getSmsRecord(String configName, String providerMessageId, String statusString,
+                                   SmsRecord existingSmsRecord) {
+        SmsRecord smsRecord;
         if (existingSmsRecord != null) {
             smsRecord = new SmsRecord(configName, OUTBOUND, existingSmsRecord.getPhoneNumber(),
                     existingSmsRecord.getMessageContent(), DateUtil.now(), null, statusString,
                     existingSmsRecord.getOpenMrsId(), providerMessageId, null);
         } else {
             //start with an empty SMS record
-            smsRecord = new SmsRecord(configName, OUTBOUND, null, null, DateUtil.now(), null, statusString, null,
+            smsRecord = new SmsRecord(configName, OUTBOUND, null, null, DateUtil.now(),
+                    null, statusString, null,
                     providerMessageId, null);
         }
-
         return smsRecord;
     }
 
@@ -186,19 +196,12 @@ public class StatusController {
         SmsRecord smsRecord = findOrCreateSmsRecord(configName, providerMessageId, statusString);
 
         if (statusString != null) {
-            if (statusString.matches(status.getStatusSuccess())) {
-                smsRecord.setDeliveryStatus(statusString);
-            } else if (status.hasStatusFailure() && statusString.matches(status.getStatusFailure())) {
-                smsRecord.setDeliveryStatus(statusString);
-            } else {
-                // If we're not certain the message was delivered or failed, then it's in the DISPATCHED gray area
-                smsRecord.setDeliveryStatus(statusString);
-            }
+            smsRecord.setDeliveryStatus(statusString);
         } else {
             String msg = String.format("Likely template error, unable to extract status string. Config: %s, Parameters: %s",
                     configName, params);
             LOGGER.error(msg);
-            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
+            alertService.notifySuperUsers(String.format(NOTIFICATION_TEMPLATE, SMS_MODULE, msg), null);
             smsRecord.setDeliveryStatus(DeliveryStatuses.FAILURE_CONFIRMED);
         }
         smsRecordDao.create(smsRecord);

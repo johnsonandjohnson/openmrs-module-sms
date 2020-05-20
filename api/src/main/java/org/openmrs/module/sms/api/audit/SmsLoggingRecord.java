@@ -2,10 +2,14 @@ package org.openmrs.module.sms.api.audit;
 
 import org.openmrs.module.sms.api.util.DateUtil;
 
+import java.io.Serializable;
+
 /**
  * Represents one record in the logging UI
  */
-public class SmsLoggingRecord {
+public class SmsLoggingRecord implements Serializable {
+
+    private static final long serialVersionUID = -7922723997141022143L;
 
     /**
      * The name of the configuration this SMS should be associated with.

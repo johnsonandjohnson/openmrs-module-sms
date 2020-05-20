@@ -7,15 +7,13 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.templates.Template;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import static org.openmrs.module.sms.api.util.Constants.SMS_DEFAULT_RETRY_COUNT;
 
-public class SendSmsState implements Serializable {
+public class SendSmsState {
 
-    private static final long serialVersionUID = 2632585637814840133L;
     private static final Log LOGGER = LogFactory.getLog(SendSmsState.class);
     private static final long MINUTE = 60000;
     private Template template;
@@ -78,7 +76,9 @@ public class SendSmsState implements Serializable {
             shouldRetry = false;
             try {
                 httpStatus = commonsHttpClient.executeMethod(httpMethod);
-                httpResponse = httpMethod.getResponseBodyAsString();
+                if (httpMethod != null) {
+                    httpResponse = httpMethod.getResponseBodyAsString();
+                }
             } catch (UnknownHostException e) {
                 errorMessage = String.format("Network connectivity issues or problem with '%s' template? %s",
                         template.getName(), e.toString());

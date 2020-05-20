@@ -31,6 +31,7 @@ public class SmsHttpServiceTest extends ContextSensitiveWithActivatorTest {
             "\"0.03330000\",\n      \"network\": \"12345\",\n      \"client-ref\": \"my-personal-reference\",\n " +
             "     \"account-ref\": \"customer1234\"\n          }";
     private static final String NEXMO_GENERIC = "nexmo-generic";
+    public static final String BAD_CREDENTIALS = "Bad Credentials";
 
     @Autowired
     @Qualifier("sms.SmsHttpService")
@@ -104,6 +105,15 @@ public class SmsHttpServiceTest extends ContextSensitiveWithActivatorTest {
         prepareFailureAnswer();
         OutgoingSms sms = new OutgoingSmsBuilder().build();
         smsHttpService.send(sms);
+        SmsRecord expected = new SmsRecordBuilder()
+                .withOpenMrsId(null)
+                .withProviderId(null)
+                .withProviderStatus(null)
+                .withErrorMessage(BAD_CREDENTIALS)
+                .withDeliveryStatus(DeliveryStatuses.ABORTED)
+                .build();
+        SmsRecord actual = smsRecordDao.getAll(true).get(0);
+        assertSmsRecord(expected, actual);
     }
 
     @Test

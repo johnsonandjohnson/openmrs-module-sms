@@ -51,7 +51,7 @@ public class SmsScheduledTaskTest {
     public void execute() {
         SmsScheduledTask task = prepareTask();
         task.execute();
-        verify(smsHttpService);
+        verify(smsHttpService).send(anyObject());
     }
 
     @Test(expected = SmsRuntimeException.class)

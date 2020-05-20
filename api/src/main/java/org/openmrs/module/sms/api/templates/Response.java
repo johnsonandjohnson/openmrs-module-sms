@@ -19,6 +19,8 @@ public class Response {
     private static final int HTTP_SUCCESS_MIN = HttpURLConnection.HTTP_OK;
     private static final int HTTP_99 = 99;
     private static final int HTTP_SUCCESS_MAX = HttpURLConnection.HTTP_OK + HTTP_99;
+    private static final String SEARCH_GROUPS_EXCEPTION_FORMAT =
+            "Invalid number of search groups, expected: 1, actual: %s.";
 
     /**
      * Whether recipients are provided in multiple lines.
@@ -155,7 +157,7 @@ public class Response {
         Matcher m = extractSingleSuccessMessageIdPattern.matcher(response);
         if (m.groupCount() != 1) {
             throw new IllegalStateException(String.format("Template error, extractSingleSuccessMessageId: " +
-                    "Invalid number of search groups, expected: 1, actual: %s.", m.groupCount()));
+                    SEARCH_GROUPS_EXCEPTION_FORMAT, m.groupCount()));
         }
         if (m.find()) {
             return m.group(1);
@@ -177,7 +179,7 @@ public class Response {
             Matcher m = extractSingleFailureMessagePattern.matcher(response);
             if (m.groupCount() != 1) {
                 throw new IllegalStateException(String.format("Template error, extractSingleFailureMessage: " +
-                        "Invalid number of search groups, expected: 1, actual: %s.", m.groupCount()));
+                        SEARCH_GROUPS_EXCEPTION_FORMAT, m.groupCount()));
             }
             if (m.find()) {
                 return m.group(1);
@@ -199,7 +201,7 @@ public class Response {
         Matcher m = extractGeneralFailureMessagePattern.matcher(response);
         if (m.groupCount() != 1) {
             throw new IllegalStateException(String.format("Template error, extractGeneralFailureMessage: " +
-                    "Invalid number of search groups, expected: 1, actual: %s.", m.groupCount()));
+                    SEARCH_GROUPS_EXCEPTION_FORMAT, m.groupCount()));
         }
         if (m.find()) {
             return m.group(1);
@@ -270,7 +272,7 @@ public class Response {
 
             if (matcher.groupCount() != 1) {
                 throw new IllegalStateException(String.format("Template error, extractProviderStatus: " +
-                        "Invalid number of search groups, expected: 1, actual: %s.", matcher.groupCount()));
+                        SEARCH_GROUPS_EXCEPTION_FORMAT, matcher.groupCount()));
             }
 
             if (matcher.find()) {

@@ -30,12 +30,6 @@ public class Configs {
     private List<Config> configs = new ArrayList<>();
 
     /**
-     * Creates a new instance, used by Jackson.
-     */
-    public Configs() {
-    }
-
-    /**
      * Returns the default configuration, users can make one of the configurations default.
      *
      * @return the default configuration, never null

@@ -131,14 +131,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
         String footer = config.getSplitFooter();
         Boolean excludeLastFooter = config.getExcludeLastFooter();
         //todo: maximum number of supported recipients : per template/provider and/or per http specs
-
-        //todo - cr - move that to the Config object so calculated only once ?
-        //todo - cr - investigate if that might be a problem on windows
-        // -2 to account for the added \n after the header and before the footer
-        if ((maxSize - header.length() - footer.length() - 2) <= 0) {
-            throw new IllegalArgumentException(
-                    "The combined sizes of the header and footer templates are larger than the maximum SMS size!");
-        }
+        verifyMessageLength(maxSize, header, footer);
 
         List<String> messageParts = splitMessage(sms.getMessage(), maxSize, header, footer, excludeLastFooter);
         List<List<String>> recipientsList = splitRecipientList(sms.getRecipients(),
@@ -147,25 +140,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
         //todo: delivery_time on the sms provider's side if they support it?
         for (List<String> recipients : recipientsList) {
             if (sms.hasDeliveryTime()) {
-                Date dt = sms.getDeliveryTime();
-                for (String part : messageParts) {
-                    String openMrsId = generateOpenMrsId();
-                    SmsEvent event = outboundEvent(SmsEventSubjects.SCHEDULED, config.getName(), recipients, part,
-                            openMrsId, null, null, null, null, sms.getCustomParams());
-                    //OpenMRS scheduler needs unique job ids, so adding openMrsId as job_id_key will do that
-                    event.getParameters().put(Constants.PARAM_JOB_ID, openMrsId);
-                    event.getParameters().put(SmsEventParams.DELIVERY_TIME, dt);
-                    schedulerService.safeScheduleRunOnceJob(event, dt, new SmsScheduledTask());
-                    LOGGER.info(String.format("Scheduling message [%s] to [%s] at %s.",
-                            part.replace("\n", "\\n"), recipients, sms.getDeliveryTime()));
-                    //add one millisecond to the next sms part so they will be delivered in order
-                    //without that it seems Quartz doesn't fire events in the order they were scheduled
-                    dt = DateUtil.plusDays(dt, 1);
-                    for (String recipient : recipients) {
-                        smsRecordDao.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, DateUtil.now(),
-                                DeliveryStatuses.SCHEDULED, null, openMrsId, null, null));
-                    }
-                }
+                scheduleSms(sms, config, messageParts, recipients);
             } else {
                 for (String part : messageParts) {
                     String openMrsId = generateOpenMrsId();
@@ -179,6 +154,38 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
                     }
                 }
             }
+        }
+    }
+
+    private void scheduleSms(OutgoingSms sms, Config config, List<String> messageParts, List<String> recipients) {
+        Date dt = sms.getDeliveryTime();
+        for (String part : messageParts) {
+            String openMrsId = generateOpenMrsId();
+            SmsEvent event = outboundEvent(SmsEventSubjects.SCHEDULED, config.getName(), recipients, part,
+                    openMrsId, null, null, null, null, sms.getCustomParams());
+            //OpenMRS scheduler needs unique job ids, so adding openMrsId as job_id_key will do that
+            event.getParameters().put(Constants.PARAM_JOB_ID, openMrsId);
+            event.getParameters().put(SmsEventParams.DELIVERY_TIME, dt);
+            schedulerService.safeScheduleRunOnceJob(event, dt, new SmsScheduledTask());
+            LOGGER.info(String.format("Scheduling message [%s] to [%s] at %s.",
+                    part.replace("\n", "\\n"), recipients, sms.getDeliveryTime()));
+            //add one millisecond to the next sms part so they will be delivered in order
+            //without that it seems Quartz doesn't fire events in the order they were scheduled
+            dt = DateUtil.plusDays(dt, 1);
+            for (String recipient : recipients) {
+                smsRecordDao.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, DateUtil.now(),
+                        DeliveryStatuses.SCHEDULED, null, openMrsId, null, null));
+            }
+        }
+    }
+
+    private void verifyMessageLength(Integer maxSize, String header, String footer) {
+        //todo - cr - move that to the Config object so calculated only once ?
+        //todo - cr - investigate if that might be a problem on windows
+        // -2 to account for the added \n after the header and before the footer
+        if ((maxSize - header.length() - footer.length() - 2) <= 0) {
+            throw new IllegalArgumentException(
+                    "The combined sizes of the header and footer templates are larger than the maximum SMS size!");
         }
     }
 }

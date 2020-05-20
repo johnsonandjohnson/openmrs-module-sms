@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -64,7 +65,7 @@ public class IncomingController {
      * @param params     the request params coming from the provider
      */
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value = "/{configName}")
+    @RequestMapping(value = "/{configName}", method = RequestMethod.GET)
     public void handleIncoming(@PathVariable String configName, @RequestParam Map<String, String> params) {
         LOGGER.info(String.format("Incoming SMS - configName = %s, params = %s", configName, params));
 

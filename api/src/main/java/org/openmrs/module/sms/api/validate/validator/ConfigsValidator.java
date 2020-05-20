@@ -34,7 +34,7 @@ public class ConfigsValidator implements ConstraintValidator<ValidConfigs, Confi
 
     @Override
     public void initialize(ValidConfigs validConfigs) {
-
+        // no specific action should be performed
     }
 
     /**

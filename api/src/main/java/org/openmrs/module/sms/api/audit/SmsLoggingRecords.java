@@ -1,7 +1,7 @@
 package org.openmrs.module.sms.api.audit;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -44,7 +44,7 @@ public class SmsLoggingRecords implements Serializable {
         records = totalRecords;
         total = rows;
 
-        List<SmsLoggingRecord> smsLoggingRecords = new ArrayList<>();
+        List<SmsLoggingRecord> smsLoggingRecords = new LinkedList<>();
         for (SmsRecord smsRecord : smsRecords.getRecords()) {
             smsLoggingRecords.add(new SmsLoggingRecord(smsRecord));
         }

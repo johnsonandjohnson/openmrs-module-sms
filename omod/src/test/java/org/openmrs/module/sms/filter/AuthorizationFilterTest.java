@@ -41,13 +41,13 @@ public class AuthorizationFilterTest {
                 Mockito.any(String.class), Mockito.any(String.class));
     }
 
-    @Test
+    @Test(expected = Test.None.class /* no exception expected */)
     public void initShouldInitWithoutExceptions() throws ServletException {
         AuthorizationFilter authorizationFilter = new AuthorizationFilter();
         authorizationFilter.init(new MockFilterConfig());
     }
 
-    @Test
+    @Test(expected = Test.None.class /* no exception expected */)
     public void destroyShouldDestroyWithoutExceptions() {
         AuthorizationFilter authorizationFilter = new AuthorizationFilter();
         authorizationFilter.destroy();
