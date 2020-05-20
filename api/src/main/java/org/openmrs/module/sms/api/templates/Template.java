@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 public class Template {
 
     public static final Pattern FIND_TOKEN_PATTERN = Pattern.compile("\\[(\\w*)\\]");
+    public static final String FORM_URLENCODED_WITH_CHARSET_UTF_8 = "application/x-www-form-urlencoded; charset=utf-8";
 
     /**
      * Models the handling of outgoing SMS messages.
@@ -86,7 +87,7 @@ public class Template {
                 }
                 ((PostMethod) httpMethod).setRequestEntity(requestEntity);
             } else {
-                httpMethod.setRequestHeader("Content-Type", PostMethod.FORM_URL_ENCODED_CONTENT_TYPE);
+                httpMethod.setRequestHeader("Content-Type", FORM_URLENCODED_WITH_CHARSET_UTF_8);
                 addBodyParameters((PostMethod) httpMethod, props);
             }
         } else {
