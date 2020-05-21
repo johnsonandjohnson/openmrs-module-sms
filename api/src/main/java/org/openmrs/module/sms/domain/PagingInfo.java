@@ -1,10 +1,10 @@
 package org.openmrs.module.sms.domain;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.openmrs.module.sms.api.web.dto.BaseDTO;
 
-public class PagingInfo {
+public class PagingInfo extends BaseDTO {
 
+    private static final long serialVersionUID = 247438117875000891L;
     private int page;
     private int pageSize;
     private Long totalRecordCount;
@@ -59,23 +59,5 @@ public class PagingInfo {
 
     public void setLoadRecordCount(boolean loadRecordCount) {
         this.loadRecordCount = loadRecordCount;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        return EqualsBuilder.reflectionEquals(this, o);
-    }
-
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
     }
 }

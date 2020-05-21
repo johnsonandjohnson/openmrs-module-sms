@@ -1,14 +1,14 @@
 package org.openmrs.module.sms.api.web;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openmrs.module.sms.api.util.DateUtil;
+import org.openmrs.module.sms.api.web.dto.BaseDTO;
 
 import java.util.Date;
 
-public class Interval {
+public class Interval extends BaseDTO {
 
+    private static final long serialVersionUID = 7249387385043145349L;
     private Date from;
 
     private Date to;
@@ -47,23 +47,5 @@ public class Interval {
 
     public void setTo(Date to) {
         this.to = to;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        return EqualsBuilder.reflectionEquals(this, o);
-    }
-
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
     }
 }

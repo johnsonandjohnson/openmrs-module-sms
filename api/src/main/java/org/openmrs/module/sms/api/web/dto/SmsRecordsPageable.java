@@ -1,18 +1,15 @@
 package org.openmrs.module.sms.api.web.dto;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.audit.SmsRecords;
 import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.module.sms.api.web.dto.builder.SmsRecordDTOBuilder;
 import org.openmrs.module.sms.domain.PagingInfo;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SmsRecordsPageable implements Serializable {
+public class SmsRecordsPageable extends BaseDTO {
 
     private static final long serialVersionUID = 4554144138502087590L;
 
@@ -64,24 +61,6 @@ public class SmsRecordsPageable implements Serializable {
 
     public void setRows(List<SmsRecordDTO> rows) {
         this.rows = rows;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        return EqualsBuilder.reflectionEquals(this, o);
-    }
-
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
     }
 
     private List<SmsRecordDTO> convertSmsRecordsToDTO(List<SmsRecord> records) {
