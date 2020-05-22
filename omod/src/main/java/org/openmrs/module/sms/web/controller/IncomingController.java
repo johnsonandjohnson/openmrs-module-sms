@@ -31,7 +31,7 @@ import static org.openmrs.module.sms.api.audit.SmsDirection.INBOUND;
  */
 @Controller
 @RequestMapping(value = "/sms/incoming")
-public class IncomingController {
+public class IncomingController extends RestController {
 
     private static final String SMS_MODULE = "openmrs-sms";
 

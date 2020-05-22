@@ -22,7 +22,7 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping(value = "/sms")
-public class SendController {
+public class SendController extends RestController {
 
     private static final Log LOGGER = LogFactory.getLog(SendController.class);
 

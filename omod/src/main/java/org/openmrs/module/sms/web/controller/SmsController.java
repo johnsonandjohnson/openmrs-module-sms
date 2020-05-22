@@ -30,7 +30,7 @@ import java.util.List;
  */
 @Controller("${rootrootArtifactId}.SmsController")
 @RequestMapping(value = "module/sms/sms.form")
-public class SmsController {
+public class SmsController extends RestController {
 
     /** Logger for this class and subclasses */
     protected static final Log LOG = LogFactory.getLog(SmsController.class);

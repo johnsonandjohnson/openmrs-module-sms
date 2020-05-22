@@ -34,7 +34,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping(value = "/sms")
-public class SmsSettingsController {
+public class SmsSettingsController extends RestController {
 
     private static final Log LOGGER = LogFactory.getLog(SendController.class);
     private static final String ERR_BAD_PARAM = "system.param";

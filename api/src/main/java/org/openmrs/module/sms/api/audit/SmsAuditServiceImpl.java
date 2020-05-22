@@ -1,5 +1,6 @@
 package org.openmrs.module.sms.api.audit;
 
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.domain.PagingInfo;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Service that does the reading and writing to the SMS audit log.
  */
-public class SmsAuditServiceImpl implements SmsAuditService {
+public class SmsAuditServiceImpl extends BaseOpenmrsService implements SmsAuditService {
 
     private SmsRecordDao smsRecordDao;
 

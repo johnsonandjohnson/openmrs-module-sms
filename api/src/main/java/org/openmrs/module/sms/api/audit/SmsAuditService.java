@@ -1,5 +1,8 @@
 package org.openmrs.module.sms.api.audit;
 
+import org.openmrs.annotation.Authorized;
+import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.sms.api.util.PrivilegeConstants;
 import org.openmrs.module.sms.domain.PagingInfo;
 
 import java.util.List;
@@ -7,13 +10,14 @@ import java.util.List;
 /**
  * Reading and writing to the SMS audit log
  */
-public interface SmsAuditService {
+public interface SmsAuditService extends OpenmrsService {
 
     /**
      * Finds and returns all <code>SmsRecord</code> entries in the sms log.
      *
      * @return all sms records in the sms log
      */
+    @Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
     List<SmsRecord> findAllSmsRecords();
 
     /**
@@ -22,6 +26,7 @@ public interface SmsAuditService {
      *
      * @return all sms records matching the provided criteria
      */
+    @Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
     SmsRecords findAllSmsRecords(SmsRecordSearchCriteria criteria);
 
     /**
@@ -30,7 +35,9 @@ public interface SmsAuditService {
      *
      * @return the count of sms records matching the provided criteria
      */
+    @Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
     long countAllSmsRecords(SmsRecordSearchCriteria criteria);
 
+    @Authorized(PrivilegeConstants.SMS_MODULE_PRIVILEGE)
     SmsRecords findPageableByCriteria(PagingInfo pagingInfo, SmsRecordSearchCriteria criteria);
 }

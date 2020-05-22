@@ -61,7 +61,7 @@ export class UploadModal extends React.Component<IImportFileModalProps> {
 
   render() {
     return (
-      <Modal show={true}>
+      <Modal show={true} onHide={() => {}}>
         {this.renderModalHeader()}
         {this.renderModalBody()}
         {this.renderModalFooter()}

@@ -7,15 +7,13 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 // generated on 2019-10-02 using @openmrs/generator-openmrs-owa 0.7.1
-"use strict";
+'use strict';
 const webpack = require("webpack");
 const path = require("path");
 const fs = require("fs");
 const target = require("yargs").argv.target;
 const targetPort = require("yargs").argv.targetPort;
 
-const UglifyPlugin = require("uglifyjs-webpack-plugin");
-const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BrowserSyncPlugin = require("browser-sync-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
@@ -41,34 +39,30 @@ var getConfig = function () {
 
   try {
     // look for config file
-    config = require("./config.json");
+    config = require('./config.json');
   } catch (err) {
     // create file with defaults if not found
     config = {
-      LOCAL_OWA_FOLDER: "/home/user/.cfl-dev/owa/",
-      APP_ENTRY_POINT: "http://localhost:8080/openmrs/owa/sms/index.html",
-      VERSION: "1.0.0-SNAPSHOT"
+      'LOCAL_OWA_FOLDER': '/home/user/.cfl-dev/owa/',
+      'APP_ENTRY_POINT': 'http://localhost:8080/openmrs/owa/sms/index.html'
     };
 
-    fs.writeFile("config.json", JSON.stringify(config));
+    fs.writeFile('config.json', JSON.stringify(config));
+
   } finally {
     return config;
-  }
-};
+  };
+}
 var config = getConfig();
 
 var resolveBrowserSyncTarget = function () {
-  if (targetPort != null && targetPort != "null") {
-    return (
-      config.APP_ENTRY_POINT.substr(0, "http://localhost:".length) +
-      targetPort +
-      config.APP_ENTRY_POINT.substr(
-        "http://localhost:".length + targetPort.toString().length,
-        config.APP_ENTRY_POINT.length
-      )
-    );
-  } else {
-    return config.APP_ENTRY_POINT;
+  if (targetPort != null && targetPort != 'null') {
+    return config.APP_ENTRY_POINT.substr(0, 'http://localhost:'.length)
+      + targetPort
+      + config.APP_ENTRY_POINT.substr('http://localhost:'.length + targetPort.toString().length, config.APP_ENTRY_POINT.length);
+  }
+  else {
+    return config.APP_ENTRY_POINT
   }
 };
 var browserSyncTarget = resolveBrowserSyncTarget();
@@ -77,7 +71,10 @@ const rules = [
   {
     test: /\.(t|j)sx?$/,
     loader: "awesome-typescript-loader",
-    exclude: /node_modules/,
+    include: [
+      path.resolve(__dirname, "app/js"),
+      path.resolve(__dirname, "node_modules/@bit/soldevelo-omrs.cfl-components")
+    ],
     query: {
       presets: ["env", "react"],
       cacheDirectory: true,
@@ -89,25 +86,12 @@ const rules = [
     loader: "url-loader"
   },
   {
-    test: /\.s?css$/,
-    include: [/node_modules/],
-    use: ["style-loader", "css-loader"]
-  },
-  {
     test: /\.html$/,
     loader: "html-loader"
   },
   {
     test: /\.s?css$/,
-    exclude: [/node_modules/],
-    use: [
-      "style-loader?sourceMap",
-      {
-        loader: "css-loader"
-      },
-      "postcss-loader",
-      "sass-loader?sourcemap&sourceMapContents&outputStyle=expanded"
-    ]
+    use: ['style-loader', 'css-loader','sass-loader']
   },
   { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
 ];
@@ -116,11 +100,9 @@ const rules = [
 if (env === "production") {
   plugins.push(
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify("production"),
-      "process.env.VERSION": JSON.stringify(config.VERSION)
+      "process.env.NODE_ENV": JSON.stringify("production")
     })
   );
-  plugins.push(new UglifyPlugin());
   outputFile = `${outputFile}.min.[chunkhash].js`;
   vendorOutputFile = "vendor.bundle.[chunkhash].js";
   outputPath = `${__dirname}/dist/`;
@@ -150,24 +132,14 @@ if (env === "production") {
   );
 }
 if (env === "deploy") {
-  plugins.push(
-    new webpack.DefinePlugin({
-      "process.env.VERSION": JSON.stringify(config.VERSION)
-    })
-  );
   outputFile = `${outputFile}.js`;
   vendorOutputFile = "vendor.bundle.js";
   outputPath = `${config.LOCAL_OWA_FOLDER}${
     config.LOCAL_OWA_FOLDER.slice(-1) != "/" ? "/" : ""
-    }${THIS_APP_ID}`;
+  }${THIS_APP_ID}`;
   devtool = "source-map";
 }
 if (env === "development") {
-  plugins.push(
-    new webpack.DefinePlugin({
-      "process.env.VERSION": JSON.stringify(config.VERSION)
-    })
-  );
   outputFile = `${outputFile}.js`;
   vendorOutputFile = "vendor.bundle.js";
   outputPath = `${__dirname}/dist/`;
@@ -179,13 +151,6 @@ plugins.push(
     proxy: {
       target: browserSyncTarget
     }
-  })
-);
-
-plugins.push(
-  new CommonsChunkPlugin({
-    name: "vendor",
-    filename: vendorOutputFile
   })
 );
 
@@ -233,6 +198,7 @@ plugins.push(
 
 var webpackConfig = {
   entry: {
+    regenerator_runtime: 'regenerator-runtime/runtime',
     app: `${__dirname}/app/js/sms`,
     css: `${__dirname}/app/css/sms.scss`,
     vendor: [
@@ -241,12 +207,13 @@ var webpackConfig = {
       "redux-promise-middleware",
       "react-redux",
       "redux-saga",
-      "redux-logger",
       "redux-thunk",
-      "react-toastify"
+      "react-toastify",
+      "regenerator-runtime"
     ]
   },
   devtool: devtool,
+  target,
   output: {
     path: outputPath,
     filename: "[name]" + outputFile
@@ -261,7 +228,20 @@ var webpackConfig = {
   },
   plugins,
   externals: nodeModules,
-  devtool: "source-map"
+  devtool: "source-map",
+  optimization: {
+    splitChunks: {
+      minSize: 10000,
+      maxSize: 250000,
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
+    }
+  }
 };
 
 module.exports = webpackConfig;

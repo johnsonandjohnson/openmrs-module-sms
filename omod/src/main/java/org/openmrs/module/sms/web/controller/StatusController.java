@@ -38,7 +38,7 @@ import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
  */
 @Controller
 @RequestMapping(value = "/sms/status")
-public class StatusController {
+public class StatusController extends RestController {
 
     private static final int RECORD_FIND_RETRY_COUNT = 3;
     private static final int RECORD_FIND_TIMEOUT = 500;

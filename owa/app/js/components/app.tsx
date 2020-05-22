@@ -24,7 +24,7 @@ class App extends React.Component {
     return (
       <div className="body-wrapper">
         <Row>
-          <Col md="12" xs="12">
+          <Col md={12} xs={12}>
             <h2>SMS</h2>
           </Col>
         </Row>

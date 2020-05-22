@@ -73,20 +73,20 @@ export default class LogsFilters extends React.PureComponent<ILogsFiltersProps, 
 
   render = () =>
     <Row>
-      <Col sm="7">
-        <Row sm="8">
-          <Col sm="6">
+      <Col sm={7}>
+        <Row>
+          <Col sm={6}>
             Search Recipient phone number
           </Col>
-          <Col sm="6">
+          <Col sm={6}>
             Select Timestamp
           </Col>
         </Row>
-        <Row className="u-mb-10" sm="8">
-          <Col sm="6">
+        <Row className="u-mb-10">
+          <Col sm={6}>
             <input className="u-fill-col" type="text" onChange={this.onPhoneNumberFilterChange} value={this.state.phoneNumber} />
           </Col>
-          <Col sm="6">
+          <Col sm={6}>
             <select className="u-fill-col" onChange={this.onDateFilterFilterChange} value={this.state.timePeriod}>
               <option>{TimePeriod.ALL}</option>
               <option>{TimePeriod.TODAY}</option>

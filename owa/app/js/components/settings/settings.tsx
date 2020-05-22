@@ -210,7 +210,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
             type={inputType}
             name={fieldName}
             value={config[fieldName]}
-            onChange={e => this.handleChange(config.localId, fieldName, e.target.value, isDefault)} />
+            onChange={(e: any) => this.handleChange(config.localId, fieldName, e.target.value, isDefault)} />
       {this.renderError(fieldName)}
     </FormGroup>
     );
@@ -220,7 +220,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
       <FormGroup controlId={`${fieldName}_${index}`}>
         <ControlLabel>{label}</ControlLabel>
         <Checkbox name={fieldName} checked={config[fieldName]}
-          onChange={e => this.handleChange(config.localId, fieldName, e.target.checked, isDefault)} />
+          onChange={(e: any) => this.handleChange(config.localId, fieldName, e.target.checked, isDefault)} />
       </FormGroup>
   );
 
@@ -249,7 +249,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
       <FormGroup controlId={`${propName}_${index}`}>
         <ControlLabel>{`${propName}:`}</ControlLabel>
         <FormControl type="text" name={propName} value={prop ? prop.value : ''}
-          onChange={e => this.handlePropChange(config.localId, propName, e.target.value, isDefault)} />
+          onChange={(e: any) => this.handlePropChange(config.localId, propName, e.target.value, isDefault)} />
       </FormGroup>
     );
   };
@@ -266,7 +266,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
           componentClass="select"
           name={fieldName}
           value={config.templateName}
-          onChange={e => this.handleChange(config.localId, fieldName, e.target.value, isDefault)} >
+          onChange={(e: any) => this.handleChange(config.localId, fieldName, e.target.value, isDefault)} >
           <option key='empty'></option>
           {templates.map(template => <option key={template.name}>{template.name}</option>)}
           className={errors ? errorFormClass : formClass}
@@ -354,7 +354,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
           title="Delete SMS configuration"
           txt="Are you sure you want to delete this configuration?" />
         <Row>
-          <Col xs="12" md="12">
+          <Col xs={12} md={12}>
             <h2>SMS Configurations</h2>
           </Col>
         </Row>

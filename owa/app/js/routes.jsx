@@ -9,20 +9,22 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Header } from '@openmrs/react-components';
+import PrivateRoute from "@bit/soldevelo-omrs.cfl-components.private-route/private-route";
 
 import App from './components/app';
 import Logs from './components/logs/logs';
 import BreadCrumb from './components/BreadCrumb';
 import Send from './components/send/send';
 import Settings from './components/settings/index';
+import {SMS_PRIVILEGE} from "./config/privileges";
 
 export default (store) => (<div>
   <Header />
   <BreadCrumb />
   <Switch>
-    <Route exact path='/' component={App} />
-    <Route path='/logs' component={Logs} />
-    <Route path='/send' component={Send} />
-    <Route path='/settings' component={Settings} />
+    <PrivateRoute path='/logs' component={Logs} requiredPrivilege={SMS_PRIVILEGE} />
+    <PrivateRoute path='/send' component={Send} requiredPrivilege={SMS_PRIVILEGE} />
+    <PrivateRoute path='/settings' component={Settings} requiredPrivilege={SMS_PRIVILEGE} />
+    <PrivateRoute exact path='/' component={App} requiredPrivilege={SMS_PRIVILEGE} />
   </Switch>
 </div>);
