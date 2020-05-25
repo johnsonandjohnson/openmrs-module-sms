@@ -164,7 +164,7 @@
         </property>
     </bean>
 
-    <bean id="smsAuditService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <bean id="sms.SmsAuditService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager">
             <ref bean="transactionManager"/>
         </property>
@@ -187,7 +187,7 @@
         <property name="moduleService">
             <list>
                 <value>org.openmrs.module.sms.api.audit.SmsAuditService</value>
-                <ref bean="smsAuditService"/>
+                <ref bean="sms.SmsAuditService"/>
             </list>
         </property>
     </bean>

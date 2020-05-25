@@ -29,7 +29,7 @@ public class SmsAuditServiceImplTest extends BaseModuleContextSensitiveTest {
     private SmsRecordDao smsRecordDao;
 
     @Autowired
-    @Qualifier("smsAuditService")
+    @Qualifier("sms.SmsAuditService")
     private SmsAuditService smsAuditService;
 
     @Before

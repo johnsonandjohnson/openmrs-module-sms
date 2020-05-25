@@ -26,7 +26,7 @@ public class SmsRecordController extends RestController {
     private static final Log LOGGER = LogFactory.getLog(SmsRecordController.class);
 
     @Autowired
-    @Qualifier("smsAuditService")
+    @Qualifier("sms.SmsAuditService")
     private SmsAuditService smsAuditService;
 
     @RequestMapping(value = "/log", method = RequestMethod.GET)

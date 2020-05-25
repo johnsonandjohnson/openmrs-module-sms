@@ -58,7 +58,7 @@ public class StatusController extends RestController {
             @Qualifier("templateService") TemplateService templateService,
             @Qualifier("sms.configService") ConfigService configService,
             @Qualifier("alertService") AlertService alertService,
-            @Qualifier("smsAuditService") SmsAuditService smsAuditService,
+            @Qualifier("sms.SmsAuditService") SmsAuditService smsAuditService,
             @Qualifier("sms.SmsRecordDao") SmsRecordDao smsRecordDao) {
         this.templateService = templateService;
         this.configService = configService;

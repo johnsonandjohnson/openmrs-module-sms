@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class SmsAuditServiceBundleUnauthorizedITTest extends BaseModuleWebContextSensitiveTest {
 
     @Autowired
-    @Qualifier("smsAuditService")
+    @Qualifier("sms.SmsAuditService")
     private SmsAuditService smsAuditService;
 
     @Override

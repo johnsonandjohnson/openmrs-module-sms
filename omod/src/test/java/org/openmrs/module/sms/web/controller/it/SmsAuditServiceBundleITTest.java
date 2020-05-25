@@ -25,7 +25,7 @@ public class SmsAuditServiceBundleITTest extends BaseModuleWebContextSensitiveTe
     private SmsRecordDao smsRecordDao;
 
     @Autowired
-    @Qualifier("smsAuditService")
+    @Qualifier("sms.SmsAuditService")
     private SmsAuditService smsAuditService;
 
     @After
