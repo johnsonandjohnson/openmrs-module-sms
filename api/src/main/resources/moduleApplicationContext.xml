@@ -169,11 +169,7 @@
             <ref bean="transactionManager"/>
         </property>
         <property name="target">
-            <bean class="org.openmrs.module.sms.api.audit.SmsAuditServiceImpl">
-                <property name="smsRecordDao">
-                <ref local="sms.SmsRecordDao"/>
-                </property>
-            </bean>
+            <bean class="org.openmrs.module.sms.api.audit.SmsAuditServiceImpl" />
         </property>
         <property name="preInterceptors">
             <ref bean="serviceInterceptors"/>

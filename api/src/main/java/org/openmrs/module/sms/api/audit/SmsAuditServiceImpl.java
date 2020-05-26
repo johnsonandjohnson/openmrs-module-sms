@@ -1,5 +1,6 @@
 package org.openmrs.module.sms.api.audit;
 
+import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.domain.PagingInfo;
@@ -13,22 +14,16 @@ import java.util.List;
  */
 public class SmsAuditServiceImpl extends BaseOpenmrsService implements SmsAuditService {
 
-    private SmsRecordDao smsRecordDao;
-
-    public void setSmsRecordDao(SmsRecordDao smsRecordDao) {
-        this.smsRecordDao = smsRecordDao;
-    }
-
     @Override
     @Transactional
     public List<SmsRecord> findAllSmsRecords() {
-        return smsRecordDao.retrieveAll();
+        return getSmsRecordDao().retrieveAll();
     }
 
     @Override
     @Transactional
     public SmsRecords findAllSmsRecords(SmsRecordSearchCriteria criteria) {
-        List<SmsRecord> recordList = smsRecordDao.findByCriteria(criteria);
+        List<SmsRecord> recordList = getSmsRecordDao().findByCriteria(criteria);
 
         return new SmsRecords(recordList.size(), recordList);
     }
@@ -36,13 +31,17 @@ public class SmsAuditServiceImpl extends BaseOpenmrsService implements SmsAuditS
     @Override
     @Transactional
     public long countAllSmsRecords(SmsRecordSearchCriteria criteria) {
-        return smsRecordDao.countFindByCriteria(criteria);
+        return getSmsRecordDao().countFindByCriteria(criteria);
     }
 
     @Override
     public SmsRecords findPageableByCriteria(PagingInfo pagingInfo, SmsRecordSearchCriteria criteria) {
-        List<SmsRecord> result = smsRecordDao.findPageableByCriteria(pagingInfo, criteria);
+        List<SmsRecord> result = getSmsRecordDao().findPageableByCriteria(pagingInfo, criteria);
         int size = pagingInfo.shouldLoadRecordCount() ? result.size() : pagingInfo.getTotalRecordCount().intValue();
         return new SmsRecords(size, result);
+    }
+
+    private SmsRecordDao getSmsRecordDao() {
+        return Context.getRegisteredComponent("sms.SmsRecordDao", SmsRecordDao.class);
     }
 }
