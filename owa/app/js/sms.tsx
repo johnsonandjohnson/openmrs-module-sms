@@ -22,7 +22,6 @@ import { loadIcons } from './config/icon-loader';
 import routes from './routes';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../css/toast.scss';
 
 // Enable notification mechanism
 toast.configure();

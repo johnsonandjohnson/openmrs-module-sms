@@ -1,7 +1,6 @@
 import * as Msg from './messages';
 import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import '../../../css/toast.css';
+import '../../../css/toast.scss';
 import { CloseButton } from './toast-builder-util';
 import { ToastStatusContent } from './toast-builder-util'
 

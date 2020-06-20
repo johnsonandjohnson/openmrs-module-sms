@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export const ToastStatusContent = ({ message, type }) => {
   var customClass = 'toast-item-image toast-item-image-' + type;
   return (
-    <div className="toast-item-wrapper">
+    <div className="toast-item-wrapper sms-toast">
       <div className={customClass}></div>
       <p>{message}</p>
     </div>
