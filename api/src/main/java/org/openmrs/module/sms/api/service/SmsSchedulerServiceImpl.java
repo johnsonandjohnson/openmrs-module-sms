@@ -33,6 +33,7 @@ public class SmsSchedulerServiceImpl extends BaseOpenmrsService implements SmsSc
         taskDefinition.setRepeatInterval(RUN_ONCE);
 
         try {
+            schedulerService.saveTaskDefinition(taskDefinition);
             schedulerService.scheduleTask(taskDefinition);
         } catch (SchedulerException ex) {
             throw new SmsRuntimeException(ex);
