@@ -17,8 +17,10 @@ import BreadCrumb from './components/BreadCrumb';
 import Send from './components/send/send';
 import Settings from './components/settings/index';
 import {SMS_PRIVILEGE} from "./config/privileges";
+import Customize from '@bit/soldevelo-omrs.cfl-components.customize'
 
 export default (store) => (<div>
+  <Customize />
   <Header />
   <BreadCrumb />
   <Switch>

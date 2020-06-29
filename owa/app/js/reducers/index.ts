@@ -17,6 +17,8 @@ import fileImport, { FileImportState }from './file-import.reducer';
 import timezone, {TimezoneState} from "./timezone.reducer";
 import privateRouteReducer, {PrivateRouteState}
   from '@bit/soldevelo-omrs.cfl-components.private-route/private-route.reducer';
+import customizeReducer, {CustomizeState}
+  from '@bit/soldevelo-omrs.cfl-components.customize/customize.reducer';
 
 export interface IRootState {
   readonly logs: LogsState;
@@ -26,6 +28,7 @@ export interface IRootState {
   readonly fileImport: FileImportState;
   readonly timezone: TimezoneState;
   readonly privateRouteReducer: PrivateRouteState;
+  readonly customizeReducer: CustomizeState;
 }
 
 export default combineReducers<IRootState>({
@@ -35,5 +38,6 @@ export default combineReducers<IRootState>({
   settings,
   fileImport,
   timezone,
-  privateRouteReducer
+  privateRouteReducer,
+  customizeReducer
 } as any); //TODO: https://github.com/reduxjs/redux/issues/2709
