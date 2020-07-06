@@ -13,10 +13,10 @@ import PrivateRoute from "@bit/soldevelo-omrs.cfl-components.private-route/priva
 
 import App from './components/app';
 import Logs from './components/logs/logs';
-import BreadCrumb from './components/BreadCrumb';
+import BreadCrumb from './components/bread-crumb';
 import Send from './components/send/send';
 import Settings from './components/settings/index';
-import {SMS_PRIVILEGE} from "./config/privileges";
+import { SMS_PRIVILEGE } from "./config/privileges";
 import Customize from '@bit/soldevelo-omrs.cfl-components.customize'
 
 export default (store) => (<div>

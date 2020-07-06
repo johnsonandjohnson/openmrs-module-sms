@@ -13,15 +13,15 @@ import { HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import 'babel-polyfill';
+import 'react-toastify/dist/ReactToastify.css';
 import '@openmrs/style-referenceapplication/lib/referenceapplication.css';
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { history } from './config/redux-store';
 import exportStore from './config/export-store';
 import { loadIcons } from './config/icon-loader';
 import routes from './routes';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 // Enable notification mechanism
 toast.configure();
