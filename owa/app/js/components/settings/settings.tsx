@@ -323,7 +323,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
 
   renderAddButton = () => (
     <Button
-      className="btn confirm btn-xs"
+      className="btn confirm btn-xs add-btn"
       onClick={this.addConfig}>
         Add Configuration
     </Button>
