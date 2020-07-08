@@ -10,13 +10,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import LogsTable from './logs-table';
-import Timezone from "../timezone/timezone";
+import Timezone from '../timezone/timezone';
+import * as Msg from '../../shared/utils/messages';
 
 export class Logs extends React.Component {
   render() {
     return (
       <div className="body-wrapper">
-        <h4>SMS Logs</h4>
+        <h2>{Msg.LOGS_BREADCRUMB}</h2>
         <Timezone />
         <LogsTable />
       </div>

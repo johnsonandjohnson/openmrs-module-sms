@@ -11,7 +11,7 @@
 export const DIFFERENT_TIMEZONE = 'Your local timezone is different than the one configured for this system. Time is shown according to: ';
 
 // Breadcrumbs
-export const LOGS_BREADCRUMB = 'Logs';
+export const LOGS_BREADCRUMB = 'SMS Logs';
 export const SEND_BREADCRUMB = 'Send';
 export const SETTINGS_BREADCRUMB = 'Settings';
 export const SYSTEM_ADMINISTRATION_BREADCRUMB = 'System Administration';
