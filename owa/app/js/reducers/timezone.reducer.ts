@@ -9,7 +9,7 @@
 
 import _ from 'lodash';
 import { REQUEST, FAILURE, SUCCESS } from "./action-type.util";
-import axiosInstance from '../config/axios';
+import axiosInstance from '@bit/soldevelo-omrs.cfl-components.shared/axios'
 
 export const ACTION_TYPES = {
     GET_TIMEZONE: 'timezone/GET_TIMEZONE',

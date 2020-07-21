@@ -1,5 +1,5 @@
 import { REQUEST, SUCCESS, FAILURE } from './action-type.util'
-import axiosInstance from '../config/axios';
+import axiosInstance from '@bit/soldevelo-omrs.cfl-components.shared/axios'
 import * as Msg from '../utils/messages'
 import { handleRequest } from '../utils/request-status-util';
 
