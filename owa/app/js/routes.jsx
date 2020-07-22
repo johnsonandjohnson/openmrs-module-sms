@@ -18,6 +18,12 @@ import Send from './components/send/send';
 import Settings from './components/settings/index';
 import { SMS_PRIVILEGE } from "./config/privileges";
 import Customize from '@bit/soldevelo-omrs.cfl-components.customize'
+import { initializeLocalizationWrapper } from '@bit/soldevelo-omrs.cfl-components.localization-wrapper';
+import messagesEN from "./translations/en.json";
+
+initializeLocalizationWrapper({
+  en: messagesEN,
+});
 
 export default (store) => (<div>
   <Customize />

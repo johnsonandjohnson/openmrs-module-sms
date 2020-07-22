@@ -15,7 +15,8 @@ import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import UrlPattern from 'url-pattern';
 import { IRootState } from '../../reducers';
-import * as Msg from '../../shared/utils/messages';
+import * as Default from '../../shared/utils/messages';
+import { getIntl } from "@openmrs/react-components/lib/components/localization/withLocalization";
 import './bread-crumb.scss';
 
 const MODULE_ROUTE = '/';
@@ -87,25 +88,25 @@ class BreadCrumb extends React.PureComponent<IBreadCrumbProps, IBreadCrumbState>
 
   getLogsCrumbs = () => {
     return [
-      this.renderCrumb(SYSTEM_ADMINISTRATION_ROUTE, Msg.SYSTEM_ADMINISTRATION_BREADCRUMB, true),
-      this.renderCrumb(MODULE_ROUTE, Msg.GENERAL_MODULE_BREADCRUMB),
-      this.renderLastCrumb(Msg.LOGS_BREADCRUMB)
+      this.renderCrumb(SYSTEM_ADMINISTRATION_ROUTE, getIntl().formatMessage({ id: 'SMS_SYSTEM_ADMINISTRATION_BREADCRUMB', defaultMessage: Default.SYSTEM_ADMINISTRATION_BREADCRUMB }), true),
+      this.renderCrumb(MODULE_ROUTE, getIntl().formatMessage({ id: 'SMS_GENERAL_MODULE_BREADCRUMB', defaultMessage: Default.GENERAL_MODULE_BREADCRUMB })),
+      this.renderLastCrumb(getIntl().formatMessage({ id: 'SMS_LOGS_BREADCRUMB', defaultMessage: Default.LOGS_BREADCRUMB }))
     ];
   }
 
   getSendCrumbs = () => {
     return [
-      this.renderCrumb(SYSTEM_ADMINISTRATION_ROUTE, Msg.SYSTEM_ADMINISTRATION_BREADCRUMB, true),
-      this.renderCrumb(MODULE_ROUTE, Msg.GENERAL_MODULE_BREADCRUMB),
-      this.renderLastCrumb(Msg.SEND_BREADCRUMB)
+      this.renderCrumb(SYSTEM_ADMINISTRATION_ROUTE, getIntl().formatMessage({ id: 'SMS_SYSTEM_ADMINISTRATION_BREADCRUMB', defaultMessage: Default.SYSTEM_ADMINISTRATION_BREADCRUMB }), true),
+      this.renderCrumb(MODULE_ROUTE, getIntl().formatMessage({ id: 'SMS_GENERAL_MODULE_BREADCRUMB', defaultMessage: Default.GENERAL_MODULE_BREADCRUMB })),
+      this.renderLastCrumb(getIntl().formatMessage({ id: 'SMS_SEND_BREADCRUMB', defaultMessage: Default.SEND_BREADCRUMB }))
     ];
   }
 
   getSettingsCrumbs = () => {
     return [
-      this.renderCrumb(SYSTEM_ADMINISTRATION_ROUTE, Msg.SYSTEM_ADMINISTRATION_BREADCRUMB, true),
-      this.renderCrumb(MODULE_ROUTE, Msg.GENERAL_MODULE_BREADCRUMB),
-      this.renderLastCrumb(Msg.SETTINGS_BREADCRUMB)
+      this.renderCrumb(SYSTEM_ADMINISTRATION_ROUTE, getIntl().formatMessage({ id: 'SMS_SYSTEM_ADMINISTRATION_BREADCRUMB', defaultMessage: Default.SYSTEM_ADMINISTRATION_BREADCRUMB }), true),
+      this.renderCrumb(MODULE_ROUTE, getIntl().formatMessage({ id: 'SMS_GENERAL_MODULE_BREADCRUMB', defaultMessage: Default.GENERAL_MODULE_BREADCRUMB })),
+      this.renderLastCrumb(getIntl().formatMessage({ id: 'SMS_SETTINGS_BREADCRUMB', defaultMessage: Default.SETTINGS_BREADCRUMB }))
     ];
   }
 
@@ -118,8 +119,8 @@ class BreadCrumb extends React.PureComponent<IBreadCrumbProps, IBreadCrumbState>
       return this.getSettingsCrumbs();
     } else {
       return [
-        this.renderCrumb(SYSTEM_ADMINISTRATION_ROUTE, Msg.SYSTEM_ADMINISTRATION_BREADCRUMB, true),
-        this.renderLastCrumb(Msg.GENERAL_MODULE_BREADCRUMB)
+        this.renderCrumb(SYSTEM_ADMINISTRATION_ROUTE, getIntl().formatMessage({ id: 'SMS_SYSTEM_ADMINISTRATION_BREADCRUMB', defaultMessage: Default.SYSTEM_ADMINISTRATION_BREADCRUMB }), true),
+        this.renderLastCrumb(getIntl().formatMessage({ id: 'SMS_GENERAL_MODULE_BREADCRUMB', defaultMessage: Default.GENERAL_MODULE_BREADCRUMB }))
       ];
     }
   }

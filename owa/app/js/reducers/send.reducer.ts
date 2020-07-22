@@ -11,7 +11,8 @@ import { REQUEST, SUCCESS, FAILURE } from './action-type.util'
 import axiosInstance from '@bit/soldevelo-omrs.cfl-components.shared/axios'
 import 'react-toastify/dist/ReactToastify.css';
 import { SmsModel } from '../shared/model/sms.model';
-import * as Msg from '../utils/messages';
+import * as Default from '../utils/messages';
+import { getIntl } from "@openmrs/react-components/lib/components/localization/withLocalization";
 import { handleRequest } from '../utils/request-status-util';
 import { defaultValue } from '../shared/model/send-form.model';
 
@@ -154,7 +155,9 @@ export const sendSms = (sms) => async (dispatch) => {
     payload: axiosInstance.post(requestUrl, outgoingSms)
   };
 
-  handleRequest(dispatch, body, Msg.SEND_SMS_SENDING_SUCCESS, Msg.SEND_SMS_SENDING_FAILURE);
+  handleRequest(dispatch, body,
+    getIntl().formatMessage({ id: 'SMS_SEND_SMS_SENDING_SUCCESS', defaultMessage: Default.SEND_SMS_SENDING_SUCCESS }),
+    getIntl().formatMessage({ id: 'SMS_SEND_SMS_SENDING_FAILURE', defaultMessage: Default.SEND_SMS_SENDING_FAILURE }));
 };
 
 export const handleMessageUpdate = (message: string) => ({

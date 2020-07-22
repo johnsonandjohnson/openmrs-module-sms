@@ -20,7 +20,8 @@ import { ITemplate } from '../../shared/model/template.model';
 import RemoveButton from '../remove-button';
 import OpenMRSModal from '../open-mrs-modal';
 import ErrorDesc from '../ErrorDesc';
-import * as Msg from '../../utils/messages'
+import * as Default from '../../utils/messages'
+import { getIntl } from "@openmrs/react-components/lib/components/localization/withLocalization";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { errorToast } from '../../utils/toast-display-util';
 
@@ -45,22 +46,22 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
 
   validationSchema = Yup.object().shape({
     name: Yup.string()
-      .required(Msg.FIELD_REQUIRED)
-      .test('unique check', Msg.CONFIG_FORM_NAME_IS_NOT_UNIQUE, nameToValidate => {
+      .required(getIntl().formatMessage({ id: 'SMS_FIELD_REQUIRED', defaultMessage: Default.FIELD_REQUIRED }))
+      .test('unique check', getIntl().formatMessage({ id: 'SMS_CONFIG_FORM_NAME_IS_NOT_UNIQUE', defaultMessage: Default.CONFIG_FORM_NAME_IS_NOT_UNIQUE }), nameToValidate => {
           const { configs } = this.props;
           return _(configs)
               .filter(configForm => configForm.name === nameToValidate)
               .size() === 1;
         }),
     templateName: Yup.string()
-      .required(Msg.FIELD_REQUIRED),
+      .required(getIntl().formatMessage({ id: 'SMS_FIELD_REQUIRED', defaultMessage: Default.FIELD_REQUIRED })),
     maxRetries: Yup.string()
-      .matches(new RegExp('^[0-9]\\d*$'), Msg.POSITIVE_NUMBERS_REQUIRED)
-      .required(Msg.FIELD_REQUIRED),
+      .matches(new RegExp('^[0-9]\\d*$'), getIntl().formatMessage({ id: 'SMS_POSITIVE_NUMBERS_REQUIRED', defaultMessage: Default.POSITIVE_NUMBERS_REQUIRED }))
+      .required(getIntl().formatMessage({ id: 'SMS_FIELD_REQUIRED', defaultMessage: Default.FIELD_REQUIRED })),
     splitHeader: Yup.string()
-      .required(Msg.FIELD_REQUIRED),
+      .required(getIntl().formatMessage({ id: 'SMS_FIELD_REQUIRED', defaultMessage: Default.FIELD_REQUIRED })),
     splitFooter: Yup.string()
-      .required(Msg.FIELD_REQUIRED),
+      .required(getIntl().formatMessage({ id: 'SMS_FIELD_REQUIRED', defaultMessage: Default.FIELD_REQUIRED })),
     excludeLastFooter: Yup.bool()
   });
 
@@ -110,7 +111,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
           updateConfigs(newConfigs);
         })
         .catch(() => {
-          errorToast(Msg.GENERIC_INVALID_FORM);
+          errorToast(getIntl().formatMessage({ id: 'SMS_GENERIC_INVALID_FORM', defaultMessage: Default.GENERIC_INVALID_FORM }));
         })
   }
 
@@ -333,7 +334,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     <a className="button import-templates" href="#/settings/templates/import">
       <i className="icon-upload-alt" />
       &nbsp;
-      {Msg.SMS_SETTINGS_IMPORT_ADDITIONAL_TEMPLATES}
+      {getIntl().formatMessage({ id: 'SMS_SETTINGS_IMPORT_ADDITIONAL_TEMPLATES', defaultMessage: Default.SMS_SETTINGS_IMPORT_ADDITIONAL_TEMPLATES })}
     </a>
   );
 

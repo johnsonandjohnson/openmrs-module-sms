@@ -22,7 +22,8 @@ import _ from 'lodash';
 
 import { IRootState } from '../reducers';
 import { setFile, reset, uploadFileToImport } from '../reducers/file-import.reducer';
-import * as Msg from '../utils/messages'
+import * as Default from '../utils/messages'
+import { getIntl } from "@openmrs/react-components/lib/components/localization/withLocalization";
 
 export interface IImportFileModalProps extends StateProps, DispatchProps, RouteComponentProps<{ entityName: string }> {
   title: string,
@@ -97,10 +98,10 @@ export class UploadModal extends React.Component<IImportFileModalProps> {
     return (
       <Modal.Footer>
         <Button className='button confirm right' onClick={this.handleImport} disabled={!isReadyToImport}>
-          {Msg.IMPORT_FILE_MODAL_CONFIRM}
+          {getIntl().formatMessage({ id: 'SMS_IMPORT_FILE_MODAL_CONFIRM', defaultMessage: Default.IMPORT_FILE_MODAL_CONFIRM })}
         </Button>
         <Button className='button cancel left' onClick={this.handleClose}>
-          {Msg.IMPORT_FILE_MODAL_CLOSE}
+          {getIntl().formatMessage({ id: 'SMS_IMPORT_FILE_MODAL_CLOSE', defaultMessage: Default.IMPORT_FILE_MODAL_CLOSE })}
         </Button>
       </Modal.Footer>
     );
@@ -115,7 +116,7 @@ export class UploadModal extends React.Component<IImportFileModalProps> {
   renderFileInput = () => (
     <Row className='u-mt-15'>
       <Col md={2} xs={2}>
-        <p>{Msg.IMPORT_FILE_MODAL_CHOSEN_FILE}</p>
+        <p>{getIntl().formatMessage({ id: 'SMS_IMPORT_FILE_MODAL_CHOSEN_FILE', defaultMessage: Default.IMPORT_FILE_MODAL_CHOSEN_FILE })}</p>
       </Col>
       <Col>
         <input className='file-upload-input' type='file' onChange={this.handleSelectFile} accept='application/json' />

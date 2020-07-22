@@ -1,4 +1,5 @@
-import * as Msg from './messages';
+import * as Default from './messages';
+import { getIntl } from "@openmrs/react-components/lib/components/localization/withLocalization";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CloseButton } from './toast-builder-util';
@@ -21,7 +22,7 @@ const displayError = (toastId, errorMessage) => {
 // Propagates request send action and displays response notification 
 export const handleRequest = async (dispatch, body, successMessage, errorMessage) => {
   var toastId = toast(
-    <ToastStatusContent message={Msg.GENERIC_PROCESSING} type="notice" />,
+    <ToastStatusContent message={getIntl().formatMessage({ id: 'SMS_GENERIC_PROCESSING', defaultMessage: Default.GENERIC_PROCESSING })} type="notice" />,
     {
       autoClose: false,
       closeButton: false,
@@ -42,7 +43,7 @@ export const handleRequest = async (dispatch, body, successMessage, errorMessage
     try {
       displayError(toastId, [errorMessage, e.response.data.message].join(' '));
     } catch(exc) {
-      displayError(toastId, Msg.GENERIC_FAILURE);
+      displayError(toastId, getIntl().formatMessage({ id: 'SMS_GENERIC_FAILURE', defaultMessage: Default.GENERIC_FAILURE }));
     }
   }
 }

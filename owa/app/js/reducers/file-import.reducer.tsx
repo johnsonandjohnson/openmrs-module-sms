@@ -1,6 +1,7 @@
 import { REQUEST, SUCCESS, FAILURE } from './action-type.util'
 import axiosInstance from '@bit/soldevelo-omrs.cfl-components.shared/axios'
-import * as Msg from '../utils/messages'
+import * as Default from '../utils/messages'
+import { getIntl } from "@openmrs/react-components/lib/components/localization/withLocalization";
 import { handleRequest } from '../utils/request-status-util';
 
 export const ACTION_TYPES = {
@@ -75,7 +76,9 @@ export const uploadFileToImport = (file: File, entityName: string, reloadCallbac
       formData,
       config)
   };
-  return await handleRequest(dispatch, body, Msg.IMPORT_FILE_MODAL_SUCCESS, Msg.IMPORT_FILE_MODAL_FAILURE)
+  return await handleRequest(dispatch, body,
+    getIntl().formatMessage({ id: 'SMS_IMPORT_FILE_MODAL_SUCCESS', defaultMessage: Default.IMPORT_FILE_MODAL_SUCCESS }),
+    getIntl().formatMessage({ id: 'SMS_IMPORT_FILE_MODAL_FAILURE', defaultMessage: Default.IMPORT_FILE_MODAL_FAILURE }))
     .then((result) => {
       dispatch(reloadCallback())
       return result;
