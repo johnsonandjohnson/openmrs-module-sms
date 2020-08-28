@@ -29,11 +29,11 @@ public final class SmsEventParams {
      */
     public static final String DELIVERY_TIME = "delivery_time";
     /**
-     * date & time when this event happened
+     * date and time when this event happened
      */
     public static final String TIMESTAMP = "timestamp";
     /**
-     * date & time when this event happened
+     * date and time when this event happened
      */
     public static final String TIMESTAMP_DATETIME = "timestamp_datetime";
     /**

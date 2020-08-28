@@ -20,7 +20,7 @@ import java.nio.charset.Charset;
 /**
  * Filter intended for all /ws/sms calls that allows the user to authenticate via Basic
  * authentication. (It will not fail on invalid or missing credentials. We count on the API to throw
- * exceptions if an unauthenticated user tries to do something they are not allowed to do.) <br/>
+ * exceptions if an unauthenticated user tries to do something they are not allowed to do.)
  */
 public class AuthorizationFilter implements Filter {
 

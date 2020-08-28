@@ -1,7 +1,7 @@
 package org.openmrs.module.sms.api.configs;
 
 /**
- * Provider-specific properties. ie: Clickatell api_key, most will have at least username & password
+ * Provider-specific properties. ie: Clickatell api_key, most will have at least username and password
  */
 public class ConfigProp {
 

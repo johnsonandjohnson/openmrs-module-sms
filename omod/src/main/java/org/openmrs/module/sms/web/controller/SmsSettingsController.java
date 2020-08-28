@@ -30,7 +30,7 @@ import java.util.Map;
 //todo: find a way to report useful information if encountering malformed templates?
 
 /**
- * Sends templates to the UI, sends & receives configs to/from the UI.
+ * Sends templates to the UI, sends and receives configs to/from the UI.
  */
 @Controller
 @RequestMapping(value = "/sms")
