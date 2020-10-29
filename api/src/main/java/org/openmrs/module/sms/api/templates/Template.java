@@ -90,11 +90,12 @@ public class Template {
                 httpMethod.setRequestHeader("Content-Type", FORM_URLENCODED_WITH_CHARSET_UTF_8);
                 addBodyParameters((PostMethod) httpMethod, props);
             }
+
+            addHeaderParameters((PostMethod) httpMethod, props);
         } else {
             httpMethod = new GetMethod(outgoing.getRequest().getUrlPath(props));
         }
         httpMethod.setQueryString(addQueryParameters(props));
-
         return httpMethod;
     }
 
@@ -188,6 +189,14 @@ public class Template {
         for (Map.Entry<String, String> entry : bodyParameters.entrySet()) {
             String value = placeHolderOrLiteral(entry.getValue(), props);
             postMethod.setParameter(entry.getKey(), value);
+        }
+    }
+
+    private void addHeaderParameters(PostMethod postMethod, Map<String, String> props) {
+        Map<String, String> headerParameters = outgoing.getRequest().getHeaderParameters();
+        for (Map.Entry<String, String> entry : headerParameters.entrySet()) {
+            String value = placeHolderOrLiteral(entry.getValue(), props);
+            postMethod.setRequestHeader(entry.getKey(), value);
         }
     }
 

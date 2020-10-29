@@ -34,6 +34,11 @@ public class Request {
     private Map<String, String> bodyParameters = new HashMap<>();
 
     /**
+     * The parameters to be included in the header of the request.
+     */
+    private Map<String, String> headerParameters = new HashMap<>();
+
+    /**
      * The type of the HTTP method used.
      */
     private HttpMethodType type;
@@ -146,6 +151,14 @@ public class Request {
      */
     public void setBodyParameters(Map<String, String> bodyParameters) {
         this.bodyParameters = bodyParameters;
+    }
+
+    public Map<String, String> getHeaderParameters() {
+        return headerParameters;
+    }
+
+    public void setHeaderParameters(Map<String, String> headerParameters) {
+        this.headerParameters = headerParameters;
     }
 
     /**
