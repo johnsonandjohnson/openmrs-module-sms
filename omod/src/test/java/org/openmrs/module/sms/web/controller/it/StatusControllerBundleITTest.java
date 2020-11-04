@@ -10,6 +10,7 @@ import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.module.sms.util.TestUtil;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,6 +27,7 @@ import java.util.UUID;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -96,34 +98,38 @@ public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveT
         //Create & send a CDR status callback
         String messageId = UUID.randomUUID().toString();
 
-        mockMvc.perform(get(String.format("/sms/status/%s", CONFIG_NAME))
-                .param("Status", "sent")
+        mockMvc.perform(post(String.format("/sms/status/%s", CONFIG_NAME))
+                .param("Status", "read")
                 .param("From", "+12065551212")
                 .param("To", "+12065551313")
-                .param("MessageUUID", messageId))
+                .param("MessageUUID", messageId)
+                .contentType(TestUtil.APPLICATION_JSON)
+                .content(TestUtil.encodeString()))
                 .andExpect(status().is(HttpStatus.OK.value()));
 
         //Verify we logged this
         List<SmsRecord> smsRecords = smsRecordDao.getAll(true);
         assertEquals(1, smsRecords.size());
-        assertEquals(smsRecords.get(0).getDeliveryStatus(), "sent");
+        assertEquals(smsRecords.get(0).getProviderStatus(), "read");
     }
 
     @Test
     public void handleWithExistingConfigAndExistingRecord() throws Exception {
         String messageId = UUID.randomUUID().toString();
         createSMSRecord(messageId);
-        mockMvc.perform(get(String.format("/sms/status/%s", CONFIG_NAME))
-                .param("Status", "sent")
+        mockMvc.perform(post(String.format("/sms/status/%s", CONFIG_NAME))
+                .param("Status", "delivered")
                 .param("From", "+12065551212")
                 .param("To", "+12065551313")
-                .param("MessageUUID", messageId))
+                .param("MessageUUID", messageId)
+                .contentType(TestUtil.APPLICATION_JSON)
+                .content(TestUtil.encodeString()))
                 .andExpect(status().is(HttpStatus.OK.value()));
 
         //Verify we logged this
         List<SmsRecord> smsRecords = smsRecordDao.getAll(true);
-        assertEquals(EXPECTED_OLD_PLUS_NEW, smsRecords.size());
-        assertEquals(smsRecords.get(NEW_RECORD_ID).getDeliveryStatus(), "sent");
+        assertEquals(1, smsRecords.size());
+        assertEquals(smsRecords.get(0).getProviderStatus(), "delivered");
     }
 
     private void createSMSRecord(String messageId) {
@@ -138,11 +144,13 @@ public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveT
         Template template = templateService.getTemplate(TEMPLATE_NAME);
         template.getStatus().setMessageIdKey(null);
         String messageId = UUID.randomUUID().toString();
-        mockMvc.perform(get(String.format("/sms/status/%s", CONFIG_NAME))
+        mockMvc.perform(post(String.format("/sms/status/%s", CONFIG_NAME))
                 .param("Status", "sent")
                 .param("From", "+12065551212")
                 .param("To", "+12065551313")
-                .param("MessageUUID", messageId))
+                .param("MessageUUID", messageId)
+                .contentType(TestUtil.APPLICATION_JSON)
+                .content(TestUtil.encodeString()))
                 .andExpect(status().is(HttpStatus.OK.value()));
 
         //Verify we logged this
@@ -155,11 +163,13 @@ public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveT
         Template template = templateService.getTemplate(TEMPLATE_NAME);
         template.getStatus().setStatusKey(null);
         String messageId = UUID.randomUUID().toString();
-        mockMvc.perform(get(String.format("/sms/status/%s", CONFIG_NAME))
+        mockMvc.perform(post(String.format("/sms/status/%s", CONFIG_NAME))
                 .param("Status", "sent")
                 .param("From", "+12065551212")
                 .param("To", "+12065551313")
-                .param("MessageUUID", messageId))
+                .param("MessageUUID", messageId)
+                .contentType(TestUtil.APPLICATION_JSON)
+                .content(TestUtil.encodeString()))
                 .andExpect(status().is(HttpStatus.OK.value()));
 
         //Verify we logged this
@@ -171,11 +181,13 @@ public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveT
     public void handleShouldThrowWhenInvalidConfig() throws Exception {
         //Create & send a CDR status callback
         String messageId = UUID.randomUUID().toString();
-        mockMvc.perform(get(String.format("/sms/status/%s", INVALID_CONFIG_NAME))
+        mockMvc.perform(post(String.format("/sms/status/%s", INVALID_CONFIG_NAME))
                 .param("Status", "sent")
                 .param("From", "+12065551212")
                 .param("To", "+12065551313")
-                .param("MessageUUID", messageId))
+                .param("MessageUUID", messageId)
+                .contentType(TestUtil.APPLICATION_JSON)
+                .content(TestUtil.encodeString()))
                 .andExpect(status().isInternalServerError());
     }
 }

@@ -37,7 +37,7 @@ public class SmsAuditServiceBundleITTest extends BaseModuleWebContextSensitiveTe
     public void verifyServiceFunctional() {
         SmsRecord smsRecord = new SmsRecord("config", SmsDirection.INBOUND, "from", "message", DateUtil.now(),
                 "PENDING", "status", "mid", "pid", null);
-        smsRecordDao.create(smsRecord);
+        smsRecordDao.createOrUpdate(smsRecord);
 
         List<SmsRecord> smsRecords = smsAuditService.findAllSmsRecords();
         assertEquals(1, smsRecords.size());

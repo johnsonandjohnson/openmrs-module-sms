@@ -60,7 +60,7 @@ public interface SmsRecordDao extends OpenmrsDataDAO<SmsRecord> {
 
     void deleteAll();
 
-    SmsRecord create(SmsRecord smsRecord);
+    SmsRecord createOrUpdate(SmsRecord smsRecord);
 
     List<SmsRecord> retrieveAll();
 

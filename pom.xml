@@ -150,7 +150,7 @@
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <failsOnError>true</failsOnError>
                         <enableFilesSummary>true</enableFilesSummary>
-                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                        <includeTestSourceDirectory>false</includeTestSourceDirectory>
                         <skip>${checkStylePluginSkip}</skip>
                     </configuration>
                     <executions>

@@ -65,7 +65,7 @@ public class SmsRecordDaoImpl extends BaseOpenmrsDataDao<SmsRecord> implements S
     }
 
     @Override
-    public SmsRecord create(SmsRecord smsRecord) {
+    public SmsRecord createOrUpdate(SmsRecord smsRecord) {
         return saveOrUpdate(smsRecord);
     }
 

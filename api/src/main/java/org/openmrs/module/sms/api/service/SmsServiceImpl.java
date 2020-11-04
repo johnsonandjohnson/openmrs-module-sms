@@ -149,7 +149,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
                     LOGGER.info(String.format("Sending message [%s] to [%s].",
                             part.replace("\n", "\\n"), recipients));
                     for (String recipient : recipients) {
-                        smsRecordDao.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, DateUtil.now(),
+                        smsRecordDao.createOrUpdate(new SmsRecord(config.getName(), OUTBOUND, recipient, part, DateUtil.now(),
                                 DeliveryStatuses.PENDING, null, openMrsId, null, null));
                     }
                 }
@@ -173,7 +173,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
             //without that it seems Quartz doesn't fire events in the order they were scheduled
             dt = DateUtil.plusDays(dt, 1);
             for (String recipient : recipients) {
-                smsRecordDao.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, DateUtil.now(),
+                smsRecordDao.createOrUpdate(new SmsRecord(config.getName(), OUTBOUND, recipient, part, DateUtil.now(),
                         DeliveryStatuses.SCHEDULED, null, openMrsId, null, null));
             }
         }

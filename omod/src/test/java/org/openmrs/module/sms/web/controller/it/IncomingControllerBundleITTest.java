@@ -1,5 +1,6 @@
 package org.openmrs.module.sms.web.controller.it;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,18 +10,24 @@ import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.SmsService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.module.sms.util.TestUtil;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,6 +42,7 @@ public class IncomingControllerBundleITTest extends BaseModuleWebContextSensitiv
     private static final String MISSING_CONFIG_NAME = "missing-config";
 
     private static final String TEMPLATE_NAME = "Plivo";
+
 
     @Autowired
     @Qualifier("sms.configService")
@@ -92,7 +100,9 @@ public class IncomingControllerBundleITTest extends BaseModuleWebContextSensitiv
 
     @Test
     public void handleIncomingControllerFunctionalMissingConfig() throws Exception {
-        mockMvc.perform(get(String.format("/sms/incoming/%s", MISSING_CONFIG_NAME)))
+        mockMvc.perform(post(String.format("/sms/incoming/%s", MISSING_CONFIG_NAME))
+                .contentType(TestUtil.APPLICATION_JSON)
+                .content(TestUtil.encodeString()))
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andExpect(content().string(""));
     }
@@ -100,8 +110,11 @@ public class IncomingControllerBundleITTest extends BaseModuleWebContextSensitiv
     @Test
     public void handleIncomingControllerFunctionalExistsConfig() throws Exception {
         prepareTemplate();
-        mockMvc.perform(get(String.format("/sms/incoming/%s", CONFIG_NAME))
-                .param("From", "testSender"))
+
+        mockMvc.perform(post(String.format("/sms/incoming/%s", CONFIG_NAME))
+                .param("From", "testSender")
+                .contentType(MediaType.parseMediaType(TestUtil.APPLICATION_JSON))
+                .content(TestUtil.encodeString()))
                 .andExpect(status().is(HttpStatus.OK.value()));
     }
 

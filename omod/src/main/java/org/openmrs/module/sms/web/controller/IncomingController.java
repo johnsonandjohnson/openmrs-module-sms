@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,9 +66,11 @@ public class IncomingController extends RestController {
      * @param params     the request params coming from the provider
      */
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value = "/{configName}", method = RequestMethod.GET)
-    public void handleIncoming(@PathVariable String configName, @RequestParam Map<String, String> params) {
-        LOGGER.info(String.format("Incoming SMS - configName = %s, params = %s", configName, params));
+    @RequestMapping(value = "/{configName}", method = RequestMethod.POST)
+    public void handleIncoming(@PathVariable String configName, @RequestParam Map<String, String> params,
+                               @RequestBody Map<String, Object> bodyParam) {
+        LOGGER.info(String.format("Incoming SMS - configName = %s, params = %s, bodyParam = %s",
+                configName, params, bodyParam));
 
         Config config;
         if (configService.hasConfig(configName)) {
@@ -79,16 +82,17 @@ public class IncomingController extends RestController {
             return;
         }
         Template template = templateService.getTemplate(config.getTemplateName());
+        Map<String, String> combinedParams = getCombinedParams(params, bodyParam);
 
-        smsRecordDao.create(new SmsRecord(config.getName(),
+        smsRecordDao.createOrUpdate(new SmsRecord(config.getName(),
                 INBOUND,
-                getSender(params, template),
-                getMessage(params, template),
+                getSender(combinedParams, template),
+                getMessage(combinedParams, template),
                 DateUtil.now(),
-                getStatus(params, template),
+                getStatus(combinedParams, template),
                 null,
                 null,
-                getMsgId(params, template), null));
+                getMsgId(combinedParams, template), null));
     }
 
     private String getSender(Map<String, String> params, Template template) {

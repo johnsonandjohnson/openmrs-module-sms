@@ -2,12 +2,18 @@ package org.openmrs.module.sms.web.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.api.APIAuthenticationException;
+import org.openmrs.module.sms.api.exception.SmsRuntimeException;
 import org.openmrs.module.sms.api.web.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class RestController {
 
@@ -26,5 +32,29 @@ public abstract class RestController {
     public ErrorResponse handleException(APIAuthenticationException e) {
         LOGGER.error(e.getMessage(), e);
         return new ErrorResponse(ERR_SYSTEM, e.getMessage());
+    }
+
+    public Map<String, String> getCombinedParams(Map<String, String> params, Map<String, Object> bodyParam) {
+        Map<String, String> paramMap = new HashMap<>();
+        if (params != null) {
+            paramMap.putAll(params);
+        }
+        ObjectMapper mapper;
+        if (bodyParam != null) {
+            for (Map.Entry<String, Object> en : bodyParam.entrySet()) {
+                mapper = new ObjectMapper();
+                if (en.getValue().getClass().equals(String.class)) {
+                    paramMap.put(en.getKey(), en.getValue().toString());
+                } else {
+                    try {
+                        String json = mapper.writeValueAsString(en.getValue());
+                        paramMap.put(en.getKey(), json);
+                    } catch (IOException e) {
+                        throw new SmsRuntimeException("invalid object", e);
+                    }
+                }
+            }
+        }
+        return paramMap;
     }
 }

@@ -134,7 +134,7 @@ public class SmsHttpService {
         // ...and audit all the records that need auditing
         //
         for (SmsRecord smsRecord : auditRecords) {
-            smsRecordDao.create(smsRecord);
+            smsRecordDao.createOrUpdate(smsRecord);
         }
     }
 
@@ -196,7 +196,7 @@ public class SmsHttpService {
         props.put("recipients", template.recipientsAsString(sms.getRecipients()));
         props.put("message", sms.getMessage());
         props.put("openMrsId", sms.getOpenMrsId());
-        props.put("callback", configService.getServerUrl() + "/module/sms/status/" + config.getName());
+        props.put("callback", configService.getServerUrl() + "/ws/sms/status/" + config.getName());
         if (sms.getCustomParams() != null) {
             props.putAll(sms.getCustomParams());
         }

@@ -85,7 +85,7 @@ public class SmsRecordDaoImplTest extends BaseModuleContextSensitiveTest {
     @Test
     public void create() {
         SmsRecord expected = new SmsRecordBuilder().buildAsNew();
-        smsRecordDao.create(expected);
+        smsRecordDao.createOrUpdate(expected);
         SmsRecord actual = smsRecordDao.getByUuid(expected.getUuid());
         assertSmsRecord(expected, actual);
     }
