@@ -97,12 +97,12 @@ public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveT
     public void handleWithExistingConfig() throws Exception {
         //Create & send a CDR status callback
         String messageId = UUID.randomUUID().toString();
-
+        createSMSRecord(messageId);
         mockMvc.perform(post(String.format("/sms/status/%s", CONFIG_NAME))
                 .param("Status", "read")
                 .param("From", "+12065551212")
                 .param("To", "+12065551313")
-                .param("MessageUUID", messageId)
+                .param("MessageUUID", UUID.randomUUID().toString())
                 .contentType(TestUtil.APPLICATION_JSON)
                 .content(TestUtil.encodeString()))
                 .andExpect(status().is(HttpStatus.OK.value()));
@@ -110,7 +110,7 @@ public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveT
         //Verify we logged this
         List<SmsRecord> smsRecords = smsRecordDao.getAll(true);
         assertEquals(1, smsRecords.size());
-        assertEquals(smsRecords.get(0).getProviderStatus(), "read");
+        assertEquals(smsRecords.get(0).getProviderStatus(), null);
     }
 
     @Test
@@ -128,8 +128,8 @@ public class StatusControllerBundleITTest extends BaseModuleWebContextSensitiveT
 
         //Verify we logged this
         List<SmsRecord> smsRecords = smsRecordDao.getAll(true);
-        assertEquals(1, smsRecords.size());
-        assertEquals(smsRecords.get(0).getProviderStatus(), "delivered");
+        assertEquals(2, smsRecords.size());
+        assertEquals(smsRecords.get(1).getProviderStatus(), "delivered");
     }
 
     private void createSMSRecord(String messageId) {

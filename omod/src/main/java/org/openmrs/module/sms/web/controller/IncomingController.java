@@ -2,10 +2,10 @@ package org.openmrs.module.sms.web.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.module.sms.api.audit.SmsAuditService;
+import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
-import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 import org.openmrs.module.sms.api.configs.Config;
-import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Template;
@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Map;
 
-import static org.openmrs.module.sms.api.audit.SmsDirection.INBOUND;
-
 /**
  * Handles http requests to {server}/openmrs/ws/sms/incoming{Config} sent by sms providers
  * when they receive an SMS
@@ -40,21 +38,19 @@ public class IncomingController extends RestController {
 
     private TemplateService templateService;
     private ConfigService configService;
-    private SmsRecordDao smsRecordDao;
     private AlertService alertService;
-
+    private SmsAuditService smsAuditService;
 
     @Autowired
-    public IncomingController(@Qualifier("sms.SmsRecordDao") SmsRecordDao smsRecordDao,
+    public IncomingController(@Qualifier("sms.SmsAuditService") SmsAuditService smsAuditService,
                               @Qualifier("templateService") TemplateService templateService,
                               @Qualifier("sms.configService") ConfigService configService,
                               @Qualifier("alertService") AlertService alertService) {
-        this.smsRecordDao = smsRecordDao;
+        this.smsAuditService = smsAuditService;
         this.templateService = templateService;
         this.configService = configService;
         this.alertService = alertService;
     }
-
 
     //todo: add provider-specific UI to explain how implementers must setup their providers' incoming callback
 
@@ -84,37 +80,9 @@ public class IncomingController extends RestController {
         Template template = templateService.getTemplate(config.getTemplateName());
         Map<String, String> combinedParams = getCombinedParams(params, bodyParam);
 
-        smsRecordDao.createOrUpdate(new SmsRecord(config.getName(),
-                INBOUND,
-                getSender(combinedParams, template),
-                getMessage(combinedParams, template),
-                DateUtil.now(),
-                getStatus(combinedParams, template),
-                null,
-                null,
-                getMsgId(combinedParams, template), null));
-    }
-
-    private String getSender(Map<String, String> params, Template template) {
-        String sender = null;
-        if (params.containsKey(template.getIncoming().getSenderKey())) {
-            sender = params.get(template.getIncoming().getSenderKey());
-            if (template.getIncoming().hasSenderRegex()) {
-                sender = template.getIncoming().extractSender(sender);
-            }
-        }
-        return sender;
-    }
-
-    private String getMessage(Map<String, String> params, Template template) {
-        return params.get(template.getIncoming().getMessageKey());
-    }
-
-    private String getMsgId(Map<String, String> params, Template template) {
-        return params.get(template.getIncoming().getMsgIdKey());
-    }
-
-    private String getStatus(Map<String, String> params, Template template) {
-        return template.getStatus().hasStatusKey() && params.containsKey(template.getStatus().getStatusKey()) ? params.get(template.getStatus().getStatusKey()) : DeliveryStatuses.RECEIVED;
+        SmsRecord smsRecord = new SmsRecord(config.getName(), SmsDirection.INBOUND, getSender(combinedParams, template),
+                getMessage(combinedParams, template), DateUtil.now(), getStatus(combinedParams, template),
+                getStatus(combinedParams, template), null, getMsgId(combinedParams, template), null);
+        smsAuditService.createOrUpdate(smsRecord);
     }
 }

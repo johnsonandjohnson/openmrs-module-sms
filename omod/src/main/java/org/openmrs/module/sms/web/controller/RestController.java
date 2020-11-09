@@ -4,7 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.api.APIAuthenticationException;
+import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
 import org.openmrs.module.sms.api.exception.SmsRuntimeException;
+import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.web.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -56,5 +58,28 @@ public abstract class RestController {
             }
         }
         return paramMap;
+    }
+
+    public String getSender(Map<String, String> params, Template template) {
+        String sender = null;
+        if (params.containsKey(template.getIncoming().getSenderKey())) {
+            sender = params.get(template.getIncoming().getSenderKey());
+            if (template.getIncoming().hasSenderRegex()) {
+                sender = template.getIncoming().extractSender(sender);
+            }
+        }
+        return sender;
+    }
+
+    public String getMessage(Map<String, String> params, Template template) {
+        return params.get(template.getIncoming().getMessageKey());
+    }
+
+    public String getMsgId(Map<String, String> params, Template template) {
+        return params.get(template.getIncoming().getMsgIdKey());
+    }
+
+    public String getStatus(Map<String, String> params, Template template) {
+        return template.getStatus().hasStatusKey() && params.containsKey(template.getStatus().getStatusKey()) ? params.get(template.getStatus().getStatusKey()) : DeliveryStatuses.RECEIVED;
     }
 }

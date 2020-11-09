@@ -1,13 +1,18 @@
 package org.openmrs.module.sms.api.audit;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Order;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.db.UserDAO;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.templates.Status;
 import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.module.sms.domain.PagingInfo;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +22,12 @@ import java.util.Map;
  * Service that does the reading and writing to the SMS audit log.
  */
 public class SmsAuditServiceImpl extends BaseOpenmrsService implements SmsAuditService {
+
+    private static final Log LOGGER = LogFactory.getLog(SmsAuditServiceImpl.class);
+
+    private static final String USER_DAO_BEAN_NAME = "userDAO";
+
+    private static final String ADMIN_USER = "admin";
 
     @Override
     @Transactional
@@ -51,22 +62,49 @@ public class SmsAuditServiceImpl extends BaseOpenmrsService implements SmsAuditS
         String statusString = params.get(status.getStatusKey());
         String providerMessageId = params.get(status.getMessageIdKey());
         SmsRecords smsRecords = findMatchingSmsRecords(configName, providerMessageId);
-        SmsRecord existingSmsRecord = findFirstByProviderMessageId(smsRecords, providerMessageId);
+        SmsRecord existingRecord = findFirstByProviderMessageId(smsRecords, providerMessageId);
 
-        SmsRecord smsRecord = getSmsRecord(existingSmsRecord, configName, statusString, providerMessageId);
-        return getSmsRecordDao().createOrUpdate(smsRecord);
+        if (existingRecord != null && !isProviderStatusAlreadyExists(smsRecords, statusString)) {
+            SmsRecord smsRecord = createSmsRecordBasedOnExistingRecord(existingRecord, statusString, providerMessageId);
+            setCreatorIfNeeded(smsRecord);
+            return getSmsRecordDao().createOrUpdate(smsRecord);
+        } else {
+            String msg = String.format("SMS record with providerMessageId = %s not found", providerMessageId);
+            LOGGER.error(msg);
+            return null;
+        }
     }
 
-    private SmsRecord getSmsRecord(SmsRecord existingSmsRecord, String configName, String statusString,
-                                   String providerMessageId) {
-        SmsRecord smsRecord;
-        if (existingSmsRecord != null) {
-            smsRecord = existingSmsRecord;
-            smsRecord.setProviderStatus(statusString);
+    @Override
+    @Transactional
+    public SmsRecord createOrUpdate(SmsRecord smsRecord) {
+        SmsRecords smsRecords = findMatchingSmsRecords(smsRecord.getConfig(), smsRecord.getProviderId());
+        if (CollectionUtils.isEmpty(smsRecords.getRecords()) ||
+                !isProviderStatusAlreadyExists(smsRecords, smsRecord.getProviderStatus())) {
+            setCreatorIfNeeded(smsRecord);
+            return getSmsRecordDao().createOrUpdate(smsRecord);
         } else {
-            smsRecord = new SmsRecord(configName, SmsDirection.OUTBOUND, null, null, DateUtil.now(),
-                    null, statusString, null, providerMessageId, null);
+            String msg = String.format("SMS record with providerMessageId = %s not found", smsRecord.getProviderId());
+            LOGGER.error(msg);
+            return null;
         }
+    }
+
+    private boolean isProviderStatusAlreadyExists(SmsRecords smsRecords, String providerStatus) {
+        for (SmsRecord smsRecord : smsRecords.getRecords()) {
+            if (StringUtils.equalsIgnoreCase(smsRecord.getProviderStatus(), providerStatus)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private SmsRecord createSmsRecordBasedOnExistingRecord(SmsRecord existingSmsRecord, String statusString,
+                                                           String providerMessageId) {
+        SmsRecord smsRecord = new SmsRecord(existingSmsRecord.getConfig(), existingSmsRecord.getSmsDirection(),
+                existingSmsRecord.getPhoneNumber(), existingSmsRecord.getMessageContent(), DateUtil.now(),
+                existingSmsRecord.getDeliveryStatus(), statusString, existingSmsRecord.getOpenMrsId(),
+                providerMessageId, null);
         return smsRecord;
     }
 
@@ -85,6 +123,13 @@ public class SmsAuditServiceImpl extends BaseOpenmrsService implements SmsAuditS
             }
         }
         return null;
+    }
+
+    private void setCreatorIfNeeded(SmsRecord smsRecord) {
+        if (Context.isSessionOpen() && !Context.isAuthenticated()) {
+            smsRecord.setCreator(Context.getRegisteredComponent(USER_DAO_BEAN_NAME, UserDAO.class)
+                    .getUserByUsername(ADMIN_USER));
+        }
     }
 
     private SmsRecordDao getSmsRecordDao() {

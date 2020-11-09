@@ -44,4 +44,7 @@ public interface SmsAuditService extends OpenmrsService {
     SmsRecords findPageableByCriteria(PagingInfo pagingInfo, SmsRecordSearchCriteria criteria);
 
     SmsRecord createOrUpdate(Status status, String configName, Map<String, String> params);
+
+    SmsRecord createOrUpdate(SmsRecord smsRecord);
+
 }
