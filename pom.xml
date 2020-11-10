@@ -35,7 +35,7 @@
         <javaCompilerSource>1.8</javaCompilerSource>
         <javaCompilerTarget>1.8</javaCompilerTarget>
         <commonsCodecVersion>1.5</commonsCodecVersion>
-        <eventVersion>2.6.0</eventVersion>
+        <eventVersion>2.8.0</eventVersion>
         <gsonVersion>1.7.1</gsonVersion>
         <httpClientVersion>3.1.0</httpClientVersion>
         <jsr311ApiVersion>1.1</jsr311ApiVersion>
