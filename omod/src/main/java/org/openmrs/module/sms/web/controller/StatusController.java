@@ -72,7 +72,6 @@ public class StatusController extends RestController {
             String msg = String.format("Received SMS Status for '%s' config but no matching config: %s, " +
                     "will try the default config", configName, params);
             LOGGER.error(msg);
-            alertService.notifySuperUsers(String.format(NOTIFICATION_TEMPLATE, SMS_MODULE, msg), null);
         }
         Config config = configService.getConfigOrDefault(configName);
         Template template = templateService.getTemplate(config.getTemplateName());
@@ -86,13 +85,11 @@ public class StatusController extends RestController {
                 String msg = String.format("We have a message id, but don't know how to extract message status, this is most likely a template error. Config: %s, Parameters: %s",
                         configName, combinedParams);
                 LOGGER.error(msg);
-                alertService.notifySuperUsers(String.format(NOTIFICATION_TEMPLATE, SMS_MODULE, msg), null);
             }
         } else {
             String msg = String.format("Status message received from provider, but no template support! Config: %s, Parameters: %s",
                     configName, combinedParams);
             LOGGER.error(msg);
-            alertService.notifySuperUsers(String.format(NOTIFICATION_TEMPLATE, SMS_MODULE, msg), null);
         }
     }
 }

@@ -66,7 +66,6 @@ public class WhatsAppController extends RestController {
         if (!configService.hasConfig(configName)) {
             String msg = String.format("Received whatsapp  event for '%s' config but no matching config will try the default config", configName);
             LOGGER.error(msg);
-            alertService.notifySuperUsers(String.format(NOTIFICATION_TEMPLATE, SMS_MODULE, msg), null);
         }
         Config config = configService.getConfigOrDefault(configName);
         Template template = templateService.getTemplate(config.getTemplateName());
@@ -120,14 +119,12 @@ public class WhatsAppController extends RestController {
                                 .format("We have a message id, but don't know how to extract message status, this is most likely a template error. Config: %s, Parameters: %s",
                                         configName, statusMap);
                         LOGGER.error(msg);
-                        alertService.notifySuperUsers(String.format(NOTIFICATION_TEMPLATE, SMS_MODULE, msg), null);
                     }
                 } else {
                     String msg = String
                             .format("Status message received from provider, but no template support! Config: %s, Parameters: %s",
                                     configName, statusMap);
                     LOGGER.error(msg);
-                    alertService.notifySuperUsers(String.format(NOTIFICATION_TEMPLATE, SMS_MODULE, msg), null);
                 }
             }
         }

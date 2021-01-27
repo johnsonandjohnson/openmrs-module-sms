@@ -116,7 +116,6 @@ public class SmsHttpService {
             } catch (IllegalStateException | IllegalArgumentException e) {
                 // exceptions generated above should only come from config/template issues, try to display something
                 // useful in the openmrs messages and tomcat log
-                alertService.notifySuperUsers(String.format(NOTIFICATION_FORMAT, SMS_MODULE, e.getMessage()), e);
                 throw e;
             }
             events = handler.getEvents();
@@ -179,7 +178,6 @@ public class SmsHttpService {
             } else {
                 message = String.format("Config %s: missing username and password", config.getName());
             }
-            alertService.notifySuperUsers(String.format(NOTIFICATION_FORMAT, SMS_MODULE, message), null);
             throw new IllegalStateException(message);
         }
     }
@@ -226,12 +224,11 @@ public class SmsHttpService {
         if (httpStatus == null) {
             String msg = String.format("Delivery to SMS provider failed: %s", errorMessage);
             LOGGER.error(msg);
-            alertService.notifySuperUsers(String.format(NOTIFICATION_FORMAT, SMS_MODULE, msg), null);
         } else {
             errorMessage = templateResponse.extractGeneralFailureMessage(httpResponse);
             if (errorMessage == null) {
-                alertService.notifySuperUsers(String.format("%s - Unable to extract failure message for '%s' config: %s",
-                        config.getName(), httpResponse, SMS_MODULE), null);
+                LOGGER.error(String.format("%s - Unable to extract failure message for '%s' config: %s",
+                        config.getName(), httpResponse, SMS_MODULE));
                 errorMessage = httpResponse;
             }
             LOGGER.error(String.format("Delivery to SMS provider failed with HTTP %d: %s", httpStatus, errorMessage));

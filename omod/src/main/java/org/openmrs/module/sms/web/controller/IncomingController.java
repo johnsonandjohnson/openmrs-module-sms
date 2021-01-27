@@ -74,7 +74,6 @@ public class IncomingController extends RestController {
         } else {
             String msg = String.format("Invalid config in incoming request: %s, params: %s", configName, params);
             LOGGER.error(msg);
-            alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, msg), null);
             return;
         }
         Template template = templateService.getTemplate(config.getTemplateName());

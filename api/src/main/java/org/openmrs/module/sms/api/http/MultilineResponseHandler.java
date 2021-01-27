@@ -56,7 +56,6 @@ public class MultilineResponseHandler extends ResponseHandler {
                     String errorMessage = String.format(
                             "Failed to send SMS. Template error. Can't parse response: %s", responseLine);
                     getLogger().error(errorMessage);
-                    warn(errorMessage);
 
                     getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, sms.getRecipients().toString(),
                             sms.getMessage(), DateUtil.now(), getConfig().retryOrAbortStatus(failureCount), providerStatus,

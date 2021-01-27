@@ -72,7 +72,6 @@ public class GenericResponseHandler extends ResponseHandler {
             if (providerMessageId == null) {
                 String message = String.format("Unable to find provider message id in '%s' header",
                         getTemplateOutgoingResponse().getHeaderMessageId());
-                warn(message);
                 getLogger().error(message);
             }
         } else if (getTemplateOutgoingResponse().hasSingleSuccessMessageId()) {

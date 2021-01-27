@@ -123,13 +123,4 @@ public abstract class ResponseHandler {
     protected Log getLogger() {
         return LOGGER;
     }
-
-    /**
-     * Creates a warning message using {@link AlertService}.
-     *
-     * @param message the message to log
-     */
-    public void warn(String message) {
-        alertService.notifySuperUsers(String.format("%s - %s", SMS_MODULE, message), null);
-    }
 }
