@@ -48,6 +48,7 @@
         <pmdPluginSkip>false</pmdPluginSkip>
         <jacocoVersion>0.8.2</jacocoVersion>
         <surefireVersion>2.17</surefireVersion>
+        <metadatasharingVersion>1.6.0</metadatasharingVersion>
     </properties>
 
     <dependencyManagement>
@@ -107,6 +108,12 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>${javax.servlet.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>metadatasharing-api</artifactId>
+                <version>${metadatasharingVersion}</version>
                 <scope>provided</scope>
             </dependency>
         </dependencies>

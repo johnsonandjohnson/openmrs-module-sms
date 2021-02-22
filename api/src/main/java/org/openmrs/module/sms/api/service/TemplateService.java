@@ -48,4 +48,45 @@ public interface TemplateService {
      * Loads the default templates. The method should be run after the module is started.
      */
     void loadTemplates();
+
+    /**
+     * Gets all default provider templates.
+     *
+     * @return the list of default provider templates, never null
+     */
+    List<Template> getDefaultTemplates();
+
+    /**
+     * Gets all custom provider templates.
+     *
+     * @return the list of custom provider templates, never null
+     */
+    List<Template> getCustomTemplates();
+
+    /**
+     * Gets all provider templates.
+     *
+     * @return the list of provider templates, never null
+     */
+    List<Template> getAllTemplates();
+
+    /**
+     * Writes {@code defaultTemplates} into the file.
+     * <p>
+     *     This method only writes templates, if you want them usable you need to call {@link #loadTemplates()}
+     * </p>
+     *
+     * @param defaultTemplates the templates to write, not null
+     */
+    void writeDefaultTemplates(List<Template> defaultTemplates);
+
+    /**
+     * Writes {@code customTemplates} into the file.
+     * <p>
+     *     This method only writes templates, if you want them usable you need to call {@link #loadTemplates()}
+     * </p>
+     *
+     * @param customTemplates the templates to write, not null
+     */
+    void writeCustomTemplates(List<Template> customTemplates);
 }

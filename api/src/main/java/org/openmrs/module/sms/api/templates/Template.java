@@ -219,6 +219,18 @@ public class Template {
         return sb.toString();
     }
 
+    public void setOutgoing(Outgoing outgoing) {
+        this.outgoing = outgoing;
+    }
+
+    public void setIncoming(Incoming incoming) {
+        this.incoming = incoming;
+    }
+
+    public void setConfigurables(List<String> configurables) {
+        this.configurables = configurables;
+    }
+
     @Override
     public String toString() {
         return "Template{" +

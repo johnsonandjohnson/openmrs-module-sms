@@ -145,6 +145,15 @@
         </constructor-arg>
     </bean>
 
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>org.openmrs.module.sms.api.service.TemplateService</value>
+                <ref local="templateService"/>
+            </list>
+        </property>
+    </bean>
+
     <bean id="sms.SmsHttpService" class="org.openmrs.module.sms.api.http.SmsHttpService">
         <property name="smsRecordDao">
             <ref local="sms.SmsRecordDao"/>
@@ -205,4 +214,5 @@
         </property>
     </bean>
 
+    <bean id="sms.TemplateHandler" class="org.openmrs.module.sms.handler.metadatasharing.TemplateHandler" />
 </beans>

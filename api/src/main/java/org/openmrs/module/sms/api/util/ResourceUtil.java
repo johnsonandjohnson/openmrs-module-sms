@@ -12,7 +12,7 @@ public final class ResourceUtil {
         return ResourceUtil.class.getClassLoader().getResource(filename) != null;
     }
 
-    public static String readResourceFile(String filename) throws SmsRuntimeException {
+    public static String readResourceFile(String filename) {
         try (InputStream in = ResourceUtil.class.getClassLoader().getResourceAsStream(filename)) {
             if (in == null) {
                 throw new SmsRuntimeException("Resource '" + filename + "' doesn't exist");
