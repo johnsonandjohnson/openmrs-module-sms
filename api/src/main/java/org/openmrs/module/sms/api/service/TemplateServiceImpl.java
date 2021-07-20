@@ -50,6 +50,9 @@ public class TemplateServiceImpl implements TemplateService {
   @Override
   public Map<String, TemplateForWeb> allTemplatesForWeb() {
     Map<String, TemplateForWeb> ret = new HashMap<>();
+    if (templates.isEmpty()) {
+      load(SMS_TEMPLATE_CUSTOM_FILE_NAME, customTemplates);
+    }
     for (Map.Entry<String, Template> entry : templates.entrySet()) {
       ret.put(entry.getKey(), new TemplateForWeb(entry.getValue()));
     }
