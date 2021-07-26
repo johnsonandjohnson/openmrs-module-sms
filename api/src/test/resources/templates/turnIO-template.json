@@ -30,7 +30,7 @@
       "multiLineRecipientResponse": "true",
       "singleRecipientResponse": "true",
       "successResponse": ".*\"id\":\"([0-9A-Za-z,-]*)",
-      "extractSingleSuccessMessageId": ".*\"id\":\"([0-9A-Za-z,-]*)",
+      "extractSingleSuccessMessageId": ".*\"id\":\"(.*?)\"",
       "extractGeneralFailureMessage": "^detail(.*)$"
     }
   },
