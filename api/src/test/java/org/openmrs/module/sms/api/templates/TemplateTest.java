@@ -23,6 +23,11 @@ public class TemplateTest {
     private static final String PROVIDER_STATUS_TEMPLATE = "templates/provider-status-template.json";
     private static final String NEXMO_RESPONSE_JSON = "responses/nexmo-response.json";
 
+    private static final String TURN_IO_TEMPLATE = "templates/turnIO-template.json";
+    private static final String TURN_IO_RESPONSE_JSON = "responses/turnIO-response.json";
+
+    private static final String TURN_IO_PROVIDER_ID = "gBEGkYiEB1VXAglK1ZE_qA1YKPrU";
+
     @Test
     public void shouldGeneratePostMethod() throws IOException {
         Template template = loadVotoTemplate();
@@ -47,8 +52,8 @@ public class TemplateTest {
 
     @Test
     public void shouldExtractProviderStatus() throws IOException {
-        Template template = loadTemplateWithProviderStatus();
-        String response = loadNexmoResponse();
+        Template template = loadTemplate(PROVIDER_STATUS_TEMPLATE);
+        String response = loadResponse(NEXMO_RESPONSE_JSON);
 
         String providerStatus = template.getOutgoing().getResponse().extractProviderStatus(response);
 
@@ -58,11 +63,21 @@ public class TemplateTest {
     @Test
     public void shouldExtractNullIfProviderStatusNotSet() throws IOException {
         Template template = loadVotoTemplate();
-        String response = loadNexmoResponse();
+        String response = loadResponse(NEXMO_RESPONSE_JSON);
 
         String providerStatus = template.getOutgoing().getResponse().extractProviderStatus(response);
 
         assertNull(providerStatus);
+    }
+
+    @Test
+    public void shouldExtractProviderIDForTurnIOWithUnderscore() throws IOException {
+        Template template = loadTemplate(TURN_IO_TEMPLATE);
+        String response = loadResponse(TURN_IO_RESPONSE_JSON);
+
+        String providerID = template.getOutgoing().getResponse().extractSingleSuccessMessageId(response);
+
+        assertEquals(TURN_IO_PROVIDER_ID, providerID);
     }
 
     private Template loadVotoTemplate() {
@@ -99,11 +114,11 @@ public class TemplateTest {
         }.getType());
     }
 
-    private Template loadTemplateWithProviderStatus() throws IOException {
-        try (InputStream templateStream = getClass().getClassLoader().getResourceAsStream(PROVIDER_STATUS_TEMPLATE)) {
+    private Template loadTemplate(String templateFile) throws IOException {
+        try (InputStream templateStream = getClass().getClassLoader().getResourceAsStream(templateFile)) {
 
             if (templateStream == null) {
-                throw new IOException("Cannot read template file: " + PROVIDER_STATUS_TEMPLATE);
+                throw new IOException("Cannot read template file: " + templateFile);
             }
 
             String jsonTemplate = IOUtils.toString(templateStream);
@@ -115,10 +130,10 @@ public class TemplateTest {
         }
     }
 
-    private String loadNexmoResponse() throws IOException {
-        try (InputStream responseStream = getClass().getClassLoader().getResourceAsStream(NEXMO_RESPONSE_JSON)) {
+    private String loadResponse(String responseFile) throws IOException {
+        try (InputStream responseStream = getClass().getClassLoader().getResourceAsStream(responseFile)) {
             if (responseStream == null) {
-                throw new IOException("Cannot read response file: " + NEXMO_RESPONSE_JSON);
+                throw new IOException("Cannot read response file: " + responseFile);
             }
             return IOUtils.toString(responseStream);
         }
