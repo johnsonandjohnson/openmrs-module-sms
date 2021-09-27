@@ -1,0 +1,2 @@
+export const DATE_TIME_PATTERN = "YYYY-MM-DD HH:mm:ss";
+export const MIN_DATE_TIME = -8640000000000000;

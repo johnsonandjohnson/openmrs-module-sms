@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+ 
+    <!--
+    	See http://wiki.openmrs.org/display/docs/Module+liquibase+File for 
+    	documentation on this file.
+    
+        See http://www.liquibase.org/manual/home#available_database_refactorings
+        for a list of supported elements and attributes
+    -->
+ 
+    <changeSet id="cfl-2019-08-27-9:45" author="Dawid Ruchniewicz">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="sms_records"/></not>
+        </preConditions>
+        <comment>
+            Created the sms_records table
+        </comment>
+        <createTable tableName="sms_records">
+            <column name="sms_records_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" unique="true"/>
+            </column>
+            <column name="config" type="varchar(255)"></column>
+            <column name="smsDirection" type="varchar(50)"></column>
+            <column name="phoneNumber" type="varchar(255)"></column>
+            <column name="messageContent" type="MEDIUMTEXT"></column>
+            <column name="timestamp" type="date"></column>
+            <column name="deliveryStatus" type="varchar(255)"></column>
+            <column name="providerStatus" type="varchar(255)"></column>
+            <column name="motechId" type="varchar(255)"></column>
+            <column name="providerId" type="varchar(255)"></column>
+            <column name="errorMessage" type="MEDIUMTEXT"></column>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="creator" type="int"/>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_voided" type="datetime"/>
+            <column name="void_reason" type="varchar(255)"/>
+            <column name="voided" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="voided_by" type="int"/>
+        </createTable>
+        <addForeignKeyConstraint constraintName="sms_records_creator_fk"
+                                 baseTableName="sms_records" baseColumnNames="creator"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="sms_records_changed_by_fk"
+                                 baseTableName="sms_records" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="sms_records_voided_by_fk"
+                                 baseTableName="sms_records" baseColumnNames="voided_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <createIndex tableName="sms_records" indexName="sms_records_index_deliveryStatus">
+            <column name="deliveryStatus"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_smsDirection">
+            <column name="smsDirection"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_providerStatus">
+            <column name="providerStatus"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_motechId">
+            <column name="motechId"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_timestamp">
+            <column name="timestamp"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_config">
+            <column name="config"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_phoneNumber">
+            <column name="phoneNumber"></column>
+        </createIndex>
+        <createIndex tableName="sms_records" indexName="sms_records_index_providerId">
+            <column name="providerId"></column>
+        </createIndex>
+    </changeSet>
+    <changeSet id="cfl-2019-11-04-20:00" author="Dawid Ruchniewicz">
+        <preConditions>
+            <tableExists tableName="sms_records"/>
+            <columnExists tableName="sms_records" columnName="motechId"/>
+            <indexExists indexName="sms_records_index_motechId"/>
+        </preConditions>
+        <comment>Changed the motechId column name</comment>
+        <renameColumn columnDataType="varchar(255)"
+                      newColumnName="openMrsId"
+                      oldColumnName="motechId"
+                      tableName="sms_records"
+                      />
+        <dropIndex tableName="sms_records" indexName="sms_records_index_motechId"/>
+        <createIndex tableName="sms_records" indexName="sms_records_index_openMrsId">
+            <column name="openMrsId"></column>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="cfl-2020-04-27-13:00" author="Arkadiusz Lalo">
+        <preConditions>
+            <tableExists tableName="sms_records"/>
+            <columnExists tableName="sms_records" columnName="timestamp"/>
+        </preConditions>
+        <comment>Changed the timestamp datatype from date to datetime</comment>
+        <sql>
+            ALTER TABLE sms_records
+            MODIFY COLUMN timestamp datetime;
+        </sql>
+    </changeSet>
+</databaseChangeLog>
