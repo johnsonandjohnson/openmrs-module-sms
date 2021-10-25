@@ -42,9 +42,10 @@
         <guavaVersion>23.0</guavaVersion>
         <legacyVersion>1.5.0</legacyVersion>
         <javax.servlet.version>3.0.1</javax.servlet.version>
-        <checkStylePluginVersion>2.10</checkStylePluginVersion>
+        <checkStylePluginVersion>3.1.2</checkStylePluginVersion>
+        <checkStyleVersion>9.0.1</checkStyleVersion>
         <checkStylePluginSkip>false</checkStylePluginSkip>
-        <pmdPluginVersion>3.5</pmdPluginVersion>
+        <pmdPluginVersion>3.12.0</pmdPluginVersion>
         <pmdPluginSkip>false</pmdPluginSkip>
         <jacocoVersion>0.8.2</jacocoVersion>
         <surefireVersion>2.17</surefireVersion>
@@ -160,6 +161,13 @@
                         <includeTestSourceDirectory>false</includeTestSourceDirectory>
                         <skip>${checkStylePluginSkip}</skip>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${checkStyleVersion}</version>
+                        </dependency>
+                    </dependencies>
                     <executions>
                         <execution>
                             <id>verify-checkstyle</id>
