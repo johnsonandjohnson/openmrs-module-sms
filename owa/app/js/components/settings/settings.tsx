@@ -31,7 +31,7 @@ interface ISettingsState {
   configs: Array<ConfigUI>,
   errors?: IConfig,
   newEntry?: HTMLDivElement | null;
-};
+}
 
 class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
 
@@ -62,7 +62,8 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
       .required(getIntl().formatMessage({ id: 'SMS_FIELD_REQUIRED', defaultMessage: Default.FIELD_REQUIRED })),
     splitFooter: Yup.string()
       .required(getIntl().formatMessage({ id: 'SMS_FIELD_REQUIRED', defaultMessage: Default.FIELD_REQUIRED })),
-    excludeLastFooter: Yup.bool()
+    excludeLastFooter: Yup.bool(),
+    automaticResponseScript: Yup.string().notRequired()
   });
 
   componentDidMount = () => {
@@ -176,7 +177,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
   handleConfirm = () => this.deleteConfig(this.props.configLocalIdToDelete);
 
   getPropsForTemplate = (templateName: string): Array<IProp> => {
-    const template = this.findTemplate(templateName)
+    const template = this.findTemplate(templateName);
     return template && template.configurables ? template.configurables.map(conf => ({
       name: conf,
       value: null
@@ -217,6 +218,20 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
     );
   };
 
+  renderTextarea = (config: ConfigUI, fieldName: string, label: string, isDefault: boolean, index: number) => {
+    return (
+    <FormGroup controlId={`${fieldName}_${index}`}>
+      <ControlLabel>{label}</ControlLabel>
+      <FormControl
+          componentClass="textarea"
+          name={fieldName}
+          value={config[fieldName]}
+          onChange={(e: any) => this.handleChange(config.localId, fieldName, e.target.value, isDefault)} />
+      {this.renderError(fieldName)}
+    </FormGroup>
+    );
+  }
+
   renderCheckbox = (config: ConfigUI, fieldName: string, label: string, isDefault: boolean, index: number) => (
       <FormGroup controlId={`${fieldName}_${index}`}>
         <ControlLabel>{label}</ControlLabel>
@@ -233,6 +248,7 @@ class Settings extends React.PureComponent <ISettingsProps, ISettingsState> {
       {this.renderInput(config, 'splitHeader', 'text', 'Split Message Header:', isDefault, index)}
       {this.renderInput(config, 'splitFooter', 'text', 'Split Message Footer:', isDefault, index)}
       {this.renderCheckbox(config, 'excludeLastFooter', 'Exclude footer from last split message', isDefault, index)}
+      {this.renderTextarea(config, 'automaticResponseScript', 'Automatic Response Script', isDefault, index)}
       <br/>
       {this.renderProps(config, isDefault, index)}
     </Form>

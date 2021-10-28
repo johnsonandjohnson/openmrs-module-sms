@@ -155,6 +155,7 @@ export const toConfigRequest = (config: ConfigUI): IConfig => {
   splitHeader: config.splitHeader,
   splitFooter: config.splitFooter,
   templateName: config.templateName,
+  automaticResponseScript: config.automaticResponseScript,
   props: config.props
   }
 };

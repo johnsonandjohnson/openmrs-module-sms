@@ -118,13 +118,6 @@
         </property>
     </bean>
 
-    <bean id="multiThreadedHttpConnectionManager"
-          class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager"/>
-
-    <bean id="commonsHttpClient" class="org.apache.commons.httpclient.HttpClient">
-        <constructor-arg ref="multiThreadedHttpConnectionManager"/>
-    </bean>
-
     <bean id="sms.configService" class="org.openmrs.module.sms.api.service.ConfigServiceImpl">
         <constructor-arg index="0">
             <ref local="sms.settings.manager"/>
@@ -160,10 +153,6 @@
         </property>
         <property name="templateService">
             <ref local="templateService"/>
-        </property>
-        <property name="alertService" ref="alertService"/>
-        <property name="commonsHttpClient">
-            <ref local="commonsHttpClient"/>
         </property>
         <property name="configService">
             <ref local="sms.configService"/>
@@ -215,4 +204,13 @@
     </bean>
 
     <bean id="sms.TemplateHandler" class="org.openmrs.module.sms.handler.metadatasharing.TemplateHandler" />
+
+    <bean id="sms.IncomingMessageService" class="org.openmrs.module.sms.api.service.impl.IncomingMessageServiceImpl" />
+    <bean id="sms.VelocityAutomaticResponseEvaluatorService"
+          class="org.openmrs.module.sms.api.service.impl.VelocityAutomaticResponseEvaluatorService" />
+    <bean id="sms.DefaultIncomingMessageHandler"
+          class="org.openmrs.module.sms.api.handler.impl.DefaultIncomingMessageHandler">
+        <property name="automaticResponseEvaluatorService" ref="sms.VelocityAutomaticResponseEvaluatorService" />
+        <property name="smsService" ref="sms.SmsService" />
+    </bean>
 </beans>
