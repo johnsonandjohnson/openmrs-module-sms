@@ -7,6 +7,7 @@ export interface IConfig {
   splitHeader?: string;
   splitFooter?: string;
   templateName?: string;
+  automaticResponseScript?: string;
   props?: Array<IProp>;
 }
 
@@ -24,6 +25,7 @@ export class ConfigUI {
   splitHeader?: string;
   splitFooter?: string;
   templateName?: string;
+  automaticResponseScript?: string;
   props?: Array<IProp>;
 
   constructor(model?: IConfig, defaultName?: string) {
@@ -57,6 +59,9 @@ export class ConfigUI {
       }
       if (!!model.templateName) {
         this.templateName = model.templateName;
+      }
+      if(!!model.automaticResponseScript) {
+        this.automaticResponseScript = model.automaticResponseScript;
       }
       if (!!model.props) {
         this.props = model.props;

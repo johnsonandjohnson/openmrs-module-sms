@@ -49,6 +49,11 @@ public class Config {
     private List<ConfigProp> props = new ArrayList<>();
 
     /**
+     * The script used to determine an automatic response for messages received using this config.
+     */
+    private String automaticResponseScript;
+
+    /**
      * @return the unique name identifying the configuration
      */
     public String getName() {
@@ -150,6 +155,14 @@ public class Config {
      */
     public void setProps(List<ConfigProp> props) {
         this.props = props;
+    }
+
+    public String getAutomaticResponseScript() {
+        return automaticResponseScript;
+    }
+
+    public void setAutomaticResponseScript(String automaticResponseScript) {
+        this.automaticResponseScript = automaticResponseScript;
     }
 
     /**
