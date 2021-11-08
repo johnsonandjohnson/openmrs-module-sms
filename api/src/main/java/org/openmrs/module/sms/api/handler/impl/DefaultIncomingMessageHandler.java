@@ -38,7 +38,7 @@ public class DefaultIncomingMessageHandler implements IncomingMessageHandler {
     if (automaticResponse.isPresent()) {
       final OutgoingSms automaticResponseSms =
           new OutgoingSms(
-              message.getConfig().getName(), message.getSender(), automaticResponse.get());
+              message.getConfig().getName(), message.getSenderPhoneNumber(), automaticResponse.get());
       smsService.send(automaticResponseSms);
     }
 

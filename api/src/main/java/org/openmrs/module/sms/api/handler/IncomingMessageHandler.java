@@ -3,7 +3,7 @@ package org.openmrs.module.sms.api.handler;
 /**
  * The IncomingMessageHandler Interface.
  *
- * <p>The implementation of this interface handle messages received by the system. The system
+ * <p>The implementation of this interface handles messages received by the system. The system
  * collects all beans which implement the IncomingMessageHandler, sorts them according to their
  * priorities and executes 'handle' methods for each in order - the execution 'chain' may be stopped
  * if proceeding handler's 'handle' method returns 'true' - that denotes a message to be handled,
