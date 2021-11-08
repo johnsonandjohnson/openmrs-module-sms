@@ -2,6 +2,7 @@ package org.openmrs.module.sms.api.http;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
@@ -23,7 +24,6 @@ import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.DateUtil;
-import org.openmrs.notification.AlertService;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.core.MediaType;
@@ -42,16 +42,32 @@ public class SmsHttpService {
 
     private static final String SMS_MODULE = "openmrs-sms";
     private static final Log LOGGER = LogFactory.getLog(SmsHttpService.class);
-    private static final String NOTIFICATION_FORMAT = "%s - %s";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
+
+    private final HttpClient commonsHttpClient;
 
     private TemplateService templateService;
     private ConfigService configService;
     private SmsEventService smsEventService;
-    private HttpClient commonsHttpClient;
-    private AlertService alertService;
     private SmsRecordDao smsRecordDao;
+
+    /**
+     * The package-private constructor which <b>facilitates unit-tests</b> and allows usage of custom/mock HttpClient
+     * object.
+     *
+     * @param commonsHttpClient the Http Client to use, not null
+     */
+    SmsHttpService(HttpClient commonsHttpClient) {
+        this.commonsHttpClient = commonsHttpClient;
+    }
+
+    /**
+     * The default constructor, used by Spring to initialize this bean.
+     */
+    public SmsHttpService() {
+        this(new HttpClient(new MultiThreadedHttpConnectionManager()));
+    }
 
     /**
      * This method allows sending outgoing sms messages through HTTP. The configuration specified in the {@link OutgoingSms}
@@ -291,14 +307,6 @@ public class SmsHttpService {
 
     public void setConfigService(ConfigService configService) {
         this.configService = configService;
-    }
-
-    public void setCommonsHttpClient(HttpClient commonsHttpClient) {
-        this.commonsHttpClient = commonsHttpClient;
-    }
-
-    public void setAlertService(AlertService alertService) {
-        this.alertService = alertService;
     }
 
     public void setSmsRecordDao(SmsRecordDao smsRecordDao) {

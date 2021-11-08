@@ -1,5 +1,7 @@
 package org.openmrs.module.sms.api.templates;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +14,11 @@ public class Incoming {
      * The key used by the provider to denote the message.
      */
     private String messageKey;
+
+    /**
+     * The regex pattern used for extracting the message from the data sent by the provider.
+     */
+    private String messageRegex;
 
     /**
      * The key used by the provider to denote the sender.
@@ -29,7 +36,7 @@ public class Incoming {
     private String recipientKey;
 
     /**
-     * The regex pattern used for extracting the sender number frm the sender data sent by the provider.
+     * The regex pattern used for extracting the sender number from the sender data sent by the provider.
      */
     private String recipientRegex;
 
@@ -44,7 +51,7 @@ public class Incoming {
     private String msgIdKey;
 
     // These patterns are compiled using the regex fields from above
-
+    private Pattern extractMessageRegex;
     private Pattern extractSenderPattern;
     private Pattern extractRecipientPattern;
 
@@ -60,6 +67,14 @@ public class Incoming {
      */
     public void setMessageKey(String messageKey) {
         this.messageKey = messageKey;
+    }
+
+    public String getMessageRegex() {
+        return messageRegex;
+    }
+
+    public void setMessageRegex(String messageRegex) {
+        this.messageRegex = messageRegex;
     }
 
     /**
@@ -118,12 +133,27 @@ public class Incoming {
         this.msgIdKey = msgIdKey;
     }
 
+    public boolean hasMessageRegex() {
+        return StringUtils.isNotBlank(messageRegex);
+    }
+
+    public String extractMessage(String s) {
+        if (extractMessageRegex == null) {
+            extractMessageRegex = Pattern.compile(messageRegex);
+        }
+        Matcher m = extractMessageRegex.matcher(s);
+        if (m.find()) {
+            return m.group(1);
+        }
+        return null;
+    }
+
     /**
      * Checks whether a regex pattern for extracting senders is set.
      *
      * @return true if this object has a pattern for extracting senders, false otherwise
      */
-    public Boolean hasSenderRegex() {
+    public boolean hasSenderRegex() {
         return senderRegex != null && senderRegex.length() > 0;
     }
 

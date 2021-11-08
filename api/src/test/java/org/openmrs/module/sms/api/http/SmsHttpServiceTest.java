@@ -11,6 +11,7 @@ import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.OutgoingSms;
+import org.openmrs.module.sms.api.service.SmsEventService;
 import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.builder.ConfigsBuilder;
 import org.openmrs.module.sms.builder.OutgoingSmsBuilder;
@@ -31,11 +32,7 @@ public class SmsHttpServiceTest extends ContextSensitiveWithActivatorTest {
             "\"0.03330000\",\n      \"network\": \"12345\",\n      \"client-ref\": \"my-personal-reference\",\n " +
             "     \"account-ref\": \"customer1234\"\n          }";
     private static final String NEXMO_GENERIC = "nexmo-generic";
-    public static final String BAD_CREDENTIALS = "Bad Credentials";
-
-    @Autowired
-    @Qualifier("sms.SmsHttpService")
-    private SmsHttpService smsHttpService;
+    private static final String BAD_CREDENTIALS = "Bad Credentials";
 
     @Autowired
     @Qualifier("templateService")
@@ -48,6 +45,10 @@ public class SmsHttpServiceTest extends ContextSensitiveWithActivatorTest {
     @Autowired
     @Qualifier("sms.SmsRecordDao")
     private SmsRecordDao smsRecordDao;
+
+    @Autowired
+    @Qualifier("sms.eventService")
+    private SmsEventService smsEventService;
 
     @Before
     public void setUp() {
@@ -65,7 +66,7 @@ public class SmsHttpServiceTest extends ContextSensitiveWithActivatorTest {
 
     @Test(expected = IllegalStateException.class)
     public void sendProcessWithInvalidAuthenticateParams() {
-        prepareSuccessAnswer(true);
+        final SmsHttpService smsHttpService = prepareSuccessAnswer(true);
         OutgoingSms sms = new OutgoingSmsBuilder()
                 .withWithAuthenticationParams(false)
                 .build();
@@ -75,7 +76,7 @@ public class SmsHttpServiceTest extends ContextSensitiveWithActivatorTest {
     @Test
     public void sendProcessWithSuccessMessage() {
         String message = UUID.randomUUID().toString();
-        prepareSuccessAnswer(true);
+        final SmsHttpService smsHttpService = prepareSuccessAnswer(true);
         OutgoingSms sms = new OutgoingSmsBuilder().withMessage(message).build();
         smsHttpService.send(sms);
         SmsRecord expected = new SmsRecordBuilder()
@@ -87,7 +88,7 @@ public class SmsHttpServiceTest extends ContextSensitiveWithActivatorTest {
 
     @Test
     public void sendProcessWithSuccessStatusWithoutMessageId() {
-        prepareSuccessAnswer(false);
+        final SmsHttpService smsHttpService = prepareSuccessAnswer(false);
         OutgoingSms sms = new OutgoingSmsBuilder().build();
         smsHttpService.send(sms);
         SmsRecord expected = new SmsRecordBuilder()
@@ -102,7 +103,7 @@ public class SmsHttpServiceTest extends ContextSensitiveWithActivatorTest {
 
     @Test
     public void sendProcessWithGeneralFailureMessage() {
-        prepareFailureAnswer();
+        final SmsHttpService smsHttpService = prepareFailureAnswer();
         OutgoingSms sms = new OutgoingSmsBuilder().build();
         smsHttpService.send(sms);
         SmsRecord expected = new SmsRecordBuilder()
@@ -119,7 +120,7 @@ public class SmsHttpServiceTest extends ContextSensitiveWithActivatorTest {
     @Test
     public void sendSuccessMessageWithGenericHandler() {
         String message = UUID.randomUUID().toString();
-        prepareSuccessAnswer(true);
+        final SmsHttpService smsHttpService = prepareSuccessAnswer(true);
         OutgoingSms sms = new OutgoingSmsBuilder()
                 .withConfig(NEXMO_GENERIC)
                 .withMessage(message)
@@ -136,13 +137,23 @@ public class SmsHttpServiceTest extends ContextSensitiveWithActivatorTest {
         assertSmsRecord(expected, actual);
     }
 
-    private void prepareSuccessAnswer(boolean withMessageId) {
-        smsHttpService.setCommonsHttpClient(new SmsHttpClient()
+    private SmsHttpService prepareSuccessAnswer(boolean withMessageId) {
+        final SmsHttpService smsHttpService = new SmsHttpService(new SmsHttpClient()
             .withMessageId(withMessageId));
+        smsHttpService.setTemplateService(templateService);
+        smsHttpService.setSmsRecordDao(smsRecordDao);
+        smsHttpService.setSmsEventService(smsEventService);
+        smsHttpService.setConfigService(configService);
+        return smsHttpService;
     }
 
-    private void prepareFailureAnswer() {
-        smsHttpService.setCommonsHttpClient(new SmsHttpClient().withSuccessProcessed(false));
+    private SmsHttpService prepareFailureAnswer() {
+        final SmsHttpService smsHttpService = new SmsHttpService(new SmsHttpClient().withSuccessProcessed(false));
+        smsHttpService.setTemplateService(templateService);
+        smsHttpService.setSmsRecordDao(smsRecordDao);
+        smsHttpService.setSmsEventService(smsEventService);
+        smsHttpService.setConfigService(configService);
+        return smsHttpService;
     }
 
     private void assertSmsRecord(SmsRecord expected, SmsRecord actual) {
