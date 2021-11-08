@@ -11,7 +11,7 @@ import org.openmrs.module.sms.api.handler.IncomingMessageData;
  */
 public interface IncomingMessageService {
   /**
-   * Runs processing for an incoming message.
+   * Process an incoming message.
    *
    * <p>Execute processing for all configured {@link
    * org.openmrs.module.sms.api.handler.IncomingMessageHandler}s. Any errors coming from handlers

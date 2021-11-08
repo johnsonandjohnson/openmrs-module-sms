@@ -60,7 +60,7 @@ public class VelocityAutomaticResponseEvaluatorService
           e);
     }
 
-    final String evaluationResult = writer.toString();
-    return StringUtils.isBlank(evaluationResult) ? Optional.empty() : Optional.of(evaluationResult);
+    final String message = writer.toString();
+    return StringUtils.isBlank(message) ? Optional.empty() : Optional.of(message);
   }
 }

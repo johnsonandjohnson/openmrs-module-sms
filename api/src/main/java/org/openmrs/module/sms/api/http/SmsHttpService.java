@@ -53,7 +53,8 @@ public class SmsHttpService {
     private SmsRecordDao smsRecordDao;
 
     /**
-     * The package-private constructor which <b>facilitates unit-tests</b> which provides custom HttpClient object.
+     * The package-private constructor which <b>facilitates unit-tests</b> and allows usage of custom/mock HttpClient
+     * object.
      *
      * @param commonsHttpClient the Http Client to use, not null
      */

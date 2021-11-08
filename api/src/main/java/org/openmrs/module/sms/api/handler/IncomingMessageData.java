@@ -13,7 +13,7 @@ import java.util.Date;
 public final class IncomingMessageData {
   private final boolean receivedForAFistTime;
   private final Config config;
-  private final String sender;
+  private final String senderPhoneNumber;
   private final String message;
   private final Date receivedAt;
   private final String deliveryStatus;
@@ -22,14 +22,14 @@ public final class IncomingMessageData {
   IncomingMessageData(
       boolean receivedForAFistTime,
       Config config,
-      String sender,
+      String senderPhoneNumber,
       String message,
       Date receivedAt,
       String deliveryStatus,
       String providerMessageId) {
     this.receivedForAFistTime = receivedForAFistTime;
     this.config = config;
-    this.sender = sender;
+    this.senderPhoneNumber = senderPhoneNumber;
     this.message = message;
     this.receivedAt = receivedAt;
     this.deliveryStatus = deliveryStatus;
@@ -44,8 +44,8 @@ public final class IncomingMessageData {
     return config;
   }
 
-  public String getSender() {
-    return sender;
+  public String getSenderPhoneNumber() {
+    return senderPhoneNumber;
   }
 
   public String getMessage() {

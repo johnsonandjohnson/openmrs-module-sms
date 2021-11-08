@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class AutomaticResponseEvaluationMessageContext {
   private final Config config;
-  private final String sender;
+  private final String senderPhoneNumber;
   private final String message;
   private final Date receivedAt;
   private final String deliveryStatus;
@@ -20,7 +20,7 @@ public class AutomaticResponseEvaluationMessageContext {
 
   public AutomaticResponseEvaluationMessageContext(IncomingMessageData incomingMessage) {
     this.config = incomingMessage.getConfig();
-    this.sender = incomingMessage.getSender();
+    this.senderPhoneNumber = incomingMessage.getSenderPhoneNumber();
     this.message = incomingMessage.getMessage();
     this.receivedAt = incomingMessage.getReceivedAt();
     this.deliveryStatus = incomingMessage.getDeliveryStatus();
@@ -31,8 +31,8 @@ public class AutomaticResponseEvaluationMessageContext {
     return config;
   }
 
-  public String getSender() {
-    return sender;
+  public String getSenderPhoneNumber() {
+    return senderPhoneNumber;
   }
 
   public String getMessage() {
