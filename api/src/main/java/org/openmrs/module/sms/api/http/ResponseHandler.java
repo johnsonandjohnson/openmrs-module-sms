@@ -9,9 +9,6 @@ import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
-import org.openmrs.notification.AlertService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +18,12 @@ import java.util.List;
  * collections of audit records and events, which should be then retrieved and handled by the code using the handler.
  */
 public abstract class ResponseHandler {
-    private static final String SMS_MODULE = "openmrs-sms";
     private static final Log LOGGER = LogFactory.getLog(ResponseHandler.class);
     private Template template;
     private Config config;
     private Response templateOutgoingResponse;
     private List<SmsEvent> events = new ArrayList<>();
     private List<SmsRecord> auditRecords = new ArrayList<>();
-
-    @Autowired
-    @Qualifier("alertService")
-    private AlertService alertService;
 
     /**
      * Constructs an instance using the provided template and configuration.

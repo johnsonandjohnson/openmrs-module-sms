@@ -14,84 +14,84 @@ import java.util.TimeZone;
 
 public final class DateUtil {
 
-    private static final Log LOGGER = LogFactory.getLog(DateUtil.class);
+  private static final Log LOGGER = LogFactory.getLog(DateUtil.class);
 
-    private static final String ISO_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+  private static final String ISO_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
-    private static final String DEFAULT_TIME_ZONE = "UTC";
+  private static final String DEFAULT_TIME_ZONE = "UTC";
 
-    public static Date parse(String dateTime) {
-        return parse(dateTime, null);
+  public static Date parse(String dateTime) {
+    return parse(dateTime, null);
+  }
+
+  public static Date parse(String dateTime, String pattern) {
+    String datePattern = pattern;
+    if (StringUtils.isBlank(pattern)) {
+      datePattern = ISO_DATE_TIME_FORMAT;
     }
-
-    public static Date parse(String dateTime, String pattern) {
-        String datePattern = pattern;
-        if (StringUtils.isBlank(pattern)) {
-            datePattern = ISO_DATE_TIME_FORMAT;
-        }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(datePattern);
-        Date result = null;
-        try {
-            result = simpleDateFormat.parse(dateTime);
-        } catch (ParseException e) {
-            LOGGER.error(String.format("Could not parse `%s` date using `%s` pattern", dateTime, datePattern));
-        }
-        return result;
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(datePattern);
+    Date result = null;
+    try {
+      result = simpleDateFormat.parse(dateTime);
+    } catch (ParseException e) {
+      LOGGER.error(
+          String.format("Could not parse `%s` date using `%s` pattern", dateTime, datePattern));
     }
+    return result;
+  }
 
-    public static Date now() {
-        return getDateWithDefaultTimeZone(new Date());
-    }
+  public static Date now() {
+    return getDateWithDefaultTimeZone(new Date());
+  }
 
-    public static Date plusDays(Date date, int duration) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DATE, duration);
-        return calendar.getTime();
-    }
+  public static Date plusDays(Date date, int duration) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(date);
+    calendar.add(Calendar.DATE, duration);
+    return calendar.getTime();
+  }
 
-    public static Date getDateWithDefaultTimeZone(Date timestamp) {
-        if (timestamp == null) {
-            return null;
-        }
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(DEFAULT_TIME_ZONE));
-        calendar.setTime(timestamp);
-        return calendar.getTime();
+  public static Date getDateWithDefaultTimeZone(Date timestamp) {
+    if (timestamp == null) {
+      return null;
     }
+    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(DEFAULT_TIME_ZONE));
+    calendar.setTime(timestamp);
+    return calendar.getTime();
+  }
 
-    public static String getDateWithLocalTimeZone(Date timestamp) {
-        if (timestamp == null) {
-            return StringUtils.EMPTY;
-        }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_TIME_FORMAT);
-        simpleDateFormat.setTimeZone(getLocalTimeZone());
-        return simpleDateFormat.format(timestamp);
+  public static String getDateWithLocalTimeZone(Date timestamp) {
+    if (timestamp == null) {
+      return StringUtils.EMPTY;
     }
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_TIME_FORMAT);
+    simpleDateFormat.setTimeZone(getLocalTimeZone());
+    return simpleDateFormat.format(timestamp);
+  }
 
-    public static String dateToString(Date date, TimeZone timeZone) {
-        if (date == null) {
-            return null;
-        }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_TIME_FORMAT);
-        if (timeZone != null) {
-            simpleDateFormat.setTimeZone(timeZone);
-        }
-        return simpleDateFormat.format(date);
+  public static String dateToString(Date date, TimeZone timeZone) {
+    if (date == null) {
+      return null;
     }
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_TIME_FORMAT);
+    if (timeZone != null) {
+      simpleDateFormat.setTimeZone(timeZone);
+    }
+    return simpleDateFormat.format(date);
+  }
 
-    public static String dateToString(Date date) {
-        return dateToString(date, TimeZone.getTimeZone(DEFAULT_TIME_ZONE));
-    }
+  public static String dateToString(Date date) {
+    return dateToString(date, TimeZone.getTimeZone(DEFAULT_TIME_ZONE));
+  }
 
-    public static TimeZone getLocalTimeZone() {
-        String userTimeZoneName = Context.getAdministrationService()
-                .getGlobalProperty(Constants.DEFAULT_USER_TIMEZONE);
-        if (StringUtils.isNotBlank(userTimeZoneName)) {
-            return TimeZone.getTimeZone(ZoneId.of(userTimeZoneName));
-        }
-        return TimeZone.getTimeZone(DEFAULT_TIME_ZONE);
+  public static TimeZone getLocalTimeZone() {
+    String userTimeZoneName =
+        Context.getAdministrationService().getGlobalProperty(SMSConstants.DEFAULT_USER_TIMEZONE);
+    if (StringUtils.isNotBlank(userTimeZoneName)) {
+      return TimeZone.getTimeZone(ZoneId.of(userTimeZoneName));
     }
+    return TimeZone.getTimeZone(DEFAULT_TIME_ZONE);
+  }
 
-    private DateUtil() {
-    }
+  private DateUtil() {}
 }

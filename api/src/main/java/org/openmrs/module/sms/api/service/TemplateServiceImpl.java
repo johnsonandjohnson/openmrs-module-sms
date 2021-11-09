@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * See {@link org.openmrs.module.sms.api.service.TemplateService}.
- * This implementation uses the OpenMRS configuration system to store the templates.
+ * See {@link org.openmrs.module.sms.api.service.TemplateService}. This implementation uses the
+ * OpenMRS configuration system to store the templates.
  */
 public class TemplateServiceImpl implements TemplateService {
 
@@ -66,8 +66,9 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     Gson gson = new Gson();
-    String jsonText = gson.toJson(customTemplates, new TypeToken<List<Template>>() {} .getType());
-    settingsManagerService.saveRawConfig(SMS_TEMPLATE_CUSTOM_FILE_NAME, new ByteArrayResource(jsonText.getBytes()));
+    String jsonText = gson.toJson(customTemplates, new TypeToken<List<Template>>() {}.getType());
+    settingsManagerService.saveRawConfig(
+        SMS_TEMPLATE_CUSTOM_FILE_NAME, new ByteArrayResource(jsonText.getBytes()));
   }
 
   @Override
@@ -106,16 +107,18 @@ public class TemplateServiceImpl implements TemplateService {
 
   @Override
   public void writeDefaultTemplates(List<Template> newDefaultTemplates) {
-    String jsonText = new Gson().toJson(newDefaultTemplates, new TypeToken<List<Template>>() {
-    } .getType());
-    settingsManagerService.saveRawConfig(SMS_TEMPLATE_FILE_NAME, new ByteArrayResource(jsonText.getBytes()));
+    String jsonText =
+        new Gson().toJson(newDefaultTemplates, new TypeToken<List<Template>>() {}.getType());
+    settingsManagerService.saveRawConfig(
+        SMS_TEMPLATE_FILE_NAME, new ByteArrayResource(jsonText.getBytes()));
   }
 
   @Override
   public void writeCustomTemplates(List<Template> newCustomTemplates) {
-    String jsonText = new Gson().toJson(newCustomTemplates, new TypeToken<List<Template>>() {
-    } .getType());
-    settingsManagerService.saveRawConfig(SMS_TEMPLATE_CUSTOM_FILE_NAME, new ByteArrayResource(jsonText.getBytes()));
+    String jsonText =
+        new Gson().toJson(newCustomTemplates, new TypeToken<List<Template>>() {}.getType());
+    settingsManagerService.saveRawConfig(
+        SMS_TEMPLATE_CUSTOM_FILE_NAME, new ByteArrayResource(jsonText.getBytes()));
   }
 
   private void load(final String fileName, final List<Template> loadedTemplates) {
@@ -123,12 +126,11 @@ public class TemplateServiceImpl implements TemplateService {
 
     initializeConfig(fileName);
 
-    try (final InputStream is = settingsManagerService.getRawConfig(fileName)) {
+    try (InputStream is = settingsManagerService.getRawConfig(fileName)) {
       final String jsonText = IOUtils.toString(is);
 
       if (StringUtils.isNotBlank(jsonText)) {
-        templateList = new Gson().fromJson(jsonText, new TypeToken<List<Template>>() {
-        } .getType());
+        templateList = new Gson().fromJson(jsonText, new TypeToken<List<Template>>() {}.getType());
       } else {
         templateList = Collections.emptyList();
       }

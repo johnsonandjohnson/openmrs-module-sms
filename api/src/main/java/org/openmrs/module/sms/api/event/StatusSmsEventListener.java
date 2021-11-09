@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.http.SmsHttpService;
 import org.openmrs.module.sms.api.service.OutgoingSms;
-import org.openmrs.module.sms.api.util.SmsEventSubjects;
+import org.openmrs.module.sms.api.util.SmsEventSubjectsConstants;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -15,7 +15,7 @@ public class StatusSmsEventListener extends AbstractSmsEventListener {
 
     @Override
     public String[] getSubjects() {
-        return new String[]{SmsEventSubjects.PENDING, SmsEventSubjects.SCHEDULED, SmsEventSubjects.RETRYING};
+        return new String[]{SmsEventSubjectsConstants.PENDING, SmsEventSubjectsConstants.SCHEDULED, SmsEventSubjectsConstants.RETRYING};
     }
 
     @Override

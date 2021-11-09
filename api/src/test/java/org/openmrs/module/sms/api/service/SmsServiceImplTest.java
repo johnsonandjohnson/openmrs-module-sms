@@ -3,7 +3,7 @@ package org.openmrs.module.sms.api.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.module.sms.api.audit.SmsRecord;
-import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
+import org.openmrs.module.sms.api.audit.constants.DeliveryStatusesConstants;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
@@ -86,7 +86,7 @@ public class SmsServiceImplTest extends BaseModuleContextSensitiveTest {
     public void sendWithShortMessage() {
         SmsRecord expected = new SmsRecordBuilder()
                 .withOpenMrsId(null)
-                .withDeliveryStatus(DeliveryStatuses.PENDING)
+                .withDeliveryStatus(DeliveryStatusesConstants.PENDING)
                 .withProviderStatus(null)
                 .withProviderId(null)
                 .build();
@@ -100,7 +100,7 @@ public class SmsServiceImplTest extends BaseModuleContextSensitiveTest {
     public void sendWithLongMessageAndMultipleRecipients() {
         SmsRecord expected = new SmsRecordBuilder()
                 .withOpenMrsId(null)
-                .withDeliveryStatus(DeliveryStatuses.PENDING)
+                .withDeliveryStatus(DeliveryStatusesConstants.PENDING)
                 .withProviderStatus(null)
                 .withProviderId(null)
                 .withMessageContent(EXPECTED_PART_OF_MESSAGE)
@@ -119,7 +119,7 @@ public class SmsServiceImplTest extends BaseModuleContextSensitiveTest {
     public void sendWithShortMessageAndDeliveryTime() {
         SmsRecord expected = new SmsRecordBuilder()
                 .withOpenMrsId(null)
-                .withDeliveryStatus(DeliveryStatuses.SCHEDULED)
+                .withDeliveryStatus(DeliveryStatusesConstants.SCHEDULED)
                 .withProviderStatus(null)
                 .withProviderId(null)
                 .build();
