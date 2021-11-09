@@ -8,36 +8,30 @@ import java.util.Map;
 
 public class ValidationException extends RuntimeException {
 
-    /**
-     * Constraint violations that describe the error causes.
-     */
-    private Map<String, String> constraintViolations;
+  private static final long serialVersionUID = -7575511914862863438L;
 
-    /**
-     * Creates new exception according to constraint violations.
-     *
-     * @param constraintViolations set of constraints that were violated
-     */
-    public ValidationException(Map<String, String> constraintViolations) {
-        this.constraintViolations = constraintViolations;
-    }
+  /** Constraint violations that describe the error causes. */
+  private Map<String, String> constraintViolations;
 
-    @Override
-    public String toString() {
-        return MessageFormat.format("{0}\n{1}",
-                super.toString(),
-                toJson(constraintViolations));
-    }
+  /**
+   * Creates new exception according to constraint violations.
+   *
+   * @param constraintViolations set of constraints that were violated
+   */
+  public ValidationException(Map<String, String> constraintViolations) {
+    this.constraintViolations = constraintViolations;
+  }
 
-    private static String toJson(Map<String, String> violations) {
-        return new GsonBuilder()
-                .disableHtmlEscaping()
-                .setPrettyPrinting()
-                .create()
-                .toJson(violations);
-    }
+  @Override
+  public String toString() {
+    return MessageFormat.format("{0}\n{1}", super.toString(), toJson(constraintViolations));
+  }
 
-    public Map<String, String> getConstraintViolations() {
-        return Collections.unmodifiableMap(constraintViolations);
-    }
+  private static String toJson(Map<String, String> violations) {
+    return new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create().toJson(violations);
+  }
+
+  public Map<String, String> getConstraintViolations() {
+    return Collections.unmodifiableMap(constraintViolations);
+  }
 }

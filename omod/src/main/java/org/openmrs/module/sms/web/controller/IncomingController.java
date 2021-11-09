@@ -6,7 +6,6 @@ import org.openmrs.module.sms.api.audit.SmsAuditService;
 import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.configs.Config;
-import org.openmrs.module.sms.api.handler.IncomingMessageData;
 import org.openmrs.module.sms.api.handler.IncomingMessageDataBuilder;
 import org.openmrs.module.sms.api.service.ConfigService;
 import org.openmrs.module.sms.api.service.IncomingMessageService;

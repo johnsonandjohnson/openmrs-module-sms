@@ -4,9 +4,9 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.openmrs.module.sms.api.util.Constants;
+import org.openmrs.module.sms.api.util.SMSConstants;
 import org.openmrs.module.sms.api.util.DateUtil;
-import org.openmrs.module.sms.api.util.SmsEventParams;
+import org.openmrs.module.sms.api.util.SmsEventParamsConstants;
 import org.openmrs.module.sms.api.util.SmsTaskUtil;
 
 import java.util.Arrays;
@@ -49,7 +49,7 @@ public class SmsEvent {
     }
 
     public String getJobId() {
-        return (String) getParameters().get(Constants.PARAM_JOB_ID);
+        return (String) getParameters().get(SMSConstants.PARAM_JOB_ID);
     }
 
     public String generateTaskName() {
@@ -61,46 +61,46 @@ public class SmsEvent {
     }
 
     public Integer getFailureCount() {
-        return (Integer) getParameters().get(SmsEventParams.FAILURE_COUNT);
+        return (Integer) getParameters().get(SmsEventParamsConstants.FAILURE_COUNT);
     }
 
     public String getOpenMrsId() {
-        return (String) getParameters().get(SmsEventParams.OPENMRS_ID);
+        return (String) getParameters().get(SmsEventParamsConstants.OPENMRS_ID);
     }
 
     public String getProviderId() {
-        return (String) getParameters().get(SmsEventParams.PROVIDER_MESSAGE_ID);
+        return (String) getParameters().get(SmsEventParamsConstants.PROVIDER_MESSAGE_ID);
     }
 
     public String getConfigParam() {
-        return (String) getParameters().get(SmsEventParams.CONFIG);
+        return (String) getParameters().get(SmsEventParamsConstants.CONFIG);
     }
 
     public Map<String, String> getCustomParams() {
-        return (Map<String, String>) getParameters().get(SmsEventParams.CUSTOM_PARAMS);
+        return (Map<String, String>) getParameters().get(SmsEventParamsConstants.CUSTOM_PARAMS);
     }
 
     public List<String> getRecipients() {
-        return (List<String>) getParameters().get(SmsEventParams.RECIPIENTS);
+        return (List<String>) getParameters().get(SmsEventParamsConstants.RECIPIENTS);
     }
 
     public String getMessage() {
-        return (String) getParameters().get(SmsEventParams.MESSAGE);
+        return (String) getParameters().get(SmsEventParamsConstants.MESSAGE);
     }
 
     public Date getDeliveryTime() {
-        return (Date) getParameters().get(SmsEventParams.DELIVERY_TIME);
+        return (Date) getParameters().get(SmsEventParamsConstants.DELIVERY_TIME);
     }
 
     public Map<String, String> convertProperties() {
         Map<String, String> result = new HashMap<>();
 
         for (String key : getParameters().keySet()) {
-            if (SmsEventParams.CUSTOM_PARAMS.equals(key)) {
+            if (SmsEventParamsConstants.CUSTOM_PARAMS.equals(key)) {
                 result.put(key, Joiner.on(CUSTOM_PARAMS_DELIMITER)
                         .withKeyValueSeparator(CUSTOM_PARAMS_KEY_VALUE_SEPARATOR)
                         .join(getCustomParams()));
-            } else if (SmsEventParams.RECIPIENTS.equals(key)) {
+            } else if (SmsEventParamsConstants.RECIPIENTS.equals(key)) {
                 List<String> recipients = getRecipients();
                 result.put(key, String.join(RECIPIENTS_DELIMITER, recipients));
             } else if (getParameters().get(key) instanceof Date) {
@@ -117,17 +117,17 @@ public class SmsEvent {
         Map<String, Object> result = new HashMap<>();
 
         for (String key : properties.keySet()) {
-            if (SmsEventParams.CUSTOM_PARAMS.equals(key)) {
+            if (SmsEventParamsConstants.CUSTOM_PARAMS.equals(key)) {
                 result.put(key, Splitter.on(CUSTOM_PARAMS_DELIMITER)
                         .withKeyValueSeparator(CUSTOM_PARAMS_KEY_VALUE_SEPARATOR)
-                        .split(properties.get(SmsEventParams.CUSTOM_PARAMS)));
-            } else if (SmsEventParams.RECIPIENTS.equals(key)) {
-                String recipients = properties.get(SmsEventParams.RECIPIENTS);
+                        .split(properties.get(SmsEventParamsConstants.CUSTOM_PARAMS)));
+            } else if (SmsEventParamsConstants.RECIPIENTS.equals(key)) {
+                String recipients = properties.get(SmsEventParamsConstants.RECIPIENTS);
                 result.put(key, Arrays.asList(recipients.split(RECIPIENTS_DELIMITER)));
-            } else if (SmsEventParams.DELIVERY_TIME.equals(key)) {
-                result.put(key, DateUtil.parse(properties.get(SmsEventParams.DELIVERY_TIME)));
-            } else if (SmsEventParams.FAILURE_COUNT.equals(key)) {
-                result.put(key, Integer.valueOf(properties.get(SmsEventParams.FAILURE_COUNT)));
+            } else if (SmsEventParamsConstants.DELIVERY_TIME.equals(key)) {
+                result.put(key, DateUtil.parse(properties.get(SmsEventParamsConstants.DELIVERY_TIME)));
+            } else if (SmsEventParamsConstants.FAILURE_COUNT.equals(key)) {
+                result.put(key, Integer.valueOf(properties.get(SmsEventParamsConstants.FAILURE_COUNT)));
             } else {
                 result.put(key, properties.get(key));
             }
