@@ -1,6 +1,6 @@
 package org.openmrs.module.sms.api.util;
 
-import org.openmrs.module.sms.api.audit.constants.DeliveryStatuses;
+import org.openmrs.module.sms.api.audit.constants.DeliveryStatusesConstants;
 import org.openmrs.module.sms.api.templates.Template;
 
 import java.util.HashMap;
@@ -63,6 +63,6 @@ public class IncomingMessageAccessor {
     return template.getStatus().hasStatusKey()
             && providerData.containsKey(template.getStatus().getStatusKey())
         ? providerData.get(template.getStatus().getStatusKey())
-        : DeliveryStatuses.RECEIVED;
+        : DeliveryStatusesConstants.RECEIVED;
   }
 }

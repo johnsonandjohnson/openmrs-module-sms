@@ -6,19 +6,21 @@ import org.openmrs.BaseOpenmrsData;
 
 public abstract class AbstractBaseOpenmrsData extends BaseOpenmrsData {
 
-    private static final String ID_FIELD_NAME = "id";
+  private static final long serialVersionUID = -2626463306839051522L;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+  private static final String ID_FIELD_NAME = "id";
 
-        return EqualsBuilder.reflectionEquals(this, o, ID_FIELD_NAME);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
 
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this, ID_FIELD_NAME);
-    }
+    return EqualsBuilder.reflectionEquals(this, o, ID_FIELD_NAME);
+  }
+
+  @Override
+  public int hashCode() {
+    return HashCodeBuilder.reflectionHashCode(this, ID_FIELD_NAME);
+  }
 }

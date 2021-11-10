@@ -5,7 +5,6 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.exception.VelocityException;
 import org.openmrs.api.APIException;
-import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.service.AutomaticResponseEvaluatorService;
 import org.openmrs.module.sms.api.util.AutomaticResponseEvaluationMessageContext;
 import org.openmrs.module.sms.api.util.VelocityContextFactory;

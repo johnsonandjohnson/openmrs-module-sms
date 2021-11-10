@@ -1,6 +1,6 @@
 package org.openmrs.module.sms.api.util;
 
-public final class Constants {
+public final class SMSConstants {
 
   public static final String VIEW_SMS_LOGS_PERMISSION = "viewSMSLogs";
 
@@ -82,5 +82,5 @@ public final class Constants {
 
   public static final String GP_SMS_VELOCITY_CONTEXT_SERVICE_MAP_DEFAULT_VALUE = "";
 
-  private Constants() {}
+  private SMSConstants() {}
 }

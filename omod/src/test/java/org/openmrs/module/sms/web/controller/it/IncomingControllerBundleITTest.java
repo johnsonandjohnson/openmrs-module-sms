@@ -1,6 +1,5 @@
 package org.openmrs.module.sms.web.controller.it;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,9 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,95 +27,95 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Verify IncomingController present & functional.
- */
+/** Verify IncomingController present & functional. */
 @WebAppConfiguration
 public class IncomingControllerBundleITTest extends BaseModuleWebContextSensitiveTest {
 
-    private static final String CONFIG_NAME = "sample-it-config";
+  private static final String CONFIG_NAME = "sample-it-config";
 
-    private static final String MISSING_CONFIG_NAME = "missing-config";
+  private static final String MISSING_CONFIG_NAME = "missing-config";
 
-    private static final String TEMPLATE_NAME = "Plivo";
+  private static final String TEMPLATE_NAME = "Plivo";
 
+  @Autowired
+  @Qualifier("sms.configService")
+  private ConfigService configService;
 
-    @Autowired
-    @Qualifier("sms.configService")
-    private ConfigService configService;
+  @Autowired
+  @Qualifier("sms.SmsService")
+  private SmsService smsService;
 
-    @Autowired
-    @Qualifier("sms.SmsService")
-    private SmsService smsService;
+  @Autowired
+  @Qualifier("templateService")
+  private TemplateService templateService;
 
-    @Autowired
-    @Qualifier("templateService")
-    private TemplateService templateService;
+  @Autowired private WebApplicationContext webApplicationContext;
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+  private MockMvc mockMvc;
 
-    private MockMvc mockMvc;
+  private Configs backupConfigs;
 
-    private Configs backupConfigs;
+  @Before
+  public void setUp() {
+    mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+  }
 
-    @Before
-    public void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }
+  @Before
+  public void createConfigs() {
+    templateService.loadTemplates();
+    backupConfigs = configService.getConfigs();
+    Config config = new Config();
+    config.setName(CONFIG_NAME);
+    config.setTemplateName(TEMPLATE_NAME);
 
-    @Before
-    public void createConfigs() {
-        templateService.loadTemplates();
-        backupConfigs = configService.getConfigs();
-        Config config = new Config();
-        config.setName(CONFIG_NAME);
-        config.setTemplateName(TEMPLATE_NAME);
+    Configs configs = new Configs();
+    configs.setConfigList(singletonList(config));
+    configs.setDefaultConfigName(CONFIG_NAME);
 
-        Configs configs = new Configs();
-        configs.setConfigs(singletonList(config));
-        configs.setDefaultConfigName(CONFIG_NAME);
+    configService.updateConfigs(configs);
+  }
 
-        configService.updateConfigs(configs);
-    }
+  @After
+  public void cleanUpDatabase() throws Exception {
+    this.deleteAllData();
+  }
 
-    @After
-    public void cleanUpDatabase() throws Exception {
-        this.deleteAllData();
-    }
+  @After
+  public void restoreConfigs() {
+    configService.updateConfigs(backupConfigs);
+  }
 
-    @After
-    public void restoreConfigs() {
-        configService.updateConfigs(backupConfigs);
-    }
+  @Test
+  public void verifyControllerFunctional() {
+    assertNotNull(smsService);
+  }
 
-    @Test
-    public void verifyControllerFunctional() {
-        assertNotNull(smsService);
-    }
-
-    @Test
-    public void handleIncomingControllerFunctionalMissingConfig() throws Exception {
-        mockMvc.perform(post(String.format("/sms/incoming/%s", MISSING_CONFIG_NAME))
+  @Test
+  public void handleIncomingControllerFunctionalMissingConfig() throws Exception {
+    mockMvc
+        .perform(
+            post(String.format("/sms/incoming/%s", MISSING_CONFIG_NAME))
                 .contentType(TestUtil.APPLICATION_JSON)
                 .content(TestUtil.encodeString()))
-                .andExpect(status().is(HttpStatus.OK.value()))
-                .andExpect(content().string(""));
-    }
+        .andExpect(status().is(HttpStatus.OK.value()))
+        .andExpect(content().string(""));
+  }
 
-    @Test
-    public void handleIncomingControllerFunctionalExistsConfig() throws Exception {
-        prepareTemplate();
+  @Test
+  public void handleIncomingControllerFunctionalExistsConfig() throws Exception {
+    prepareTemplate();
 
-        mockMvc.perform(post(String.format("/sms/incoming/%s", CONFIG_NAME))
+    mockMvc
+        .perform(
+            post(String.format("/sms/incoming/%s", CONFIG_NAME))
                 .param("From", "testSender")
                 .contentType(MediaType.parseMediaType(TestUtil.APPLICATION_JSON))
                 .content(TestUtil.encodeString()))
-                .andExpect(status().is(HttpStatus.OK.value()));
-    }
+        .andExpect(status().is(HttpStatus.OK.value()));
+  }
 
-    private void prepareTemplate() {
-        Template template = templateService.getTemplate(TEMPLATE_NAME);
-        template.getIncoming().setSenderRegex("(.*)");
-    }
+  private void prepareTemplate() {
+    Template template = templateService.getTemplate(TEMPLATE_NAME);
+    template.getIncoming().setSenderRegex("(.*)");
+  }
 }

@@ -78,7 +78,7 @@ public class VelocityContextFactory {
   private static Map<String, String> getServiceMap() {
     final String parameterValue =
         Context.getAdministrationService()
-            .getGlobalProperty(Constants.GP_SMS_VELOCITY_CONTEXT_SERVICE_MAP);
+            .getGlobalProperty(SMSConstants.GP_SMS_VELOCITY_CONTEXT_SERVICE_MAP);
 
     if (StringUtils.isBlank(parameterValue)) {
       return Collections.emptyMap();
