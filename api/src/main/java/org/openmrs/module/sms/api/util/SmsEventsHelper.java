@@ -37,7 +37,7 @@ public final class SmsEventsHelper {
       Integer failureCount,
       String providerStatus,
       Date timestamp,
-      Map<String, String> customParams) {
+      Map<String, Object> customParams) {
     Map<String, Object> params = new HashMap<>();
     params.put(SmsEventParamsConstants.CONFIG, config);
     params.put(SmsEventParamsConstants.RECIPIENTS, recipients);

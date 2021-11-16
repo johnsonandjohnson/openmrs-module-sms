@@ -4,6 +4,8 @@ package org.openmrs.module.sms.api.templates;
 // useful way for implementers?
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.net.HttpURLConnection;
 import java.util.regex.Matcher;
@@ -23,47 +25,46 @@ public class Response {
       "Invalid number of search groups, expected: 1, actual: %s.";
 
   /** Whether recipients are provided in multiple lines. */
-  private Boolean multiLineRecipientResponse = false;
+  @JsonProperty private Boolean multiLineRecipientResponse = false;
 
   /** Whether the provider has a different type of response for single recipient messages. */
-  private Boolean singleRecipientResponse = false;
+  @JsonProperty private Boolean singleRecipientResponse = false;
 
   /** The success status expected. */
-  private String successStatus;
+  @JsonProperty private String successStatus;
 
   /** If not empty, indicates that the provider sends responses for successful requests. */
-  private String successResponse;
+  @JsonProperty private String successResponse;
 
   /** The regex pattern that can be used for extracting ID from single success messages. */
-  private String extractSingleSuccessMessageId;
+  @JsonProperty private String extractSingleSuccessMessageId;
 
   /** The regex pattern that can be used for extracting single failure messages. */
-  private String extractSingleFailureMessage;
+  @JsonProperty private String extractSingleFailureMessage;
 
   /** The regex pattern used for extracting the general failure message. */
-  private String extractGeneralFailureMessage;
+  @JsonProperty private String extractGeneralFailureMessage;
 
   /** The regex pattern used for extracting the success message ID and its recipient. */
-  private String extractSuccessMessageIdAndRecipient;
+  @JsonProperty private String extractSuccessMessageIdAndRecipient;
 
   /** The regex pattern used for extracting the failure message and its recipient. */
-  private String extractFailureMessageAndRecipient;
+  @JsonProperty private String extractFailureMessageAndRecipient;
 
   /** The regex pattern used for extracting the raw provider status. Optional. */
-  private String extractProviderStatus;
+  @JsonProperty private String extractProviderStatus;
 
   /** The name of the HTTP header containing the message ID. */
-  private String headerMessageId;
+  @JsonProperty private String headerMessageId;
 
   // These patterns are compiled from the strings above, when needed
-
-  private Pattern successResponsePattern;
-  private Pattern extractSingleSuccessMessageIdPattern;
-  private Pattern extractSingleFailureMessagePattern;
-  private Pattern extractGeneralFailureMessagePattern;
-  private Pattern extractSuccessMessageIdAndRecipientPattern;
-  private Pattern extractFailureMessageAndRecipientPattern;
-  private Pattern extractProviderStatusPattern;
+  @JsonIgnore private Pattern successResponsePattern;
+  @JsonIgnore private Pattern extractSingleSuccessMessageIdPattern;
+  @JsonIgnore private Pattern extractSingleFailureMessagePattern;
+  @JsonIgnore private Pattern extractGeneralFailureMessagePattern;
+  @JsonIgnore private Pattern extractSuccessMessageIdAndRecipientPattern;
+  @JsonIgnore private Pattern extractFailureMessageAndRecipientPattern;
+  @JsonIgnore private Pattern extractProviderStatusPattern;
 
   /**
    * Checks whether the given status is a success status.

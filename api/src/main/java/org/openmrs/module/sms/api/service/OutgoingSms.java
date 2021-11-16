@@ -3,12 +3,12 @@ package org.openmrs.module.sms.api.service;
 import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.util.SmsEventParamsConstants;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static java.util.Collections.singletonList;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 /** Represents an outgoing SMS */
@@ -29,7 +29,7 @@ public class OutgoingSms {
   /** Internal failure counter */
   private Integer failureCount = 0;
   /** Map of custom parameters */
-  private Map<String, String> customParams;
+  private Map<String, Object> customParams;
 
   /** Constructs a new instance without setting any fields. */
   public OutgoingSms() {}
@@ -77,7 +77,7 @@ public class OutgoingSms {
    * @param deliveryTime the expected delivery time of the sms
    */
   public OutgoingSms(String config, String recipient, String message, Date deliveryTime) {
-    this(config, Collections.singletonList(recipient), message, deliveryTime);
+    this(config, singletonList(recipient), message, deliveryTime);
   }
 
   /**
@@ -94,7 +94,14 @@ public class OutgoingSms {
   }
 
   public OutgoingSms(String config, String recipient, String message) {
-    this(config, Collections.singletonList(recipient), message);
+    this(config, singletonList(recipient), message);
+  }
+
+  public OutgoingSms(String config, String recipient, String message, Map<String, Object> customParams) {
+    this.config = config;
+    this.message = message;
+    this.recipients = singletonList(recipient);
+    this.customParams = customParams;
   }
 
   /**
@@ -118,7 +125,7 @@ public class OutgoingSms {
    * @param deliveryTime the expected delivery time of the sms
    */
   public OutgoingSms(String recipient, String message, Date deliveryTime) {
-    this(Collections.singletonList(recipient), message, deliveryTime);
+    this(singletonList(recipient), message, deliveryTime);
   }
 
   /**
@@ -139,7 +146,7 @@ public class OutgoingSms {
    * @param message the message to send
    */
   public OutgoingSms(String recipient, String message) {
-    this(Collections.singletonList(recipient), message);
+    this(singletonList(recipient), message);
   }
 
   /**
@@ -283,12 +290,12 @@ public class OutgoingSms {
   }
 
   /** @return map of custom parameters for the template */
-  public Map<String, String> getCustomParams() {
+  public Map<String, Object> getCustomParams() {
     return customParams;
   }
 
   /** @param customParams map of custom parameters for the template */
-  public void setCustomParams(Map<String, String> customParams) {
+  public void setCustomParams(Map<String, Object> customParams) {
     this.customParams = customParams;
   }
 

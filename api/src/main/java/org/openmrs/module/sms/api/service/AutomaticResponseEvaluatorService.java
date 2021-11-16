@@ -1,5 +1,6 @@
 package org.openmrs.module.sms.api.service;
 
+import org.openmrs.module.sms.api.data.AutomaticResponseData;
 import org.openmrs.module.sms.api.util.AutomaticResponseEvaluationMessageContext;
 
 import java.util.Optional;
@@ -11,5 +12,5 @@ import java.util.Optional;
  * sender of a message received by system.
  */
 public interface AutomaticResponseEvaluatorService {
-  Optional<String> evaluate(AutomaticResponseEvaluationMessageContext messageContext);
+  Optional<AutomaticResponseData> evaluate(AutomaticResponseEvaluationMessageContext messageContext);
 }

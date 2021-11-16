@@ -4,7 +4,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.exception.VelocityException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.api.APIException;
+import org.openmrs.module.sms.api.data.AutomaticResponseData;
 import org.openmrs.module.sms.api.service.AutomaticResponseEvaluatorService;
 import org.openmrs.module.sms.api.util.AutomaticResponseEvaluationMessageContext;
 import org.openmrs.module.sms.api.util.VelocityContextFactory;
@@ -18,19 +20,25 @@ import static java.text.MessageFormat.format;
 /**
  * The VelocityAutomaticResponseEvaluatorService Class.
  *
- * <p>The implementation of AutomaticResponseEvaluatorService which resolves {@link
- * Config#getAutomaticResponseScript()} as Apache Velocity Template which creates the text of the
+ * <p>The implementation of AutomaticResponseEvaluatorService which resolves
+ * Config#getAutomaticResponseScript() as Apache Velocity Template which creates the text of the
  * automatic response.
  */
 public class VelocityAutomaticResponseEvaluatorService
     implements AutomaticResponseEvaluatorService {
 
   @Override
-  public Optional<String> evaluate(AutomaticResponseEvaluationMessageContext messageContext) {
+  public Optional<AutomaticResponseData> evaluate(
+      AutomaticResponseEvaluationMessageContext messageContext) {
     if (messageContext.getConfig().getAutomaticResponseScript() == null) {
       return Optional.empty();
     }
 
+    final String scriptResultRaw = executeScript(messageContext);
+    return parseResponse(scriptResultRaw, messageContext);
+  }
+
+  private String executeScript(AutomaticResponseEvaluationMessageContext messageContext) {
     final VelocityContext velocityContext = VelocityContextFactory.createDefaultContext();
     velocityContext.put("messageContext", messageContext);
 
@@ -59,7 +67,26 @@ public class VelocityAutomaticResponseEvaluatorService
           e);
     }
 
-    final String message = writer.toString();
-    return StringUtils.isBlank(message) ? Optional.empty() : Optional.of(message);
+    return writer.toString();
+  }
+
+  private Optional<AutomaticResponseData> parseResponse(
+      String scriptResultRaw, AutomaticResponseEvaluationMessageContext messageContext) {
+    if (StringUtils.isBlank(scriptResultRaw)) {
+      return Optional.empty();
+    }
+
+    try {
+      final ObjectMapper objectMapper = new ObjectMapper();
+      final AutomaticResponseData response =
+          objectMapper.readValue(scriptResultRaw, AutomaticResponseData.class);
+      return Optional.of(response);
+    } catch (IOException ioe) {
+      throw new APIException(
+          format(
+              "Failed to read result of Velocity Template for automatic response configured by: {0}",
+              messageContext.getConfig().getName()),
+          ioe);
+    }
   }
 }

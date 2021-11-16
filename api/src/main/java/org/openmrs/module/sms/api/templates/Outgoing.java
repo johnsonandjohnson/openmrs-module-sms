@@ -1,5 +1,7 @@
 package org.openmrs.module.sms.api.templates;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.sms.api.util.SMSConstants;
 
@@ -7,49 +9,49 @@ import org.openmrs.module.sms.api.util.SMSConstants;
 public class Outgoing {
 
   /** The {@link Request} object used for generating an outgoing SMS request. */
-  private Request request;
+  @JsonProperty private Request request;
 
   /** The {@link Response} object used for dealing with the provider response. */
-  private Response response;
+  @JsonProperty private Response response;
 
   /** True if the provider requires authentication. */
-  private Boolean hasAuthentication;
+  @JsonProperty private Boolean hasAuthentication;
 
   /** Whether we should back off exponentially between retries. Not used currently. */
-  private Boolean exponentialBackOffRetries;
+  @JsonProperty private Boolean exponentialBackOffRetries;
 
   /**
    * The minimal number of milliseconds which we should wait between sending messages to the
    * provider, prevents issues with sending too many requests per second.
    */
-  private Integer millisecondsBetweenMessages;
+  @JsonProperty private Integer millisecondsBetweenMessages;
 
   /** The maximum size of an SMS message. */
-  private Integer maxSmsSize;
+  @JsonProperty private Integer maxSmsSize;
 
   /** The maximum number of recipients. */
-  private Integer maxRecipient;
+  @JsonProperty private Integer maxRecipient;
 
   /** The separator used to separate recipients for the SMS. */
-  private String recipientSeparator;
+  @JsonProperty private String recipientSeparator;
 
   /**
    * The default minimal number of milliseconds between sending SMS requests to the provider. This
    * values is used millisecondsBetweenMessages is used.
    */
-  private Integer defaultMillisecondsBetweenMessages;
+  @JsonIgnore private Integer defaultMillisecondsBetweenMessages;
 
   /** The default maximum size of an SMS message. Will be used if maxSmsSize is not set. */
-  private Integer defaultMaxSmsSize;
+  @JsonIgnore private Integer defaultMaxSmsSize;
 
   /** The default maximum number of recipients, will be used if maxRecipient is not set. */
-  private Integer defaultMaxRecipient;
+  @JsonIgnore private Integer defaultMaxRecipient;
 
   /**
    * The default separator used for separating recipient of the SMS message, will be used if
    * recipientSeparator is not set.
    */
-  private String defaultRecipientSeparator;
+  @JsonIgnore private String defaultRecipientSeparator;
 
   /** Reads the default values from OpenMRS settings. */
   public void readDefaults() {

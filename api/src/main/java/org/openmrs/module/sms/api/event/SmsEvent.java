@@ -76,8 +76,8 @@ public class SmsEvent {
         return (String) getParameters().get(SmsEventParamsConstants.CONFIG);
     }
 
-    public Map<String, String> getCustomParams() {
-        return (Map<String, String>) getParameters().get(SmsEventParamsConstants.CUSTOM_PARAMS);
+    public Map<String, Object> getCustomParams() {
+        return (Map<String, Object>) getParameters().get(SmsEventParamsConstants.CUSTOM_PARAMS);
     }
 
     public List<String> getRecipients() {

@@ -1,5 +1,6 @@
 package org.openmrs.module.sms.api.handler.impl;
 
+import org.openmrs.module.sms.api.data.AutomaticResponseData;
 import org.openmrs.module.sms.api.handler.IncomingMessageData;
 import org.openmrs.module.sms.api.handler.IncomingMessageHandler;
 import org.openmrs.module.sms.api.service.AutomaticResponseEvaluatorService;
@@ -31,14 +32,17 @@ public class DefaultIncomingMessageHandler implements IncomingMessageHandler {
       return false;
     }
 
-    final Optional<String> automaticResponse =
+    final Optional<AutomaticResponseData> automaticResponse =
         automaticResponseEvaluatorService.evaluate(
             new AutomaticResponseEvaluationMessageContext(message));
 
     if (automaticResponse.isPresent()) {
       final OutgoingSms automaticResponseSms =
           new OutgoingSms(
-              message.getConfig().getName(), message.getSenderPhoneNumber(), automaticResponse.get());
+              message.getConfig().getName(),
+              message.getSenderPhoneNumber(),
+              automaticResponse.get().getMessage(),
+              automaticResponse.get().getCustomParameters());
       smsService.send(automaticResponseSms);
     }
 
