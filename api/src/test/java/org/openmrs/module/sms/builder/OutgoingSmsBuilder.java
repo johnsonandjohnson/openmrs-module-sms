@@ -113,8 +113,8 @@ public class OutgoingSmsBuilder extends AbstractBuilder<OutgoingSms> {
         return this;
     }
 
-    private Map<String, String> buildCustomProps() {
-        HashMap<String, String> props = new HashMap<>();
+    private Map<String, Object> buildCustomProps() {
+        HashMap<String, Object> props = new HashMap<>();
         if (withAuthenticationParams) {
             props.put(USERNAME_PROP, USERNAME);
             props.put(PASSWORD_PROP, PASSWORD);

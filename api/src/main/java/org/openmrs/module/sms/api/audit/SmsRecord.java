@@ -18,6 +18,7 @@ import java.util.Date;
 public class SmsRecord extends AbstractBaseOpenmrsData {
 
   private static final String MEDIUMTEXT = "mediumtext";
+  private static final long serialVersionUID = -2503300803981539221L;
 
   @Id
   @GeneratedValue
