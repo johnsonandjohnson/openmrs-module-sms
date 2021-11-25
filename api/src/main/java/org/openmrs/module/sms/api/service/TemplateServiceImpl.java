@@ -7,6 +7,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.openmrs.api.APIException;
 import org.openmrs.module.sms.api.exception.SmsRuntimeException;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.templates.TemplateForWeb;
@@ -65,10 +67,15 @@ public class TemplateServiceImpl implements TemplateService {
       importTemplate(template);
     }
 
-    Gson gson = new Gson();
-    String jsonText = gson.toJson(customTemplates, new TypeToken<List<Template>>() {}.getType());
-    settingsManagerService.saveRawConfig(
-        SMS_TEMPLATE_CUSTOM_FILE_NAME, new ByteArrayResource(jsonText.getBytes()));
+    ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      String jsonText = objectMapper.writeValueAsString(customTemplates);
+      settingsManagerService.saveRawConfig(
+          SMS_TEMPLATE_CUSTOM_FILE_NAME, new ByteArrayResource(jsonText.getBytes()));
+    } catch (IOException ioe) {
+      LOGGER.error("Failed to save loaded templates", ioe);
+      throw new APIException(ioe);
+    }
   }
 
   @Override

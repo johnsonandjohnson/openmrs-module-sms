@@ -81,7 +81,7 @@ public class SmsHttpService {
     Integer httpStatus = null;
     String httpResponse = null;
     String errorMessage = null;
-    Map<String, String> props = generateProps(sms, template, config);
+    Map<String, Object> props = generateProps(sms, template, config);
     List<SmsEvent> events = new ArrayList<>();
     List<SmsRecord> auditRecords = new ArrayList<>();
 
@@ -186,10 +186,10 @@ public class SmsHttpService {
     throw new IllegalStateException(String.format("Unexpected HTTP method: %s", method.getClass()));
   }
 
-  private void authenticate(Map<String, String> props, Config config) {
+  private void authenticate(Map<String, Object> props, Config config) {
     if (props.containsKey(USERNAME) && props.containsKey(PASSWORD)) {
-      String u = props.get(USERNAME);
-      String p = props.get(PASSWORD);
+      String u = props.get(USERNAME).toString();
+      String p = props.get(PASSWORD).toString();
       commonsHttpClient.getParams().setAuthenticationPreemptive(true);
       commonsHttpClient
           .getState()
@@ -215,10 +215,10 @@ public class SmsHttpService {
     sleep(milliseconds);
   }
 
-  private Map<String, String> generateProps(OutgoingSms sms, Template template, Config config) {
-    Map<String, String> props = new HashMap<>();
+  private Map<String, Object> generateProps(OutgoingSms sms, Template template, Config config) {
+    Map<String, Object> props = new HashMap<>();
     props.put("recipients", template.recipientsAsString(sms.getRecipients()));
-    props.put("message", sms.getMessage());
+    props.put("message", escapeForJson(sms.getMessage()));
     props.put("openMrsId", sms.getOpenMrsId());
     props.put("callback", configService.getServerUrl() + "/ws/sms/status/" + config.getName());
     if (sms.getCustomParams() != null) {
@@ -234,12 +234,16 @@ public class SmsHttpService {
     // UI...
     // ***** WARNING *****
     if (LOGGER.isDebugEnabled()) {
-      for (Map.Entry<String, String> entry : props.entrySet()) {
+      for (Map.Entry<String, Object> entry : props.entrySet()) {
         LOGGER.debug(String.format("PROP %s: %s", entry.getKey(), entry.getValue()));
       }
     }
 
     return props;
+  }
+
+  private String escapeForJson(String text) {
+    return text.replace("\\", "\\\\").replace("\"", "\\\"");
   }
 
   // CHECKSTYLE:OFF: ParameterNumber
@@ -317,7 +321,7 @@ public class SmsHttpService {
     return handler;
   }
 
-  private HttpMethod prepHttpMethod(Template template, Map<String, String> props, Config config) {
+  private HttpMethod prepHttpMethod(Template template, Map<String, Object> props, Config config) {
     HttpMethod method = template.generateRequestFor(props);
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug(printableMethodParams(method));
