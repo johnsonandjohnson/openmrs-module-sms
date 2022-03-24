@@ -25,4 +25,9 @@
 	<!-- Used to handle AnnotationMethodHandlerExceptionResolver (@ExceptionHandler)
 	before default HandlerExceptionResolver implementations registered with DispatcherServlet -->
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver" p:order="1" />
+
+	<bean class="org.openmrs.ui.framework.StandardModuleUiConfiguration">
+		<property name="moduleId" value="${project.parent.artifactId}"/>
+	</bean>
+
 </beans>

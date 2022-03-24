@@ -1,5 +1,10 @@
 package org.openmrs.module.sms.web.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.HttpURLConnection;
 import java.util.Map;
 
 //todo: find a way to report useful information if encountering malformed templates?
@@ -32,6 +38,8 @@ import java.util.Map;
 /**
  * Sends templates to the UI, sends and receives configs to/from the UI.
  */
+@Api(value = "Sends and receives templates/configs to/from the UI",
+        tags = {"REST API to send and receive templates/configs to/from the UI"})
 @Controller
 @RequestMapping(value = "/sms")
 public class SmsSettingsController extends RestController {
@@ -53,6 +61,11 @@ public class SmsSettingsController extends RestController {
      *
      * @return a map of templates, keys are template names
      */
+    @ApiOperation(value = "Returns all the templates for the UI", notes = "Returns all the templates for the UI")
+    @ApiResponses(value = {
+            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "On successful returning all the templates"),
+            @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = "Failure to return all the templates"),
+            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Error in returning all the templates")})
     @RequestMapping(value = "/templates", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, TemplateForWeb> getTemplates() {
@@ -65,9 +78,15 @@ public class SmsSettingsController extends RestController {
      * @param file the file containing the templates
      * @throws IOException if there was a problem reading the file
      */
+    @ApiOperation(value = "Imports templates from the uploaded file", notes = "Imports templates from the uploaded file")
+    @ApiResponses(value = {
+            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "On successful importing templates"),
+            @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = "Failure to import templates"),
+            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Error in importing templates")})
     @RequestMapping(value = "/templates/import", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void importTemplates(@RequestParam(value = "file") MultipartFile file)
+    public void importTemplates(@ApiParam(name = "file", value = "the file containing the templates", required = true)
+            @RequestParam(value = "file") MultipartFile file)
             throws IOException {
         StringWriter writer = new StringWriter();
         IOUtils.copy(file.getInputStream(), writer);
@@ -80,6 +99,11 @@ public class SmsSettingsController extends RestController {
      *
      * @return all configurations in the system
      */
+    @ApiOperation(value = "Retrieves all configurations for the UI", notes = "Retrieves all configurations for the UI")
+    @ApiResponses(value = {
+            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "On successful retrieving all configurations"),
+            @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = "Failure to retrieve all configurations"),
+            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Error in retrieving all configurations")})
     @RequestMapping(value = "/configs", method = RequestMethod.GET)
     @ResponseBody
     public Configs getConfigs() {
@@ -92,10 +116,17 @@ public class SmsSettingsController extends RestController {
      * @param configs all configurations to save
      * @return the newly saved configurations
      */
+    @ApiOperation(value = "Saves the provided configurations, overriding old ones",
+            notes = "Saves the provided configurations, overriding old ones")
+    @ApiResponses(value = {
+            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "On successful saving provided configurations"),
+            @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = "Failure to save provided configurations"),
+            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Error in saving provided configurations")})
     @RequestMapping(value = "/configs", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Configs setConfigs(@RequestBody Configs configs) {
+    public Configs setConfigs(@ApiParam(name = "configs", value = "All configurations to save")
+            @RequestBody Configs configs) {
         validationComponent.validate(configs);
         return smsSettingsService.setConfigs(configs);
     }
@@ -114,6 +145,11 @@ public class SmsSettingsController extends RestController {
         return e.getMessage();
     }
 
+    @ApiOperation(value = "Fetch custom UI settings", notes = "Fetch custom UI settings")
+    @ApiResponses(value = {
+            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "On successful fetching custom UI settings"),
+            @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = "Failure to fetch custom UI settings"),
+            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Error in fetching custom UI settings")})
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/mds-databrowser-config", method = RequestMethod.GET)
     @ResponseBody

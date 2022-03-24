@@ -1,5 +1,10 @@
 package org.openmrs.module.sms.web.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.audit.SmsAuditService;
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +38,7 @@ import java.util.Map;
 import static org.openmrs.module.sms.api.audit.SmsDirection.INBOUND;
 
 /** Handles events triggered from whatApp {server}/openmrs/ws/whatsapp/{Config} */
+@Api(value = "Handles events triggered from whatApp", tags = {"REST API to handle events triggered from whatApp"})
 @Controller
 @RequestMapping(value = "/whatsapp")
 public class WhatsAppController extends RestController {
@@ -55,10 +62,18 @@ public class WhatsAppController extends RestController {
     this.incomingMessageService = incomingMessageService;
   }
 
+  @ApiOperation(value = "Handles events triggered from whatApp", notes = "Handles events triggered from whatApp")
+  @ApiResponses(value = {
+          @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "On successful handling events triggered from whatApp"),
+          @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = "Failure to handle events triggered from whatApp"),
+          @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Error in handling events triggered from whatApp")})
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   @RequestMapping(value = "/{configName}", method = RequestMethod.POST)
-  public void handle(@PathVariable String configName, @RequestBody Map<String, Object> bodyParam) {
+  public void handle(@ApiParam(name = "configName", value = "The name of the configuration")
+          @PathVariable String configName,
+                     @ApiParam(name = "bodyParam", value = "The request body param")
+                     @RequestBody Map<String, Object> bodyParam) {
     LOGGER.info(
         String.format("whatsapp  event - configName = %s, bodyParam = %s", configName, bodyParam));
 

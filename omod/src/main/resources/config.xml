@@ -21,7 +21,13 @@
 
     <require_modules>
         <require_module version="${eventVersion}">org.openmrs.event</require_module>
+        <require_module version="${uiframeworkVersion}">org.openmrs.module.uiframework</require_module>
     </require_modules>
+
+    <extension>
+        <point>org.openmrs.admin.list</point>
+        <class>org.openmrs.module.sms.extension.html.AdminList</class>
+    </extension>
 
     <aware_of_modules>
         <aware_of_module>org.openmrs.module.legacyui</aware_of_module>
