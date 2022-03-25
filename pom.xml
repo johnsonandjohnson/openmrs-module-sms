@@ -51,7 +51,7 @@
         <surefireVersion>2.17</surefireVersion>
         <metadatasharingVersion>1.6.0</metadatasharingVersion>
         <uiframeworkVersion>3.4</uiframeworkVersion>
-        <swaggerCore.version>1.6.2</swaggerCore.version>
+        <swaggerCoreVersion>1.6.2</swaggerCoreVersion>
     </properties>
 
     <dependencyManagement>
@@ -119,12 +119,19 @@
                 <version>${metadatasharingVersion}</version>
                 <scope>provided</scope>
             </dependency>
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>uiframework-api</artifactId>
+                <version>${uiframeworkVersion}</version>
+                <type>jar</type>
+                <scope>provided</scope>
+            </dependency>
             <!-- Swagger dependencies-->
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-core</artifactId>
                 <scope>provided</scope>
-                <version>${swaggerCore.version}</version>
+                <version>${swaggerCoreVersion}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>javax.ws.rs</groupId>
