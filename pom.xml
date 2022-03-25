@@ -50,6 +50,8 @@
         <jacocoVersion>0.8.2</jacocoVersion>
         <surefireVersion>2.17</surefireVersion>
         <metadatasharingVersion>1.6.0</metadatasharingVersion>
+        <uiframeworkVersion>3.4</uiframeworkVersion>
+        <swaggerCoreVersion>1.6.2</swaggerCoreVersion>
     </properties>
 
     <dependencyManagement>
@@ -116,6 +118,34 @@
                 <artifactId>metadatasharing-api</artifactId>
                 <version>${metadatasharingVersion}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>uiframework-api</artifactId>
+                <version>${uiframeworkVersion}</version>
+                <type>jar</type>
+                <scope>provided</scope>
+            </dependency>
+            <!-- Swagger dependencies-->
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-core</artifactId>
+                <scope>provided</scope>
+                <version>${swaggerCoreVersion}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.ws.rs</groupId>
+                        <artifactId>jsr311-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.validation</groupId>
+                        <artifactId>validation-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>

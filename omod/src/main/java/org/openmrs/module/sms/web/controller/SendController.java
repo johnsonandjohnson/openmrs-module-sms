@@ -1,5 +1,10 @@
 package org.openmrs.module.sms.web.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.service.OutgoingSms;
@@ -16,10 +21,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 /**
  * handles requests to {server}/openmrs/ws/sms/send: how the Send SMS dialog sends a message
  */
+@Api(value = "Outgoing requests", tags = {"REST API to handle outgoing requests"})
 @Controller
 @RequestMapping(value = "/sms")
 public class SendController extends RestController {
@@ -37,10 +44,17 @@ public class SendController extends RestController {
      * @return a message describing that the SMS was sent
      * @see OutgoingSms
      */
+    @ApiOperation(value = "Sends an outgoing SMS", notes = "Sends an outgoing SMS")
+    @ApiResponses(value = {
+            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "On successful sending an outgoing SMS"),
+            @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = "Failure to send an outgoing SMS"),
+            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Error in an outgoing SMS"),
+            @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = "There are no SMS configs on this server")})
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String sendSms(@RequestBody OutgoingSms outgoingSms) {
+    public String sendSms(@ApiParam(name = "outgoingSms", value = "The definition of the SMS to send")
+            @RequestBody OutgoingSms outgoingSms) {
         smsService.send(outgoingSms);
         return String.format("SMS to %s using the %s config was added to the message queue.",
                 outgoingSms.getRecipients().toString(), outgoingSms.getConfig());

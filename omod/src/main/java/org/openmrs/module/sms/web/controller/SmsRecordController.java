@@ -1,5 +1,10 @@
 package org.openmrs.module.sms.web.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.audit.SmsAuditService;
@@ -18,7 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
+@Api(value = "Fetch SMS records", tags = {"REST API to fetch SMS records"})
 @Controller
 @RequestMapping(value = "/sms")
 public class SmsRecordController extends RestController {
@@ -29,10 +36,16 @@ public class SmsRecordController extends RestController {
     @Qualifier("sms.SmsAuditService")
     private SmsAuditService smsAuditService;
 
+    @ApiOperation(value = "Fetch SMS records", notes = "Fetch SMS records")
+    @ApiResponses(value = {
+            @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "On successful fetching SMS records"),
+            @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = "Failure to fetch SMS records"),
+            @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Error while fetching SMS records")})
     @RequestMapping(value = "/log", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public SmsRecordsPageable getAll(GridSettings gridSettings) {
+    public SmsRecordsPageable getAll(@ApiParam(name = "gridSettings", value = "Models the audit log filter settings UI")
+            GridSettings gridSettings) {
         PagingInfo page = gridSettings.toPageInfo();
         SmsRecordSearchCriteria searchCriteria = gridSettings.toSmsRecordSearchCriteria();
         return new SmsRecordsPageable(page, smsAuditService.findPageableByCriteria(page, searchCriteria));

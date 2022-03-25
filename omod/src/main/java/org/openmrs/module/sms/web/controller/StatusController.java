@@ -1,5 +1,10 @@
 package org.openmrs.module.sms.web.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.audit.SmsAuditService;
@@ -20,12 +25,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.net.HttpURLConnection;
 import java.util.Map;
 
 /**
  * Handles message delivery status updates sent by sms providers to
  * {server}/openmrs/ws/sms/status{Config}
  */
+@Api(value = "Handles message delivery status updates sent by SMS providers",
+        tags = {"REST API to handle message delivery status updates sent by SMS providers"})
 @Controller
 @RequestMapping(value = "/sms/status")
 public class StatusController extends RestController {
@@ -53,12 +61,22 @@ public class StatusController extends RestController {
    * @param configName the name of the configuration for the provider that is sending the update
    * @param params params of the request sent by the provider
    */
+  @ApiOperation(
+      value = "Publishing an OpenMRS Event and creating a record in the database",
+      notes = "Publishing an OpenMRS Event and creating a record in the database")
+  @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "On successful publishing an OpenMRS Event"),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = "Failure to publish an OpenMRS Event"),
+        @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Error in publishing an OpenMRS Event")})
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   @RequestMapping(value = "/{configName}", method = RequestMethod.POST)
   public void handle(
+          @ApiParam(name = "configName", value = "The name of the configuration for the provider that is sending the update")
       @PathVariable String configName,
+          @ApiParam(name = "params", value = "Params of the request sent by the provider")
       @RequestParam Map<String, String> params,
+          @ApiParam(name = "bodyParam", value = "The request body param")
       @RequestBody Map<String, Object> bodyParam) {
     LOGGER.info(
         String.format(

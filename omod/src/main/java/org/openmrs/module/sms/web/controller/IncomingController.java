@@ -1,5 +1,10 @@
 package org.openmrs.module.sms.web.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.audit.SmsAuditService;
@@ -24,12 +29,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.net.HttpURLConnection;
 import java.util.Map;
 
 /**
  * Handles http requests to {server}/openmrs/ws/sms/incoming{Config} sent by sms providers when they
  * receive an SMS
  */
+@Api(value = "Incoming http requests", tags = {"REST API to handle http requests sent by SMS providers"})
 @Controller
 @RequestMapping(value = "/sms/incoming")
 public class IncomingController extends RestController {
@@ -61,11 +68,20 @@ public class IncomingController extends RestController {
    * @param configName the name of the configuration that should handle the SMS
    * @param params the request params coming from the provider
    */
+  @ApiOperation(value = "Handles an incoming SMS notification",
+          notes = "Handles an incoming SMS notificationcoming from the provider")
+  @ApiResponses(value = {
+          @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "On successful handling of an incoming SMS"),
+          @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = "Failure to handle an incoming SMS"),
+          @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Error in an incoming SMS")})
   @ResponseStatus(HttpStatus.OK)
   @RequestMapping(value = "/{configName}", method = RequestMethod.POST)
   public void handleIncoming(
+          @ApiParam(name = "configName", value = "The name of the configuration that should handle the SMS")
       @PathVariable String configName,
+          @ApiParam(name = "params", value = "The request params coming from the provider")
       @RequestParam Map<String, String> params,
+          @ApiParam(name = "bodyParam", value = "The request body params")
       @RequestBody Map<String, Object> bodyParam) {
     LOGGER.info(
         String.format(
