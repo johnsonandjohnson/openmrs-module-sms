@@ -40,9 +40,7 @@ public abstract class BaseOpenmrsDataDao<T extends BaseOpenmrsData> extends Hibe
 
             if (pagingInfo.shouldLoadRecordCount()) {
                 Long count = countRows(paginationCriteria);
-                if (count == null)
-                    count = Long.valueOf(0);
-                pagingInfo.setTotalRecordCount(count);
+                pagingInfo.setTotalRecordCount(count == null ? 0 : count);
                 pagingInfo.setLoadRecordCount(false);
             }
 

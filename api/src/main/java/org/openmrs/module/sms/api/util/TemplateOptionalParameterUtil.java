@@ -61,9 +61,8 @@ public class TemplateOptionalParameterUtil {
       Map<String, Object> contextProperties, String spElExpression) {
     final StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
     evaluationContext.setVariables(contextProperties);
-    return SPEL_EXPRESSION_PARSER
-        .parseExpression(spElExpression)
-        .getValue(evaluationContext, Boolean.class).equals(
-            Boolean.TRUE);
+    return Boolean.TRUE.equals(
+        SPEL_EXPRESSION_PARSER.parseExpression(spElExpression)
+            .getValue(evaluationContext, Boolean.class));
   }
 }
