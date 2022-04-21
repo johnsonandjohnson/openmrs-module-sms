@@ -28,7 +28,7 @@ public class GenericResponseHandler extends ResponseHandler {
 
     String providerStatus = getTemplateOutgoingResponse().extractProviderStatus(response);
 
-    if (!getTemplateOutgoingResponse().hasSuccessResponse()
+    if (getTemplateOutgoingResponse().hasSuccessResponse().equals(Boolean.FALSE)
         || getTemplateOutgoingResponse().checkSuccessResponse(response).equals(Boolean.TRUE)) {
 
       String providerMessageId = extractProviderMessageId(headers, response);

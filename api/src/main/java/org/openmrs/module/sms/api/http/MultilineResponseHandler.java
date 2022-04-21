@@ -17,8 +17,6 @@ import java.util.List;
 /** Deals with multi-line responses, like the ones sent by Clickatell. */
 public class MultilineResponseHandler extends ResponseHandler {
 
-  public static final int INDEX_CONSTANT = 1;
-
   /**
    * Constructs an instance using the provided template and configuration.
    *
@@ -88,7 +86,7 @@ public class MultilineResponseHandler extends ResponseHandler {
                       null));
         } else {
           String failureMessage = messageAndRecipient[0];
-          String recipient = messageAndRecipient[INDEX_CONSTANT];
+          String recipient = messageAndRecipient[1];
           List<String> recipients = Collections.singletonList(recipient);
           getEvents()
               .add(
@@ -120,7 +118,7 @@ public class MultilineResponseHandler extends ResponseHandler {
         }
       } else {
         String messageId = messageIdAndRecipient[0];
-        String recipient = messageIdAndRecipient[INDEX_CONSTANT];
+        String recipient = messageIdAndRecipient[1];
 
         // todo: HIPAA concerns?
         getLogger()

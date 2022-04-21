@@ -185,7 +185,7 @@ public class GridSettings {
 		this.smsDirection = smsDirection;
 	}
 
-	/** @reaturn the OpenMRS ID to search for */
+	/** @return the OpenMRS ID to search for */
 	public String getOpenMrsId() {
 		return openMrsId;
 	}
@@ -218,7 +218,6 @@ public class GridSettings {
 	/**
 	 * Converts these grid settings to a {@link SmsRecordSearchCriteria} object, which
 	 * contains type safe information and should be used for building database criteria.
-	 *
 	 * @return the newly created search crtieria
 	 */
 	public SmsRecordSearchCriteria toSmsRecordSearchCriteria() {
@@ -248,7 +247,6 @@ public class GridSettings {
 	/**
 	 * Converts these grid settings to a {@link PagingInfo} object, which
 	 * contains the paging configuration.
-	 *
 	 * @return the newly created paging information
 	 */
 	public PagingInfo toPageInfo() {

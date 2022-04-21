@@ -20,16 +20,8 @@ public class IncomingMessageServiceImpl extends BaseIncomingMessageService {
     if (isTokenNotSet(incomingMessage) || isHandlersDisabled()) {
       return;
     }
-
-    try {
-      Daemon.runInDaemonThreadAndWait(
-          () -> internalHandleMessage(incomingMessage), getDaemonToken());
-    } catch (Exception e){
-      LOGGER.error(
-         MessageFormat.format(
-              "Failed to handle incoming message, message providerId: {0}. Cause: {1}",
-              incomingMessage.getProviderMessageId(), e.toString()));
-    }
+    Daemon.runInDaemonThreadAndWait(
+        () -> internalHandleMessage(incomingMessage), getDaemonToken());
   }
 
   private boolean isHandlersDisabled() {

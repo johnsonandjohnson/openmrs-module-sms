@@ -19,13 +19,13 @@ public final class IncomingMessageData {
 	private final String providerMessageId;
 
 	IncomingMessageData(
-					boolean receivedForAFistTime,
-					Config config,
-					String senderPhoneNumber,
-					String message,
-					Date receivedAt,
-					String deliveryStatus,
-					String providerMessageId) {
+			boolean receivedForAFistTime,
+			Config config,
+			String senderPhoneNumber,
+			String message,
+			Date receivedAt,
+			String deliveryStatus,
+			String providerMessageId) {
 		this.receivedForAFistTime = receivedForAFistTime;
 		this.config = config;
 		this.senderPhoneNumber = senderPhoneNumber;

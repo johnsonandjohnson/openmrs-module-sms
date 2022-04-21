@@ -44,7 +44,7 @@ public class TemplateServiceImpl implements TemplateService {
 
   @Override
   public Template getTemplate(String name) {
-    if (templates.containsKey(name)) {
+    if (templates.get(name) != null) {
       return templates.get(name);
     }
     throw new IllegalArgumentException(String.format("Unknown template: '%s'.", name));

@@ -79,16 +79,16 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
 	// NO CHECKSTYLE ParameterNumber
 	@SuppressWarnings({"PMD.ExcessiveParameterList"})
 	public SmsRecord(
-					String config,
-					SmsDirection smsDirection,
-					String number,
-					String message,
-					Date timestamp,
-					String deliveryStatus,
-					String providerStatus,
-					String openMrsId,
-					String providerId,
-					String errorMessage) {
+			String config,
+			SmsDirection smsDirection,
+			String number,
+			String message,
+			Date timestamp,
+			String deliveryStatus,
+			String providerStatus,
+			String openMrsId,
+			String providerId,
+			String errorMessage) {
 		this.config = config;
 		this.smsDirection = smsDirection;
 		this.phoneNumber = number;

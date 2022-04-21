@@ -14,10 +14,10 @@ public class Templates {
    * Constructs this collection from the provided templates. The templates will read their default
    * values from the OpenMRS configuration system through the provided settings facade.
    *
-   * @param templateMap the collection of templates from which this object will be built
+   * @param templates the collection of templates from which this object will be built
    */
-  public Templates(List<Template> templateMap) {
-    for (Template template : templateMap) {
+  public Templates(List<Template> templates) {
+    for (Template template : templates) {
       template.readDefaults();
       this.templateMap.put(template.getName(), template);
     }

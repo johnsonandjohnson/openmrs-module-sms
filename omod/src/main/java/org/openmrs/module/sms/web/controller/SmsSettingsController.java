@@ -140,7 +140,7 @@ public class SmsSettingsController extends RestController {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public String handleException(Exception e) throws IOException {
+    public String handleException(Exception e) {
         LOGGER.error("Error in SMS SettingsController", e);
         return e.getMessage();
     }

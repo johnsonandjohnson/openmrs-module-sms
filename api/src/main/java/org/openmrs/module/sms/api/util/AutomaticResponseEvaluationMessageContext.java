@@ -5,8 +5,7 @@ import org.openmrs.module.sms.api.handler.IncomingMessageData;
 
 import java.util.Date;
 
-/**
- * The AutomaticResponseEvaluationContext Class.
+/** The AutomaticResponseEvaluationContext Class.
  * <p>The POJO with information related to the message which caused the Automatic Response.
  */
 public class AutomaticResponseEvaluationMessageContext {
