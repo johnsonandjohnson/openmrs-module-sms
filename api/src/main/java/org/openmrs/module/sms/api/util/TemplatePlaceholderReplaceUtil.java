@@ -15,7 +15,7 @@ import java.util.stream.StreamSupport;
  * <p>Provides utilities to replace tokens in SMS template Json strings.
  */
 public class TemplatePlaceholderReplaceUtil {
-  private static final Pattern FIND_STRING_TOKEN_PATTERN = Pattern.compile("\\[(\\w*)]");
+  private static final Pattern FIND_STRING_TOKEN_PATTERN = Pattern.compile("\\[(\\w+)]");
   private static final Pattern FIND_ARRAY_TOKEN_PATTERN = Pattern.compile("\\[\\((.*)\\)]");
 
   private static final String ARRAY_START = "[";
