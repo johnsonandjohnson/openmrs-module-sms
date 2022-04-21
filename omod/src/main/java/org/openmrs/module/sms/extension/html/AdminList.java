@@ -21,6 +21,7 @@ import java.util.Map;
  */
 public class AdminList extends AdministrationSectionExt {
 
+  private static final String TITLE = "sms.title";
   /**
    * @see org.openmrs.module.web.extension.AdministrationSectionExt#getMediaType()
    */
@@ -33,7 +34,7 @@ public class AdminList extends AdministrationSectionExt {
    * @see org.openmrs.module.web.extension.AdministrationSectionExt#getTitle()
    */
   public String getTitle() {
-    return "sms.title";
+    return TITLE;
   }
 
   /**

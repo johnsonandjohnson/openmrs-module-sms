@@ -15,7 +15,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Filter intended for all /ws/sms calls that allows the user to authenticate via Basic
@@ -72,7 +72,7 @@ public class AuthorizationFilter implements Filter {
         // this is "Basic ${base64encode(username + ":" + password)}"
         try {
             String decoded = new String(Base64.decodeBase64(authorization.replace(BASIC_KEYWORD, "")),
-                    Charset.forName("UTF-8"));
+                    StandardCharsets.UTF_8);
             String[] userAndPass = decoded.split(":");
             Context.authenticate(userAndPass[0], userAndPass[1]);
             if (LOGGER.isDebugEnabled()) {

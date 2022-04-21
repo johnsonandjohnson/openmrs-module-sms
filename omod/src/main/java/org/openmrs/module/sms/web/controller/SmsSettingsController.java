@@ -153,7 +153,7 @@ public class SmsSettingsController extends RestController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/mds-databrowser-config", method = RequestMethod.GET)
     @ResponseBody
-    public String getCustomUISettings() throws IOException {
+    public String getCustomUISettings() {
         return smsSettingsService.getCustomUISettings();
     }
 

@@ -1,21 +1,23 @@
 package org.openmrs.module.sms.api.http;
 
 import org.apache.commons.httpclient.Header;
+import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatusesConstants;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.DateUtil;
+import org.openmrs.module.sms.api.util.SmsEventsHelper;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
-import static org.openmrs.module.sms.api.util.SmsEventsHelper.outboundEvent;
 
 /** Deals with multi-line responses, like the ones sent by Clickatell. */
 public class MultilineResponseHandler extends ResponseHandler {
+
+  public static final int INDEX_CONSTANT = 1;
 
   /**
    * Constructs an instance using the provided template and configuration.
@@ -54,7 +56,7 @@ public class MultilineResponseHandler extends ResponseHandler {
         if (messageAndRecipient == null) {
           getEvents()
               .add(
-                  outboundEvent(
+                   SmsEventsHelper.outboundEvent(
                       getConfig().retryOrAbortSubject(failureCount),
                       getConfig().getName(),
                       sms.getRecipients(),
@@ -75,7 +77,7 @@ public class MultilineResponseHandler extends ResponseHandler {
               .add(
                   new SmsRecord(
                       getConfig().getName(),
-                      OUTBOUND,
+                      SmsDirection.OUTBOUND,
                       sms.getRecipients().toString(),
                       sms.getMessage(),
                       DateUtil.now(),
@@ -86,11 +88,11 @@ public class MultilineResponseHandler extends ResponseHandler {
                       null));
         } else {
           String failureMessage = messageAndRecipient[0];
-          String recipient = messageAndRecipient[1];
+          String recipient = messageAndRecipient[INDEX_CONSTANT];
           List<String> recipients = Collections.singletonList(recipient);
           getEvents()
               .add(
-                  outboundEvent(
+                  SmsEventsHelper.outboundEvent(
                       getConfig().retryOrAbortSubject(failureCount),
                       getConfig().getName(),
                       recipients,
@@ -106,7 +108,7 @@ public class MultilineResponseHandler extends ResponseHandler {
               .add(
                   new SmsRecord(
                       getConfig().getName(),
-                      OUTBOUND,
+                      SmsDirection.OUTBOUND,
                       recipient,
                       sms.getMessage(),
                       DateUtil.now(),
@@ -118,7 +120,7 @@ public class MultilineResponseHandler extends ResponseHandler {
         }
       } else {
         String messageId = messageIdAndRecipient[0];
-        String recipient = messageIdAndRecipient[1];
+        String recipient = messageIdAndRecipient[INDEX_CONSTANT];
 
         // todo: HIPAA concerns?
         getLogger()
@@ -129,7 +131,7 @@ public class MultilineResponseHandler extends ResponseHandler {
             .add(
                 new SmsRecord(
                     getConfig().getName(),
-                    OUTBOUND,
+                    SmsDirection.OUTBOUND,
                     recipient,
                     sms.getMessage(),
                     DateUtil.now(),

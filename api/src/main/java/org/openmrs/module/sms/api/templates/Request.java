@@ -35,7 +35,7 @@ public class Request {
   @JsonProperty private HttpMethodType type;
 
   /** True if the provider expected a json content type. */
-  @JsonProperty private Boolean jsonContentType = false;
+  @JsonProperty private Boolean jsonContentType = Boolean.FALSE;
 
   /** Properties used for building the current processed url path. */
   @JsonIgnore private Map<String, Object> props;

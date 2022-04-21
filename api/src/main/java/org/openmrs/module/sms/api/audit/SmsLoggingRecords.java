@@ -4,31 +4,21 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * SMS record collection for the logging UI
- */
+/** SMS record collection for the logging UI */
 public class SmsLoggingRecords implements Serializable {
 
-    private static final long serialVersionUID = -6205245415683301270L;
+    private static final long serialVersionUID = 6510594252135942241L;
 
-    /**
-     * The page number.
-     */
+    /** The page number. */
     private final Integer page;
 
-    /**
-     * The number of rows per page.
-     */
+    /** The number of rows per page. */
     private final Integer total;
 
-    /**
-     * The total number of records.
-     */
+    /** The total number of records. */
     private final Long records;
 
-    /**
-     * The data to display in the grid.
-     */
+    /** The data to display in the grid. */
     private final List<SmsLoggingRecord> rows;
 
     /**
@@ -52,30 +42,22 @@ public class SmsLoggingRecords implements Serializable {
         this.rows = smsLoggingRecords;
     }
 
-    /**
-     * @return the page number
-     */
+    /** @return the page number */
     public Integer getPage() {
         return page;
     }
 
-    /**
-     * @return the number of rows per page
-     */
+    /** @return the number of rows per page */
     public Integer getTotal() {
         return total;
     }
 
-    /**
-     * @return the total number of records
-     */
+    /** @return the total number of records */
     public Long getRecords() {
         return records;
     }
 
-    /**
-     * @return the data display in the grid
-     */
+    /** @return the data display in the grid */
     public List<SmsLoggingRecord> getRows() {
         return rows;
     }

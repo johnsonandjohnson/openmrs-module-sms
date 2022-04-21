@@ -33,7 +33,7 @@ import java.util.List;
 public class SmsController extends RestController {
 
   /** Logger for this class and subclasses */
-  protected static final Log LOG = LogFactory.getLog(SmsController.class);
+  private static final Log LOG = LogFactory.getLog(SmsController.class);
 
   @Autowired
   @Qualifier("userService")

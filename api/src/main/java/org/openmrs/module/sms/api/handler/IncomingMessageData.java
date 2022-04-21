@@ -7,60 +7,57 @@ import java.util.Date;
 /**
  * The immutable IncomingMessageData Class stores information about single message received by the
  * system.
- *
  * @see IncomingMessageDataBuilder
  */
 public final class IncomingMessageData {
-  private final boolean receivedForAFistTime;
-  private final Config config;
-  private final String senderPhoneNumber;
-  private final String message;
-  private final Date receivedAt;
-  private final String deliveryStatus;
-  private final String providerMessageId;
+	private final boolean receivedForAFistTime;
+	private final Config config;
+	private final String senderPhoneNumber;
+	private final String message;
+	private final Date receivedAt;
+	private final String deliveryStatus;
+	private final String providerMessageId;
 
-  IncomingMessageData(
-      boolean receivedForAFistTime,
-      Config config,
-      String senderPhoneNumber,
-      String message,
-      Date receivedAt,
-      String deliveryStatus,
-      String providerMessageId) {
-    this.receivedForAFistTime = receivedForAFistTime;
-    this.config = config;
-    this.senderPhoneNumber = senderPhoneNumber;
-    this.message = message;
-    this.receivedAt = receivedAt;
-    this.deliveryStatus = deliveryStatus;
-    this.providerMessageId = providerMessageId;
-  }
+	IncomingMessageData(
+					boolean receivedForAFistTime,
+					Config config,
+					String senderPhoneNumber,
+					String message,
+					Date receivedAt,
+					String deliveryStatus,
+					String providerMessageId) {
+		this.receivedForAFistTime = receivedForAFistTime;
+		this.config = config;
+		this.senderPhoneNumber = senderPhoneNumber;
+		this.message = message;
+		this.receivedAt = receivedAt;
+		this.deliveryStatus = deliveryStatus;
+		this.providerMessageId = providerMessageId;
+	}
 
-  public boolean isReceivedForAFistTime() {
-    return receivedForAFistTime;
-  }
+	public boolean isReceivedForAFistTime() {
+		return receivedForAFistTime;
+	}
 
-  public Config getConfig() {
-    return config;
-  }
+	public Config getConfig() {
+		return config;
+	}
 
-  public String getSenderPhoneNumber() {
-    return senderPhoneNumber;
-  }
+	public String getSenderPhoneNumber() {
+		return senderPhoneNumber;
+	}
 
-  public String getMessage() {
-    return message;
-  }
+	public String getMessage() {
+		return message;
+	}
 
-  public Date getReceivedAt() {
-    return receivedAt;
-  }
+	public Date getReceivedAt() { return receivedAt; }
 
-  public String getDeliveryStatus() {
-    return deliveryStatus;
-  }
+	public String getDeliveryStatus() {
+		return deliveryStatus;
+	}
 
-  public String getProviderMessageId() {
-    return providerMessageId;
-  }
+	public String getProviderMessageId() {
+		return providerMessageId;
+	}
 }

@@ -12,6 +12,7 @@ import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.configs.ConfigProp;
@@ -24,6 +25,7 @@ import org.openmrs.module.sms.api.service.TemplateService;
 import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.DateUtil;
+import org.openmrs.module.sms.api.util.SmsEventsHelper;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.core.MediaType;
@@ -32,8 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
-import static org.openmrs.module.sms.api.util.SmsEventsHelper.outboundEvent;
 
 /** This is the main meat - here we talk to the providers using HTTP. */
 public class SmsHttpService {
@@ -173,7 +173,7 @@ public class SmsHttpService {
           }
           sb.append(String.format("%s: %s", param.getName(), param.getValue()));
         }
-        return "POST Parameters: " + sb.toString();
+        return "POST Parameters: " + sb;
       } else if (requestEntity.getClass() == StringRequestEntity.class) {
         // Assume MediaType.APPLICATION_JSON_VALUE
         return "POST JSON: " + ((StringRequestEntity) requestEntity).getContent();
@@ -280,7 +280,7 @@ public class SmsHttpService {
       auditRecords.add(
           new SmsRecord(
               config.getName(),
-              OUTBOUND,
+              SmsDirection.OUTBOUND,
               recipient,
               sms.getMessage(),
               DateUtil.now(),
@@ -291,7 +291,7 @@ public class SmsHttpService {
               errorMessage));
     }
     events.add(
-        outboundEvent(
+            SmsEventsHelper.outboundEvent(
             config.retryOrAbortSubject(failureCount),
             config.getName(),
             sms.getRecipients(),
@@ -308,8 +308,8 @@ public class SmsHttpService {
   private ResponseHandler createResponseHandler(
       Template template, Response templateResponse, Config config, OutgoingSms sms) {
     ResponseHandler handler;
-    if (templateResponse.supportsSingleRecipientResponse()) {
-      if (sms.getRecipients().size() == 1 && templateResponse.supportsSingleRecipientResponse()) {
+    if (templateResponse.supportsSingleRecipientResponse().equals(Boolean.TRUE)) {
+      if (sms.getRecipients().size() == 1) {
         handler = new MultilineSingleResponseHandler(template, config);
       } else {
         handler = new MultilineResponseHandler(template, config);
@@ -327,7 +327,7 @@ public class SmsHttpService {
       LOGGER.debug(printableMethodParams(method));
     }
 
-    if (template.getOutgoing().hasAuthentication()) {
+    if (template.getOutgoing().hasAuthentication().equals(Boolean.TRUE)) {
       authenticate(props, config);
     }
     return method;
@@ -344,19 +344,19 @@ public class SmsHttpService {
     }
   }
 
-  public void setTemplateService(TemplateService templateService) {
+  public synchronized void setTemplateService(TemplateService templateService) {
     this.templateService = templateService;
   }
 
-  public void setSmsEventService(SmsEventService smsEventService) {
+  public synchronized void setSmsEventService(SmsEventService smsEventService) {
     this.smsEventService = smsEventService;
   }
 
-  public void setConfigService(ConfigService configService) {
+  public synchronized void setConfigService(ConfigService configService) {
     this.configService = configService;
   }
 
-  public void setSmsRecordDao(SmsRecordDao smsRecordDao) {
+  public synchronized void setSmsRecordDao(SmsRecordDao smsRecordDao) {
     this.smsRecordDao = smsRecordDao;
   }
 }

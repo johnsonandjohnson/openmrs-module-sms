@@ -1,15 +1,14 @@
 package org.openmrs.module.sms.api.http;
 
 import org.apache.commons.httpclient.Header;
+import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatusesConstants;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.DateUtil;
-
-import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
-import static org.openmrs.module.sms.api.util.SmsEventsHelper.outboundEvent;
+import org.openmrs.module.sms.api.util.SmsEventsHelper;
 
 /** Deals with providers who return a generic response in the body or header */
 public class GenericResponseHandler extends ResponseHandler {
@@ -30,7 +29,7 @@ public class GenericResponseHandler extends ResponseHandler {
     String providerStatus = getTemplateOutgoingResponse().extractProviderStatus(response);
 
     if (!getTemplateOutgoingResponse().hasSuccessResponse()
-        || getTemplateOutgoingResponse().checkSuccessResponse(response)) {
+        || getTemplateOutgoingResponse().checkSuccessResponse(response).equals(Boolean.TRUE)) {
 
       String providerMessageId = extractProviderMessageId(headers, response);
 
@@ -45,7 +44,7 @@ public class GenericResponseHandler extends ResponseHandler {
             .add(
                 new SmsRecord(
                     getConfig().getName(),
-                    OUTBOUND,
+                    SmsDirection.OUTBOUND,
                     recipient,
                     sms.getMessage(),
                     DateUtil.now(),
@@ -64,7 +63,7 @@ public class GenericResponseHandler extends ResponseHandler {
       }
       getEvents()
           .add(
-              outboundEvent(
+                  SmsEventsHelper.outboundEvent(
                   getConfig().retryOrAbortSubject(failureCount),
                   getConfig().getName(),
                   sms.getRecipients(),
@@ -81,7 +80,7 @@ public class GenericResponseHandler extends ResponseHandler {
             .add(
                 new SmsRecord(
                     getConfig().getName(),
-                    OUTBOUND,
+                    SmsDirection.OUTBOUND,
                     recipient,
                     sms.getMessage(),
                     DateUtil.now(),
@@ -110,7 +109,7 @@ public class GenericResponseHandler extends ResponseHandler {
                 getTemplateOutgoingResponse().getHeaderMessageId());
         getLogger().error(message);
       }
-    } else if (getTemplateOutgoingResponse().hasSingleSuccessMessageId()) {
+    } else if (getTemplateOutgoingResponse().hasSingleSuccessMessageId().equals(Boolean.TRUE)) {
       providerMessageId = getTemplateOutgoingResponse().extractSingleSuccessMessageId(response);
     }
 

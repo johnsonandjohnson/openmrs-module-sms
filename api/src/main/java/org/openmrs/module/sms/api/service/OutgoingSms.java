@@ -1,15 +1,10 @@
 package org.openmrs.module.sms.api.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.util.SmsEventParamsConstants;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import static java.util.Collections.singletonList;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import java.util.*;
 
 /** Represents an outgoing SMS */
 public class OutgoingSms {
@@ -77,7 +72,7 @@ public class OutgoingSms {
    * @param deliveryTime the expected delivery time of the sms
    */
   public OutgoingSms(String config, String recipient, String message, Date deliveryTime) {
-    this(config, singletonList(recipient), message, deliveryTime);
+    this(config, Collections.singletonList(recipient), message, deliveryTime);
   }
 
   /**
@@ -94,13 +89,13 @@ public class OutgoingSms {
   }
 
   public OutgoingSms(String config, String recipient, String message) {
-    this(config, singletonList(recipient), message);
+    this(config, Collections.singletonList(recipient), message);
   }
 
   public OutgoingSms(String config, String recipient, String message, Map<String, Object> customParams) {
     this.config = config;
     this.message = message;
-    this.recipients = singletonList(recipient);
+    this.recipients = Collections.singletonList(recipient);
     this.customParams = customParams;
   }
 
@@ -125,7 +120,7 @@ public class OutgoingSms {
    * @param deliveryTime the expected delivery time of the sms
    */
   public OutgoingSms(String recipient, String message, Date deliveryTime) {
-    this(singletonList(recipient), message, deliveryTime);
+    this(Collections.singletonList(recipient), message, deliveryTime);
   }
 
   /**
@@ -146,7 +141,7 @@ public class OutgoingSms {
    * @param message the message to send
    */
   public OutgoingSms(String recipient, String message) {
-    this(singletonList(recipient), message);
+    this(Collections.singletonList(recipient), message);
   }
 
   /**
@@ -166,7 +161,7 @@ public class OutgoingSms {
    *     used
    */
   public Boolean hasConfig() {
-    return isNotBlank(config);
+    return StringUtils.isNotBlank(config);
   }
 
   /**
@@ -258,7 +253,7 @@ public class OutgoingSms {
   }
 
   public Boolean hasOpenMrsId() {
-    return isNotBlank(openMrsId);
+    return StringUtils.isNotBlank(openMrsId);
   }
 
   /**

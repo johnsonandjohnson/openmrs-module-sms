@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiResponses;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.audit.SmsAuditService;
+import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.handler.IncomingMessageDataBuilder;
@@ -30,12 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.openmrs.module.sms.api.audit.SmsDirection.INBOUND;
+import java.util.*;
 
 /** Handles events triggered from whatApp {server}/openmrs/ws/whatsapp/{Config} */
 @Api(value = "Handles events triggered from whatApp", tags = {"REST API to handle events triggered from whatApp"})
@@ -44,6 +40,8 @@ import static org.openmrs.module.sms.api.audit.SmsDirection.INBOUND;
 public class WhatsAppController extends RestController {
 
   private static final Log LOGGER = LogFactory.getLog(WhatsAppController.class);
+  private static final String STATUSES = "statuses";
+  private static final String MESSAGES = "messages";
 
   private SmsAuditService smsAuditService;
   private TemplateService templateService;
@@ -108,7 +106,7 @@ public class WhatsAppController extends RestController {
         final SmsRecord smsRecord =
             new SmsRecord(
                 config.getName(),
-                INBOUND,
+                SmsDirection.INBOUND,
                 messageAccessor.getSender(),
                 messageAccessor.getMessage(),
                 DateUtil.now(),
@@ -134,18 +132,18 @@ public class WhatsAppController extends RestController {
 
   private void buildParams(
       @RequestBody Map<String, Object> bodyParam,
-      List<Map<String, String>> statusList,
-      List<Map<String, String>> incomingMessageList) {
+      Collection<Map<String, String>> statusList,
+      Collection<Map<String, String>> incomingMessageList) {
     for (Map.Entry<String, Object> en : bodyParam.entrySet()) {
-      if (en.getKey().equals("statuses") && en.getValue() instanceof List) {
-        List<Object> objList = (List) en.getValue();
+      if (STATUSES.equals(en.getKey()) && en.getValue() instanceof List) {
+        List<Object> objList = Collections.singletonList(en.getValue());
         for (Object ele : objList) {
           HashMap<String, Object> obj = (HashMap<String, Object>) ele;
           statusList.add(getCombinedParams(null, obj));
         }
       }
-      if (en.getKey().equals("messages") && en.getValue() instanceof List) {
-        List<Object> objList = (List) en.getValue();
+      if (MESSAGES.equals(en.getKey()) && en.getValue() instanceof List) {
+        List<Object> objList = Collections.singletonList(en.getValue());
         for (Object ele : objList) {
           HashMap<String, Object> obj = (HashMap<String, Object>) ele;
           incomingMessageList.add(getCombinedParams(null, obj));

@@ -23,16 +23,11 @@ public abstract class AbstractSmsEventListener implements EventListener {
     @Override
     public void onMessage(Message message) {
         try {
-            Map<String, Object> properties = getProperties(message);
-            Daemon.runInDaemonThread(new Runnable() {
-                @Override
-                public void run() {
-                    handleEvent(properties);
-                }
-            }, daemonToken);
-        } catch (Exception ex) {
+            Map<String, Object> properties = getProperties((MapMessage) message);
+            Daemon.runInDaemonThread(() -> handleEvent(properties), daemonToken);
+        } catch ( JMSException e ) {
             // generic error handling is used to avoid the ActiveMQ retrying mechanism (retry 6 times)
-            LOGGER.error("Error during handling Sms event", ex);
+            LOGGER.error("Error during handling Sms event", e);
         }
     }
 
@@ -48,13 +43,9 @@ public abstract class AbstractSmsEventListener implements EventListener {
         return Context.getRegisteredComponent(beanName, type);
     }
 
-    private Map<String, Object> getProperties(Message message) throws JMSException {
+    private Map<String, Object> getProperties(MapMessage mapMessage) throws JMSException {
+        final Enumeration<String> propertiesKey = (Enumeration<String>) mapMessage.getMapNames();
         Map<String, Object> properties = new HashMap<>();
-
-        // OpenMRS event module uses underneath MapMessage to construct Message. For some reason retrieving properties
-        // from Message interface doesn't work and we have to map object to MapMessage.
-        MapMessage mapMessage = (MapMessage) message;
-        Enumeration<String> propertiesKey = (Enumeration<String>) mapMessage.getMapNames();
 
         while (propertiesKey.hasMoreElements()) {
             String key = propertiesKey.nextElement();

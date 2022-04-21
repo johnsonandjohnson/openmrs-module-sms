@@ -41,7 +41,7 @@ public class Templates {
    * @see TemplateForWeb
    */
   public Map<String, TemplateForWeb> templatesForWeb() {
-    Map<String, TemplateForWeb> ret = new HashMap<>();
+    Map<String, TemplateForWeb> ret = new HashMap<>(templateMap.size());
     for (Map.Entry<String, Template> entry : templateMap.entrySet()) {
       ret.put(entry.getKey(), new TemplateForWeb(entry.getValue()));
     }

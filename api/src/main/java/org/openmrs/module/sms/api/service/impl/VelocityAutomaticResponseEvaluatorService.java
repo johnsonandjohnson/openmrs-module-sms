@@ -13,9 +13,8 @@ import org.openmrs.module.sms.api.util.VelocityContextFactory;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.MessageFormat;
 import java.util.Optional;
-
-import static java.text.MessageFormat.format;
 
 /**
  * The VelocityAutomaticResponseEvaluatorService Class.
@@ -54,16 +53,16 @@ public class VelocityAutomaticResponseEvaluatorService
 
       if (!evaluationResult) {
         throw new APIException(
-            format(
+           MessageFormat.format(
                 "Failed to execute Velocity Template for automatic response configured by: {0}, see logs for further "
                     + "information.",
                 messageContext.getConfig().getName()));
       }
     } catch (IOException | VelocityException e) {
       throw new APIException(
-          format(
+         MessageFormat.format(
               "Failed to execute Velocity Template Template for response configured by: {0}. Cause: {1}",
-              messageContext.getConfig().getName(), e.toString()),
+              messageContext.getConfig().getName(), e),
           e);
     }
 
@@ -83,7 +82,7 @@ public class VelocityAutomaticResponseEvaluatorService
       return Optional.of(response);
     } catch (IOException ioe) {
       throw new APIException(
-          format(
+         MessageFormat.format(
               "Failed to read result of Velocity Template for automatic response configured by: {0}. Cause: {1}",
               messageContext.getConfig().getName(), ioe.toString()),
           ioe);

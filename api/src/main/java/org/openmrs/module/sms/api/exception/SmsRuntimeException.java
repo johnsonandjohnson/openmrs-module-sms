@@ -2,7 +2,7 @@ package org.openmrs.module.sms.api.exception;
 
 public class SmsRuntimeException extends RuntimeException {
 
-    private static final long serialVersionUID = 5343408438923419174L;
+    private static final long serialVersionUID = 4513932642755534409L;
 
     public SmsRuntimeException(Throwable throwable) {
         super(throwable);

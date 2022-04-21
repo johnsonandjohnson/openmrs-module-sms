@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SmsRecordsPageable extends BaseDTO {
 
-    private static final long serialVersionUID = 4554144138502087590L;
+    private static final long serialVersionUID = -2734653856427001890L;
 
     private Integer pageIndex;
 
@@ -64,24 +64,24 @@ public class SmsRecordsPageable extends BaseDTO {
     }
 
     private List<SmsRecordDTO> convertSmsRecordsToDTO(List<SmsRecord> records) {
-        List<SmsRecordDTO> result = new ArrayList<>();
-        for (SmsRecord record : records) {
+        List<SmsRecordDTO> result = new ArrayList<>(records.size());
+        for (SmsRecord smsRecord : records) {
             result.add(new SmsRecordDTOBuilder()
-                    .setId(record.getId())
-                    .setErrorMessage(record.getErrorMessage())
-                    .setProviderStatus(record.getProviderStatus())
-                    .setOpenMrsId(record.getOpenMrsId())
-                    .setProviderId(record.getProviderId())
-                    .setDeliveryStatus(record.getDeliveryStatus())
-                    .setMessageContent(record.getMessageContent())
-                    .setTimestamp(DateUtil.getDateWithLocalTimeZone(record.getTimestamp()))
-                    .setConfig(record.getConfig())
-                    .setSmsDirection(record.getSmsDirection())
-                    .setPhoneNumber(record.getPhoneNumber())
-                    .setModificationDate(DateUtil.getDateWithLocalTimeZone(record.getDateChanged()))
-                    .setCreationDate(DateUtil.getDateWithLocalTimeZone(record.getDateCreated()))
-                    .setModifiedBy(record.getChangedBy())
-                    .setCreator(record.getCreator())
+                    .setId(smsRecord.getId())
+                    .setErrorMessage(smsRecord.getErrorMessage())
+                    .setProviderStatus(smsRecord.getProviderStatus())
+                    .setOpenMrsId(smsRecord.getOpenMrsId())
+                    .setProviderId(smsRecord.getProviderId())
+                    .setDeliveryStatus(smsRecord.getDeliveryStatus())
+                    .setMessageContent(smsRecord.getMessageContent())
+                    .setTimestamp(DateUtil.getDateWithLocalTimeZone(smsRecord.getTimestamp()))
+                    .setConfig(smsRecord.getConfig())
+                    .setSmsDirection(smsRecord.getSmsDirection())
+                    .setPhoneNumber(smsRecord.getPhoneNumber())
+                    .setModificationDate(DateUtil.getDateWithLocalTimeZone(smsRecord.getDateChanged()))
+                    .setCreationDate(DateUtil.getDateWithLocalTimeZone(smsRecord.getDateCreated()))
+                    .setModifiedBy(smsRecord.getChangedBy())
+                    .setCreator(smsRecord.getCreator())
                     .createSmsRecordDTO());
         }
         return result;

@@ -13,7 +13,9 @@ import org.openmrs.module.sms.api.configs.Configs;
 import org.openmrs.module.sms.api.util.SMSConstants;
 import org.springframework.core.io.ByteArrayResource;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /** See {@link org.openmrs.module.sms.api.service.ConfigService} */
@@ -31,9 +33,9 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
       String jsonText = IOUtils.toString(is);
       Gson gson = new Gson();
       configs = gson.fromJson(jsonText, Configs.class);
-    } catch (Exception e) {
+    } catch (IOException ioException) {
       throw new JsonIOException(
-          "Malformed " + SMSConstants.SMS_CONFIGS_FILE_NAME + " file? " + e.toString(), e);
+          "Malformed " + SMSConstants.SMS_CONFIGS_FILE_NAME + " file? " + ioException, ioException);
     }
   }
 
@@ -69,7 +71,7 @@ public class ConfigServiceImpl extends BaseOpenmrsService implements ConfigServi
   public void updateConfigs(Configs configs) {
     Gson gson = new Gson();
     String jsonText = gson.toJson(configs, Configs.class);
-    ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes());
+    ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes(StandardCharsets.UTF_8));
     settingsManagerService.saveRawConfig(SMSConstants.SMS_CONFIGS_FILE_NAME, resource);
     loadConfigs();
   }

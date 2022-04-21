@@ -48,13 +48,8 @@ public class ConfigsValidator implements ConstraintValidator<ValidConfigs, Confi
     List<Config> configList = configs.getConfigList();
     for (int i = 0; i < configList.size(); i++) {
       Config config = configList.get(i);
-      isValid = isNameValid(config, i, configList, ctx) && isValid;
-      isValid = isTemplateValid(config, i, ctx) && isValid;
-      isValid = isMaxRetriesValid(config, i, ctx) && isValid;
-      isValid = isSplitHeaderValid(config, i, ctx) && isValid;
-      isValid = isSplitFooterValid(config, i, ctx) && isValid;
+      isValid = isNameValid(config, i, configList, ctx) && isTemplateValid(config, i, ctx) && isMaxRetriesValid(config, i, ctx) && isSplitHeaderValid(config, i, ctx) && isSplitFooterValid(config, i, ctx);
     }
-
     return isValid;
   }
 

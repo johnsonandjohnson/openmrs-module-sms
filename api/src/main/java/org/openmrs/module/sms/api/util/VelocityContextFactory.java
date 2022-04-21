@@ -22,8 +22,8 @@ import java.util.stream.Stream;
  * <p>The VelocityContextUtil provides utilities to create a VelocityContext for SMS module.
  */
 public class VelocityContextFactory {
-  private static String SERVICE_MAP_ENTRY_DELIMITER = ",";
-  private static String SERVICE_MAP_KEY_VALUE_DELIMITER = ":";
+  private static final String SERVICE_MAP_ENTRY_DELIMITER = ",";
+  private static final String SERVICE_MAP_KEY_VALUE_DELIMITER = ":";
   /** List of classes to add an alias to VelocityContext. */
   private static final List<Class<?>> DEFAULT_CLASSES =
       Arrays.asList(

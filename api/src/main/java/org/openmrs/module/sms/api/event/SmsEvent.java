@@ -116,7 +116,8 @@ public class SmsEvent {
     public static Map<String, Object> convertProperties(Map<String, String> properties) {
         Map<String, Object> result = new HashMap<>();
 
-        for (String key : properties.keySet()) {
+        for (Map.Entry<String, String> map : properties.entrySet()) {
+            String key=map.getKey();
             if (SmsEventParamsConstants.CUSTOM_PARAMS.equals(key)) {
                 result.put(key, Splitter.on(CUSTOM_PARAMS_DELIMITER)
                         .withKeyValueSeparator(CUSTOM_PARAMS_KEY_VALUE_SEPARATOR)

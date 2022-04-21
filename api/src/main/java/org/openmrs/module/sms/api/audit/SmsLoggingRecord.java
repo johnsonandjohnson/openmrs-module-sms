@@ -63,20 +63,20 @@ public class SmsLoggingRecord implements Serializable {
      * Constructs an instance of SmsLoggingRecord from an {@link SmsRecord}. In other words
      * it converts the domain object to the view object.
      *
-     * @param record the domain representation of the record
+     * @param smsRecord the domain representation of the record
      */
-    public SmsLoggingRecord(SmsRecord record) {
-        this.config = record.getConfig();
-        this.phoneNumber = record.getPhoneNumber();
-        this.smsDirection = record.getSmsDirection().toString();
+    public SmsLoggingRecord(SmsRecord smsRecord) {
+        this.config = smsRecord.getConfig();
+        this.phoneNumber = smsRecord.getPhoneNumber();
+        this.smsDirection = smsRecord.getSmsDirection().toString();
         // DateUtil.setTimeZone converts the message time from UTC to local time for display
-        this.timestamp = DateUtil.getDateWithLocalTimeZone(record.getTimestamp());
-        this.deliveryStatus = record.getDeliveryStatus().toString();
-        this.providerStatus = record.getProviderStatus();
-        this.messageContent = record.getMessageContent();
-        this.openMrsId = record.getOpenMrsId();
-        this.providerId = record.getProviderId();
-        this.errorMessage = record.getErrorMessage();
+        this.timestamp = DateUtil.getDateWithLocalTimeZone(smsRecord.getTimestamp());
+        this.deliveryStatus = smsRecord.getDeliveryStatus();
+        this.providerStatus = smsRecord.getProviderStatus();
+        this.messageContent = smsRecord.getMessageContent();
+        this.openMrsId = smsRecord.getOpenMrsId();
+        this.providerId = smsRecord.getProviderId();
+        this.errorMessage = smsRecord.getErrorMessage();
     }
 
     /**

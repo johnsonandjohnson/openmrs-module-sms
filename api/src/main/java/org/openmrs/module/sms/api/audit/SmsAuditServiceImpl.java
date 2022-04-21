@@ -101,11 +101,10 @@ public class SmsAuditServiceImpl extends BaseOpenmrsService implements SmsAuditS
 
     private SmsRecord createSmsRecordBasedOnExistingRecord(SmsRecord existingSmsRecord, String statusString,
                                                            String providerMessageId) {
-        SmsRecord smsRecord = new SmsRecord(existingSmsRecord.getConfig(), existingSmsRecord.getSmsDirection(),
+        return new SmsRecord(existingSmsRecord.getConfig(), existingSmsRecord.getSmsDirection(),
                 existingSmsRecord.getPhoneNumber(), existingSmsRecord.getMessageContent(), DateUtil.now(),
                 existingSmsRecord.getDeliveryStatus(), statusString, existingSmsRecord.getOpenMrsId(),
                 providerMessageId, null);
-        return smsRecord;
     }
 
     private SmsRecords findMatchingSmsRecords(String configName, String providerMessageId) {

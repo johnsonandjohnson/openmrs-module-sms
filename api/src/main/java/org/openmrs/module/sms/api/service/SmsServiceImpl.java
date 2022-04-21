@@ -3,6 +3,7 @@ package org.openmrs.module.sms.api.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatusesConstants;
 import org.openmrs.module.sms.api.configs.Config;
@@ -14,15 +15,13 @@ import org.openmrs.module.sms.api.util.SMSConstants;
 import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.module.sms.api.util.SmsEventParamsConstants;
 import org.openmrs.module.sms.api.util.SmsEventSubjectsConstants;
+import org.openmrs.module.sms.api.util.SmsEventsHelper;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
-import static org.openmrs.module.sms.api.util.SmsEventsHelper.outboundEvent;
 
 // todo: final pass over how we use openMrsId system-wide
 
@@ -54,7 +53,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
 
   private static List<String> splitMessage(
       String message, int maxSize, String header, String footer, boolean excludeLastFooter) {
-    List<String> parts = new ArrayList<String>();
+    List<String> parts = new ArrayList<>();
     int messageLength = message.length();
 
     if (messageLength <= maxSize) {
@@ -101,7 +100,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
         chunk = new ArrayList<>();
       }
     }
-    if (chunk.size() > 0) {
+    if (!chunk.isEmpty()) {
       ret.add(chunk);
     }
     return ret;
@@ -145,13 +144,13 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
 
     // todo: delivery_time on the sms provider's side if they support it?
     for (List<String> recipients : recipientsList) {
-      if (sms.hasDeliveryTime()) {
+      if (sms.hasDeliveryTime().equals(Boolean.TRUE)) {
         scheduleSms(sms, config, messageParts, recipients);
       } else {
         for (String part : messageParts) {
           String openMrsId = generateOpenMrsId();
           smsEventService.sendEventMessage(
-              outboundEvent(
+             SmsEventsHelper.outboundEvent(
                   SmsEventSubjectsConstants.PENDING,
                   config.getName(),
                   recipients,
@@ -169,7 +168,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
             smsRecordDao.createOrUpdate(
                 new SmsRecord(
                     config.getName(),
-                    OUTBOUND,
+                    SmsDirection.OUTBOUND,
                     recipient,
                     part,
                     DateUtil.now(),
@@ -190,7 +189,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
     for (String part : messageParts) {
       String openMrsId = generateOpenMrsId();
       SmsEvent event =
-          outboundEvent(
+         SmsEventsHelper.outboundEvent(
               SmsEventSubjectsConstants.SCHEDULED,
               config.getName(),
               recipients,
@@ -216,7 +215,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
         smsRecordDao.createOrUpdate(
             new SmsRecord(
                 config.getName(),
-                OUTBOUND,
+                SmsDirection.OUTBOUND,
                 recipient,
                 part,
                 DateUtil.now(),
