@@ -1,18 +1,18 @@
 package org.openmrs.module.sms.api.http;
 
 import org.apache.commons.httpclient.Header;
+import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatusesConstants;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.DateUtil;
+import org.openmrs.module.sms.api.util.SmsEventsHelper;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
-import static org.openmrs.module.sms.api.util.SmsEventsHelper.outboundEvent;
 
 /** Deals with multi-line responses, like the ones sent by Clickatell. */
 public class MultilineResponseHandler extends ResponseHandler {
@@ -54,7 +54,7 @@ public class MultilineResponseHandler extends ResponseHandler {
         if (messageAndRecipient == null) {
           getEvents()
               .add(
-                  outboundEvent(
+                   SmsEventsHelper.outboundEvent(
                       getConfig().retryOrAbortSubject(failureCount),
                       getConfig().getName(),
                       sms.getRecipients(),
@@ -75,7 +75,7 @@ public class MultilineResponseHandler extends ResponseHandler {
               .add(
                   new SmsRecord(
                       getConfig().getName(),
-                      OUTBOUND,
+                      SmsDirection.OUTBOUND,
                       sms.getRecipients().toString(),
                       sms.getMessage(),
                       DateUtil.now(),
@@ -90,7 +90,7 @@ public class MultilineResponseHandler extends ResponseHandler {
           List<String> recipients = Collections.singletonList(recipient);
           getEvents()
               .add(
-                  outboundEvent(
+                  SmsEventsHelper.outboundEvent(
                       getConfig().retryOrAbortSubject(failureCount),
                       getConfig().getName(),
                       recipients,
@@ -106,7 +106,7 @@ public class MultilineResponseHandler extends ResponseHandler {
               .add(
                   new SmsRecord(
                       getConfig().getName(),
-                      OUTBOUND,
+                      SmsDirection.OUTBOUND,
                       recipient,
                       sms.getMessage(),
                       DateUtil.now(),
@@ -129,7 +129,7 @@ public class MultilineResponseHandler extends ResponseHandler {
             .add(
                 new SmsRecord(
                     getConfig().getName(),
-                    OUTBOUND,
+                    SmsDirection.OUTBOUND,
                     recipient,
                     sms.getMessage(),
                     DateUtil.now(),

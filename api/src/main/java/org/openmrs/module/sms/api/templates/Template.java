@@ -11,6 +11,8 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
+import org.openmrs.module.sms.api.util.TemplateOptionalParameterUtil;
+import org.openmrs.module.sms.api.util.TemplatePlaceholderReplaceUtil;
 
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
@@ -20,9 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.openmrs.module.sms.api.util.TemplateOptionalParameterUtil.shouldParameterBeIncluded;
-import static org.openmrs.module.sms.api.util.TemplateOptionalParameterUtil.trimOptionalExpression;
-import static org.openmrs.module.sms.api.util.TemplatePlaceholderReplaceUtil.placeholderOrLiteral;
 
 /**
  * Models how we can talk to a specific SMS provider.
@@ -73,7 +72,7 @@ public class Template {
   private PostMethod generatePOSTRequest(Map<String, Object> props) {
     final PostMethod postMethod = new PostMethod(outgoing.getRequest().getUrlPath(props));
 
-    if (outgoing.getRequest().getJsonContentType()) {
+    if (outgoing.getRequest().getJsonContentType() != null) {
       final Map<String, String> jsonParams =
           getJsonParameters(outgoing.getRequest().getBodyParameters(), props);
 
@@ -115,7 +114,7 @@ public class Template {
    * @param recipients the list of recipients
    * @return the recipient string for the provider
    */
-  public String recipientsAsString(List<String> recipients) {
+  public String recipientsAsString(Iterable<String> recipients) {
     return StringUtils.join(recipients.iterator(), outgoing.getRequest().getRecipientsSeparator());
   }
 
@@ -162,10 +161,10 @@ public class Template {
   }
 
   private NameValuePair[] addQueryParameters(Map<String, Object> props) {
-    List<NameValuePair> queryStringValues = new ArrayList<>();
     Map<String, String> queryParameters = outgoing.getRequest().getQueryParameters();
+    List<NameValuePair> queryStringValues = new ArrayList<>(queryParameters.size());
     for (Map.Entry<String, String> entry : queryParameters.entrySet()) {
-      String value = placeholderOrLiteral(entry.getValue(), props);
+      String value = TemplatePlaceholderReplaceUtil.placeholderOrLiteral(entry.getValue(), props);
       queryStringValues.add(new NameValuePair(entry.getKey(), value));
     }
     return queryStringValues.toArray(new NameValuePair[0]);
@@ -177,9 +176,9 @@ public class Template {
 
     for (Map.Entry<String, String> entry : bodyParameters.entrySet()) {
       final String bodyParametersName = entry.getKey();
-      if (shouldParameterBeIncluded(bodyParametersName, props)) {
-        final String value = placeholderOrLiteral(entry.getValue(), props);
-        result.put(trimOptionalExpression(bodyParametersName), value);
+      if (TemplateOptionalParameterUtil.shouldParameterBeIncluded(bodyParametersName, props)) {
+        final String value = TemplatePlaceholderReplaceUtil.placeholderOrLiteral(entry.getValue(), props);
+        result.put(TemplateOptionalParameterUtil.trimOptionalExpression(bodyParametersName), value);
       }
     }
 
@@ -189,7 +188,7 @@ public class Template {
   private void addBodyParameters(PostMethod postMethod, Map<String, Object> props) {
     Map<String, String> bodyParameters = outgoing.getRequest().getBodyParameters();
     for (Map.Entry<String, String> entry : bodyParameters.entrySet()) {
-      String value = placeholderOrLiteral(entry.getValue(), props);
+      String value = TemplatePlaceholderReplaceUtil.placeholderOrLiteral(entry.getValue(), props);
       postMethod.setParameter(entry.getKey(), value);
     }
   }
@@ -197,7 +196,7 @@ public class Template {
   private void addHeaderParameters(PostMethod postMethod, Map<String, Object> props) {
     Map<String, String> headerParameters = outgoing.getRequest().getHeaderParameters();
     for (Map.Entry<String, String> entry : headerParameters.entrySet()) {
-      String value = placeholderOrLiteral(entry.getValue(), props);
+      String value = TemplatePlaceholderReplaceUtil.placeholderOrLiteral(entry.getValue(), props);
       postMethod.setRequestHeader(entry.getKey(), value);
     }
   }

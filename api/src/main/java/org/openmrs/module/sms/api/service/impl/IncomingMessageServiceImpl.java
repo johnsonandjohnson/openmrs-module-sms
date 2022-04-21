@@ -1,16 +1,17 @@
 package org.openmrs.module.sms.api.service.impl;
 
+import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.context.Daemon;
 import org.openmrs.module.sms.api.handler.IncomingMessageData;
 import org.openmrs.module.sms.api.handler.IncomingMessageHandler;
 import org.openmrs.module.sms.api.util.SMSConstants;
 
+import java.text.MessageFormat;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import static java.text.MessageFormat.format;
-import static java.util.Comparator.comparing;
 
 /** The default implementation of IncomingMessageService. */
 public class IncomingMessageServiceImpl extends BaseIncomingMessageService {
@@ -19,16 +20,8 @@ public class IncomingMessageServiceImpl extends BaseIncomingMessageService {
     if (isTokenNotSet(incomingMessage) || isHandlersDisabled()) {
       return;
     }
-
-    try {
-      Daemon.runInDaemonThreadAndWait(
-          () -> internalHandleMessage(incomingMessage), getDaemonToken());
-    } catch (Exception e) {
-      LOGGER.error(
-          format(
-              "Failed to handle incoming message, message providerId: {0}. Cause: {1}",
-              incomingMessage.getProviderMessageId(), e.toString()));
-    }
+    Daemon.runInDaemonThreadAndWait(
+        () -> internalHandleMessage(incomingMessage), getDaemonToken());
   }
 
   private boolean isHandlersDisabled() {
@@ -50,19 +43,19 @@ public class IncomingMessageServiceImpl extends BaseIncomingMessageService {
   private Iterator<IncomingMessageHandler> getHandlers() {
     final List<IncomingMessageHandler> allHandlers =
         Context.getRegisteredComponents(IncomingMessageHandler.class);
-    allHandlers.sort(comparing(IncomingMessageHandler::priority).reversed());
+    allHandlers.sort(Comparator.comparing(IncomingMessageHandler::priority).reversed());
     return allHandlers.iterator();
   }
 
   private void handle(IncomingMessageData incomingMessage, IncomingMessageHandler handler) {
     try {
       handler.handle(incomingMessage);
-    } catch (Exception e) {
+    }catch (APIException apiException) {
       LOGGER.error(
-          format(
+         MessageFormat.format(
               "Error executing Incoming Message handler: {0}. Cause: {1}",
-              handler.getClass().getName(), e.toString()),
-          e);
+              handler.getClass().getName(), apiException.toString()),
+          apiException);
     }
   }
 }

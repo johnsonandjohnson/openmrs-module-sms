@@ -11,9 +11,6 @@ import java.net.HttpURLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-
 /** How to to deal with provider-specific http responses */
 @SuppressWarnings({"PMD.TooManyFields"})
 public class Response {
@@ -25,10 +22,10 @@ public class Response {
       "Invalid number of search groups, expected: 1, actual: %s.";
 
   /** Whether recipients are provided in multiple lines. */
-  @JsonProperty private Boolean multiLineRecipientResponse = false;
+  @JsonProperty private Boolean multiLineRecipientResponse = Boolean.FALSE;
 
   /** Whether the provider has a different type of response for single recipient messages. */
-  @JsonProperty private Boolean singleRecipientResponse = false;
+  @JsonProperty private Boolean singleRecipientResponse = Boolean.FALSE;
 
   /** The success status expected. */
   @JsonProperty private String successStatus;
@@ -73,7 +70,7 @@ public class Response {
    * @return true if this is a success status, false otherwise
    */
   public Boolean isSuccessStatus(Integer status) {
-    if (isBlank(successStatus)) {
+    if (StringUtils.isBlank(successStatus)) {
       return (status >= HTTP_SUCCESS_MIN && status <= HTTP_SUCCESS_MAX);
     }
     return status.toString().matches(successStatus);
@@ -81,7 +78,7 @@ public class Response {
 
   /** @return true if this provider returns responses for successful requests */
   public Boolean hasSuccessResponse() {
-    return isNotBlank(successResponse);
+    return StringUtils.isNotBlank(successResponse);
   }
 
   /**
@@ -115,7 +112,7 @@ public class Response {
 
   /** @return true if the id for successfully sent messages is included in the response */
   public Boolean hasSingleSuccessMessageId() {
-    return isNotBlank(extractSingleSuccessMessageId);
+    return StringUtils.isNotBlank(extractSingleSuccessMessageId);
   }
 
   /**
@@ -214,7 +211,7 @@ public class Response {
     if (m.find()) {
       return new String[] {m.group(1), m.group(2)};
     }
-    return null;
+    return new String[]{} ;
   }
 
   /**
@@ -239,7 +236,7 @@ public class Response {
     if (m.find()) {
       return new String[] {m.group(1), m.group(2)};
     }
-    return null;
+    return new String[]{};
   }
 
   /**
@@ -277,7 +274,7 @@ public class Response {
 
   /** @return true if this provider returns message IDs as a header, false otherwise */
   public boolean hasHeaderMessageId() {
-    return isNotBlank(headerMessageId);
+    return StringUtils.isNotBlank(headerMessageId);
   }
 
   /** @return the header name for the message ID */

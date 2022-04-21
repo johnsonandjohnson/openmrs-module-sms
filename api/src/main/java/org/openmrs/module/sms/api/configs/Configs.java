@@ -1,14 +1,12 @@
 package org.openmrs.module.sms.api.configs;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.openmrs.module.sms.api.validate.annotation.ValidConfigs;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 //
 // todo: expose list of configs as task action parameter values to send_sms?
@@ -36,7 +34,7 @@ public class Configs {
    */
   @JsonIgnore
   public Config getDefaultConfig() {
-    if (isNotBlank(defaultConfigName)) {
+    if (StringUtils.isNotBlank(defaultConfigName)) {
       return getConfig(defaultConfigName);
     }
     throw new IllegalStateException(
@@ -124,7 +122,7 @@ public class Configs {
    * @throws IllegalArgumentException if a configuration with the given name does not exist
    */
   public Config getConfigOrDefault(String name) {
-    if (isBlank(name)) {
+    if (StringUtils.isBlank(name)) {
       return getDefaultConfig();
     }
     return getConfig(name);

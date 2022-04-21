@@ -20,7 +20,8 @@ public class SmsEventServiceImpl extends BaseOpenmrsService implements SmsEventS
     private EventMessage convertParamsToEventMessage(Map<String, Object> params) {
         EventMessage eventMessage = new EventMessage();
 
-        for (String key : params.keySet()) {
+        for (Map.Entry<String,Object> map : params.entrySet()) {
+            String key = map.getKey();
             if (params.get(key) instanceof Date) {
                 eventMessage.put(key, DateUtil.dateToString((Date) params.get(key)));
             } else {

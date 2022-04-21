@@ -8,10 +8,10 @@ import java.util.Map;
 
 public class ValidationException extends RuntimeException {
 
-  private static final long serialVersionUID = -7575511914862863438L;
+  private static final long serialVersionUID = -7949334830813519654L;
 
   /** Constraint violations that describe the error causes. */
-  private Map<String, String> constraintViolations;
+  private final Map<String, String> constraintViolations;
 
   /**
    * Creates new exception according to constraint violations.

@@ -1,8 +1,7 @@
 package org.openmrs.module.sms.api.templates;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
-
-import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 /** How to interpret provider-specific response statuses. */
 public class Status {
@@ -25,7 +24,7 @@ public class Status {
    * @return true if we have a key for message IDs, false otherwise
    */
   public boolean hasMessageIdKey() {
-    return isNotBlank(messageIdKey);
+    return StringUtils.isNotBlank(messageIdKey);
   }
 
   /** @return the key of the ID of the message this status relates to */
@@ -44,7 +43,7 @@ public class Status {
    * @return true if we have a key for the status field, false otherwise
    */
   public boolean hasStatusKey() {
-    return isNotBlank(statusKey);
+    return StringUtils.isNotBlank(statusKey);
   }
 
   /** @return the key of the status */
@@ -63,7 +62,7 @@ public class Status {
    * @return true if we have an expected success status, false otherwise
    */
   public boolean hasStatusSuccess() {
-    return isNotBlank(statusSuccess);
+    return StringUtils.isNotBlank(statusSuccess);
   }
 
   /** @return the expected success status */
@@ -82,7 +81,7 @@ public class Status {
    * @return true if we have an expected failure status, false otherwise
    */
   public Boolean hasStatusFailure() {
-    return isNotBlank(statusFailure);
+    return StringUtils.isNotBlank(statusFailure);
   }
 
   /** @return the expected failure status */

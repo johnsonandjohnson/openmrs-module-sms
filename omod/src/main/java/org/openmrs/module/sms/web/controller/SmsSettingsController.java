@@ -140,7 +140,7 @@ public class SmsSettingsController extends RestController {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public String handleException(Exception e) throws IOException {
+    public String handleException(Exception e) {
         LOGGER.error("Error in SMS SettingsController", e);
         return e.getMessage();
     }
@@ -153,7 +153,7 @@ public class SmsSettingsController extends RestController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/mds-databrowser-config", method = RequestMethod.GET)
     @ResponseBody
-    public String getCustomUISettings() throws IOException {
+    public String getCustomUISettings() {
         return smsSettingsService.getCustomUISettings();
     }
 

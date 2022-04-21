@@ -34,7 +34,7 @@ public class ValidationComponent {
     }
 
     private static <T> Map<String, String> buildValidationErrorCause(Set<ConstraintViolation<T>> violations) {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(violations.size());
         for (ConstraintViolation<T> violation : violations) {
             map.put(violation.getPropertyPath().toString(), violation.getMessage());
         }

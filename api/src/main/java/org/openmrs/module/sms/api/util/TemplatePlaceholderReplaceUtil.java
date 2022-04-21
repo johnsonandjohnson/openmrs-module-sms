@@ -9,8 +9,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static java.util.regex.Matcher.quoteReplacement;
-
 /**
  * The TemplatePlaceholderReplaceUtil Class.
  *
@@ -49,7 +47,7 @@ public class TemplatePlaceholderReplaceUtil {
     while (inputTextMatcher.find()) {
       final String arrayItemBody = replaceStringTokens(inputTextMatcher.group(1), props, false);
       final String arrayText = resolveArray(arrayItemBody, props);
-      inputTextMatcher.appendReplacement(result, quoteReplacement(arrayText));
+      inputTextMatcher.appendReplacement(result, Matcher.quoteReplacement(arrayText));
     }
     inputTextMatcher.appendTail(result);
 
@@ -67,7 +65,7 @@ public class TemplatePlaceholderReplaceUtil {
 
       for (String arrayValueItem : arrayValue) {
         arrayTextJoiner.add(
-            arrayItemBodyMatcher.replaceAll(quoteReplacement(removeNewLines(arrayValueItem))));
+            arrayItemBodyMatcher.replaceAll(Matcher.quoteReplacement(removeNewLines(arrayValueItem))));
       }
     }
 
@@ -88,11 +86,11 @@ public class TemplatePlaceholderReplaceUtil {
       final Object propertyValue = props.get(propertyName);
 
       if (propertyValue instanceof String) {
-        replaceTokenMatcher.appendReplacement(result, quoteReplacement(propertyValue.toString()));
+        replaceTokenMatcher.appendReplacement(result, Matcher.quoteReplacement(propertyValue.toString()));
       } else if (propertyValue != null) {
         final String replacement =
             alwaysReplace ? propertyValue.toString() : wrapAsStringToken(propertyName);
-        replaceTokenMatcher.appendReplacement(result, quoteReplacement(replacement));
+        replaceTokenMatcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
       } else {
         throw new IllegalStateException(
             MessageFormat.format("Template error! Unable to find value for ''{0}''", propertyName));

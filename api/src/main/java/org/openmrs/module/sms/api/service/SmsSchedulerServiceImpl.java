@@ -28,7 +28,7 @@ public class SmsSchedulerServiceImpl extends BaseOpenmrsService implements SmsSc
         taskDefinition.setName(taskName);
         taskDefinition.setTaskClass(task.getClass().getName());
         taskDefinition.setStartTime(startTime);
-        taskDefinition.setStartOnStartup(false);
+        taskDefinition.setStartOnStartup(Boolean.FALSE);
         taskDefinition.setProperties(event.convertProperties());
         taskDefinition.setRepeatInterval(RUN_ONCE);
 

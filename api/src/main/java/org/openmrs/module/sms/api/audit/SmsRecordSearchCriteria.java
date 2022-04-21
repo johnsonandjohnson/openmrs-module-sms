@@ -282,7 +282,7 @@ public class SmsRecordSearchCriteria {
         }
     }
 
-    private void addSetRestriction(Criteria criteria, String fieldName, Set set) {
+    private void addSetRestriction(Criteria criteria, String fieldName, Set<?> set) {
         if (set != null && !set.isEmpty()) {
             criteria.add(Restrictions.in(fieldName, set));
         }

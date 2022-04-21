@@ -1,15 +1,15 @@
 package org.openmrs.module.sms.api.http;
 
 import org.apache.commons.httpclient.Header;
+import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatusesConstants;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.service.OutgoingSms;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.DateUtil;
+import org.openmrs.module.sms.api.util.SmsEventsHelper;
 
-import static org.openmrs.module.sms.api.audit.SmsDirection.OUTBOUND;
-import static org.openmrs.module.sms.api.util.SmsEventsHelper.outboundEvent;
 
 /**
  * Deals with providers who return multi-line responses, but return a different response when
@@ -42,7 +42,7 @@ public class MultilineSingleResponseHandler extends ResponseHandler {
       }
       getEvents()
           .add(
-              outboundEvent(
+                  SmsEventsHelper.outboundEvent(
                   getConfig().retryOrAbortSubject(failureCount),
                   getConfig().getName(),
                   sms.getRecipients(),
@@ -58,7 +58,7 @@ public class MultilineSingleResponseHandler extends ResponseHandler {
           .add(
               new SmsRecord(
                   getConfig().getName(),
-                  OUTBOUND,
+                  SmsDirection.OUTBOUND,
                   sms.getRecipients().get(0),
                   sms.getMessage(),
                   DateUtil.now(),
@@ -78,7 +78,7 @@ public class MultilineSingleResponseHandler extends ResponseHandler {
           .add(
               new SmsRecord(
                   getConfig().getName(),
-                  OUTBOUND,
+                  SmsDirection.OUTBOUND,
                   sms.getRecipients().get(0),
                   sms.getMessage(),
                   DateUtil.now(),

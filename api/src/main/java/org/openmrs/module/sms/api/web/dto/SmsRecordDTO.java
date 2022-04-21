@@ -2,7 +2,7 @@ package org.openmrs.module.sms.api.web.dto;
 
 public class SmsRecordDTO extends BaseDTO {
 
-  private static final long serialVersionUID = 8104465406110473101L;
+  private static final long serialVersionUID = 1601315934245197082L;
 
   private Integer id;
 

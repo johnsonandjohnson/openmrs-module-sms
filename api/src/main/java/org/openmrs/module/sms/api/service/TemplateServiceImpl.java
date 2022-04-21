@@ -17,6 +17,7 @@ import org.springframework.core.io.ByteArrayResource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -43,7 +44,7 @@ public class TemplateServiceImpl implements TemplateService {
 
   @Override
   public Template getTemplate(String name) {
-    if (templates.containsKey(name)) {
+    if (templates.get(name) != null) {
       return templates.get(name);
     }
     throw new IllegalArgumentException(String.format("Unknown template: '%s'.", name));
@@ -51,7 +52,7 @@ public class TemplateServiceImpl implements TemplateService {
 
   @Override
   public Map<String, TemplateForWeb> allTemplatesForWeb() {
-    Map<String, TemplateForWeb> ret = new HashMap<>();
+    Map<String, TemplateForWeb> ret = new HashMap<>(templates.size());
     if (templates.isEmpty()) {
       load(SMS_TEMPLATE_CUSTOM_FILE_NAME, customTemplates);
     }
@@ -71,7 +72,7 @@ public class TemplateServiceImpl implements TemplateService {
     try {
       String jsonText = objectMapper.writeValueAsString(customTemplates);
       settingsManagerService.saveRawConfig(
-          SMS_TEMPLATE_CUSTOM_FILE_NAME, new ByteArrayResource(jsonText.getBytes()));
+          SMS_TEMPLATE_CUSTOM_FILE_NAME, new ByteArrayResource(jsonText.getBytes(StandardCharsets.UTF_8)));
     } catch (IOException ioe) {
       LOGGER.error("Failed to save loaded templates", ioe);
       throw new APIException(ioe);
@@ -117,7 +118,7 @@ public class TemplateServiceImpl implements TemplateService {
     String jsonText =
         new Gson().toJson(newDefaultTemplates, new TypeToken<List<Template>>() {}.getType());
     settingsManagerService.saveRawConfig(
-        SMS_TEMPLATE_FILE_NAME, new ByteArrayResource(jsonText.getBytes()));
+        SMS_TEMPLATE_FILE_NAME, new ByteArrayResource(jsonText.getBytes(StandardCharsets.UTF_8)));
   }
 
   @Override
@@ -125,7 +126,7 @@ public class TemplateServiceImpl implements TemplateService {
     String jsonText =
         new Gson().toJson(newCustomTemplates, new TypeToken<List<Template>>() {}.getType());
     settingsManagerService.saveRawConfig(
-        SMS_TEMPLATE_CUSTOM_FILE_NAME, new ByteArrayResource(jsonText.getBytes()));
+        SMS_TEMPLATE_CUSTOM_FILE_NAME, new ByteArrayResource(jsonText.getBytes(StandardCharsets.UTF_8)));
   }
 
   private void load(final String fileName, final List<Template> loadedTemplates) {

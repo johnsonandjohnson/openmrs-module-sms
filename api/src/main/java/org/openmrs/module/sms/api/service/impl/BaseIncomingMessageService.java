@@ -11,7 +11,7 @@ import org.openmrs.module.sms.api.service.IncomingMessageService;
  * methods.
  */
 public abstract class BaseIncomingMessageService implements IncomingMessageService {
-  protected static final Log LOGGER = LogFactory.getLog(IncomingMessageService.class);
+  protected static final Log LOGGER = LogFactory.getLog(BaseIncomingMessageService.class);
 
   private DaemonToken daemonToken;
 

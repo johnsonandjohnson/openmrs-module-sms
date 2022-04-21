@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class SmsRecords implements Serializable {
 
-    private static final long serialVersionUID = -1584588569625856505L;
+    private static final long serialVersionUID = 5635211296748218742L;
 
     /**
      * The total number of SMS records in the current context.

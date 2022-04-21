@@ -5,12 +5,11 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.templates.Template;
+import org.openmrs.module.sms.api.util.SMSConstants;
 
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-
-import static org.openmrs.module.sms.api.util.SMSConstants.SMS_DEFAULT_RETRY_COUNT;
 
 public class SendSmsState {
 
@@ -88,7 +87,7 @@ public class SendSmsState {
         String msg =
             String.format("Problem with '%s' template? %s", template.getName(), e.toString());
         if (SocketException.class.isAssignableFrom(e.getClass())
-            && retryCount < SMS_DEFAULT_RETRY_COUNT) {
+            && retryCount < SMSConstants.SMS_DEFAULT_RETRY_COUNT) {
           LOGGER.warn(msg);
           sleep(MINUTE);
           shouldRetry = true;
