@@ -23,104 +23,117 @@ import static org.mockito.Mockito.doReturn;
 @RunWith(MockitoJUnitRunner.class)
 public class ConfigsValidatorTest {
 
-  @Mock private ConstraintValidatorContext validatorContext;
+	@Mock private ConstraintValidatorContext validatorContext;
 
-  private ConfigsValidator configsValidator = new ConfigsValidator();
+	private ConfigsValidator configsValidator = new ConfigsValidator();
 
-  @Before
-  public void setUp() {
-    doNothing().when(validatorContext).disableDefaultConstraintViolation();
-  }
+	@Before
+	public void setUp() {
+		doNothing().when(validatorContext).disableDefaultConstraintViolation();
+	}
 
-  @Test
-  public void shouldReturnValidForEmptyConfigs() {
-    assertTrue(configsValidator.isValid(new Configs(), validatorContext));
-  }
+	@Test
+	public void shouldReturnValidForEmptyConfigs() {
+		assertTrue(configsValidator.isValid(new Configs(), validatorContext));
+	}
 
-  @Test
-  public void shouldReturnNotValidForEmptyConfig() {
-    doReturn(new MockedViolationBuilder())
-        .when(validatorContext)
-        .buildConstraintViolationWithTemplate(anyString());
-    Configs configs = new Configs();
-    configs.setConfigList(Collections.singletonList(new Config()));
+	@Test
+	public void shouldReturnNotValidForEmptyConfig() {
+		doReturn(new MockedViolationBuilder())
+				.when(validatorContext)
+				.buildConstraintViolationWithTemplate(anyString());
+		Configs configs = new Configs();
+		configs.setConfigList(Collections.singletonList(new Config()));
 
-    assertFalse(configsValidator.isValid(configs, validatorContext));
-  }
+		assertFalse(configsValidator.isValid(configs, validatorContext));
+	}
 
-  @Test
-  public void shouldReturnNotValidForBlankTemplate() {
-    doReturn(new MockedViolationBuilder())
-        .when(validatorContext)
-        .buildConstraintViolationWithTemplate(anyString());
+	@Test
+	public void shouldReturnNotValidForBlankTemplate() {
+		doReturn(new MockedViolationBuilder())
+				.when(validatorContext)
+				.buildConstraintViolationWithTemplate(anyString());
 
-    Configs configs = new Configs();
-    configs.setConfigList(
-        Collections.singletonList(new ConfigBuilder().withTemplateName(null).build()));
+		Configs configs = new Configs();
+		configs.setConfigList(
+				Collections.singletonList(new ConfigBuilder().withTemplateName(null).build()));
 
-    assertFalse(configsValidator.isValid(configs, validatorContext));
-  }
+		assertFalse(configsValidator.isValid(configs, validatorContext));
+	}
 
-  @Test
-  public void shouldReturnNotValidForBlankMaxRetries() {
-    doReturn(new MockedViolationBuilder())
-        .when(validatorContext)
-        .buildConstraintViolationWithTemplate(anyString());
+	@Test
+	public void shouldReturnNotValidForBlankMaxRetries() {
+		doReturn(new MockedViolationBuilder())
+				.when(validatorContext)
+				.buildConstraintViolationWithTemplate(anyString());
 
-    Configs configs = new Configs();
-    configs.setConfigList(
-        Collections.singletonList(new ConfigBuilder().withMaxRetries(null).build()));
+		Configs configs = new Configs();
+		configs.setConfigList(
+				Collections.singletonList(new ConfigBuilder().withMaxRetries(null).build()));
 
-    assertFalse(configsValidator.isValid(configs, validatorContext));
-  }
+		assertFalse(configsValidator.isValid(configs, validatorContext));
+	}
 
-  @Test
-  public void shouldReturnNotValidForNegativeMaxRetries() {
-    doReturn(new MockedViolationBuilder())
-        .when(validatorContext)
-        .buildConstraintViolationWithTemplate(anyString());
+	@Test
+	public void shouldReturnNotValidForNegativeMaxRetries() {
+		doReturn(new MockedViolationBuilder())
+				.when(validatorContext)
+				.buildConstraintViolationWithTemplate(anyString());
 
-    Configs configs = new Configs();
-    configs.setConfigList(
-        Collections.singletonList(new ConfigBuilder().withMaxRetries(-1).build()));
+		Configs configs = new Configs();
+		configs.setConfigList(
+				Collections.singletonList(new ConfigBuilder().withMaxRetries(-1).build()));
 
-    assertFalse(configsValidator.isValid(configs, validatorContext));
-  }
+		assertFalse(configsValidator.isValid(configs, validatorContext));
+	}
 
-  @Test
-  public void shouldReturnNotValidForBlankSplitHeader() {
-    doReturn(new MockedViolationBuilder())
-        .when(validatorContext)
-        .buildConstraintViolationWithTemplate(anyString());
+	@Test
+	public void shouldReturnNotValidForBlankSplitHeader() {
+		doReturn(new MockedViolationBuilder())
+				.when(validatorContext)
+				.buildConstraintViolationWithTemplate(anyString());
 
-    Configs configs = new Configs();
-    configs.setConfigList(
-        Collections.singletonList(new ConfigBuilder().withSplitHeader(null).build()));
+		Configs configs = new Configs();
+		configs.setConfigList(
+				Collections.singletonList(new ConfigBuilder().withSplitHeader(null).build()));
 
-    assertFalse(configsValidator.isValid(configs, validatorContext));
-  }
+		assertFalse(configsValidator.isValid(configs, validatorContext));
+	}
 
-  @Test
-  public void shouldReturnNotValidForBlankSplitFooter() {
-    doReturn(new MockedViolationBuilder())
-        .when(validatorContext)
-        .buildConstraintViolationWithTemplate(anyString());
+	@Test
+	public void shouldReturnNotValidForBlankSplitFooter() {
+		doReturn(new MockedViolationBuilder())
+				.when(validatorContext)
+				.buildConstraintViolationWithTemplate(anyString());
 
-    Configs configs = new Configs();
-    configs.setConfigList(
-        Collections.singletonList(new ConfigBuilder().withSplitFooter(null).build()));
+		Configs configs = new Configs();
+		configs.setConfigList(
+				Collections.singletonList(new ConfigBuilder().withSplitFooter(null).build()));
 
-    assertFalse(configsValidator.isValid(configs, validatorContext));
-  }
+		assertFalse(configsValidator.isValid(configs, validatorContext));
+	}
 
-  @Test
-  public void shouldReturnNotValidForBlankEntity() {
-    doReturn(new MockedViolationBuilder())
-        .when(validatorContext)
-        .buildConstraintViolationWithTemplate(anyString());
-    Configs configs = new Configs();
-    configs.setConfigList(Collections.singletonList(new Config()));
+	@Test
+	public void shouldReturnValidForValidSplitFooter() {
+		doReturn(new MockedViolationBuilder())
+				.when(validatorContext)
+				.buildConstraintViolationWithTemplate(anyString());
 
-    assertFalse(configsValidator.isValid(configs, validatorContext));
-  }
+		Configs configs = new Configs();
+		configs.setConfigList(
+				Collections.singletonList(new ConfigBuilder().withSplitFooter("configs[%d].splitFooter").build()));
+
+		assertTrue(configsValidator.isValid(configs, validatorContext));
+	}
+
+	@Test
+	public void shouldReturnNotValidForBlankEntity() {
+		doReturn(new MockedViolationBuilder())
+				.when(validatorContext)
+				.buildConstraintViolationWithTemplate(anyString());
+		Configs configs = new Configs();
+		configs.setConfigList(Collections.singletonList(new Config()));
+
+		assertFalse(configsValidator.isValid(configs, validatorContext));
+	}
 }
