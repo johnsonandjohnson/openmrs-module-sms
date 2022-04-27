@@ -93,7 +93,7 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
 		this.smsDirection = smsDirection;
 		this.phoneNumber = number;
 		this.messageContent = message;
-		this.timestamp = timestamp;
+		this.timestamp = timestamp!= null ? new Date(timestamp.getTime()) : null;
 		this.deliveryStatus = deliveryStatus;
 		this.providerStatus = providerStatus;
 		this.openMrsId = openMrsId;
@@ -159,7 +159,7 @@ public class SmsRecord extends AbstractBaseOpenmrsData {
 
 	/** @param timestamp the timestamp for this SMS */
 	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
+		this.timestamp = timestamp!= null ? new Date(timestamp.getTime()) : null;
 	}
 
 	/** @return the delivery status for this SMS */

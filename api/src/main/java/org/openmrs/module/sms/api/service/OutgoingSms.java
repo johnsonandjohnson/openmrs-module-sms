@@ -60,7 +60,7 @@ public class OutgoingSms {
     this.recipients = recipients;
     this.message = message;
     this.config = config;
-    this.deliveryTime = deliveryTime;
+    this.deliveryTime = deliveryTime!= null ? new Date(deliveryTime.getTime()) : null;
   }
 
   /**
@@ -109,7 +109,7 @@ public class OutgoingSms {
   public OutgoingSms(List<String> recipients, String message, Date deliveryTime) {
     this.recipients = recipients;
     this.message = message;
-    this.deliveryTime = deliveryTime;
+    this.deliveryTime = deliveryTime!= null ? new Date(deliveryTime.getTime()) : null;
   }
 
   /**
@@ -229,7 +229,7 @@ public class OutgoingSms {
    * @param deliveryTime the delivery time for this SMS
    */
   public void setDeliveryTime(Date deliveryTime) {
-    this.deliveryTime = deliveryTime;
+    this.deliveryTime = deliveryTime!= null ? new Date(deliveryTime.getTime()) : null;
   }
 
   /**

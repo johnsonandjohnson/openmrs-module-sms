@@ -49,7 +49,7 @@ public final class IncomingMessageDataBuilder {
   }
 
   public IncomingMessageDataBuilder setReceivedAt(Date receivedAt) {
-    this.receivedAt = receivedAt;
+    this.receivedAt = receivedAt!= null ? new Date(receivedAt.getTime()) : null;
     return this;
   }
 
