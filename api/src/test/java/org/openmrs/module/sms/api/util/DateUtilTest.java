@@ -73,6 +73,14 @@ public class DateUtilTest {
         assertThat(DateUtil.dateToString(actual, TimeZone.getTimeZone(ASIA_ALMATY)), equalTo(expectedDateAsString));
     }
 
+    @Test
+    public void shouldReturnStringConvertingDate() {
+        String expected = "2010-11-16T15:43:59.000Z";
+        Date date = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "UTC");
+        String actual = DateUtil.dateToString(date);
+        assertThat(actual, equalTo(expected));
+    }
+
     private Date createDate(int year, int month, int day, int hour, int minute, int second, String timezone) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day, hour, minute, second);

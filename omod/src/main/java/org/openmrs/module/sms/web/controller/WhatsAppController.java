@@ -81,6 +81,7 @@ public class WhatsAppController extends RestController {
               "Received whatsapp  event for '%s' config but no matching config will try the default config",
               configName);
       LOGGER.error(msg);
+      return;
     }
 
     Config config = configService.getConfigOrDefault(configName);

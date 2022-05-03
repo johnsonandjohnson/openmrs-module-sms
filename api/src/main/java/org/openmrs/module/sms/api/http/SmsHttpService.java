@@ -216,7 +216,7 @@ public class SmsHttpService {
   }
 
   private Map<String, Object> generateProps(OutgoingSms sms, Template template, Config config) {
-    Map<String, Object> props = new HashMap<>();
+    Map<String, Object> props = new HashMap<>(config.getProps().size());
     props.put("recipients", template.recipientsAsString(sms.getRecipients()));
     props.put("message", escapeForJson(sms.getMessage()));
     props.put("openMrsId", sms.getOpenMrsId());
