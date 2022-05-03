@@ -16,12 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 public class SmsServiceImplTest extends BaseModuleContextSensitiveTest {
+
+	private final String CONFIG = "nexmo";
 
 	public static final String LONG_TEXT = "Really long text which will cause exception if will be enough long. " +
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
@@ -173,11 +177,11 @@ public class SmsServiceImplTest extends BaseModuleContextSensitiveTest {
 				.withDeliveryStatus(DeliveryStatusesConstants.PENDING)
 				.withProviderStatus(null)
 				.withProviderId(null)
-				.withConfig("nexmo")
+				.withConfig(CONFIG)
 				.withMessageContent(EXPECTED_PART_OF_MESSAGE)
 				.withPhoneNumber("213561315")
 				.build();
-		OutgoingSms outgoingSms = new OutgoingSms("nexmo","213561315",LONG_TEXT);
+		OutgoingSms outgoingSms = new OutgoingSms(CONFIG,"213561315",LONG_TEXT);
 		smsService.send(outgoingSms);
 		SmsRecord actual = smsRecordDao.getAll(true).get(0);
 		assertSmsRecord(expected, actual);
@@ -190,11 +194,29 @@ public class SmsServiceImplTest extends BaseModuleContextSensitiveTest {
 				.withDeliveryStatus(DeliveryStatusesConstants.SCHEDULED)
 				.withProviderStatus(null)
 				.withProviderId(null)
-				.withConfig("nexmo")
+				.withConfig(CONFIG)
 				.withMessageContent(EXPECTED_PART_OF_MESSAGE)
 				.withPhoneNumber("213561315")
 				.build();
-		OutgoingSms outgoingSms = new OutgoingSms("nexmo","213561315",LONG_TEXT, DateUtil.now());
+		OutgoingSms outgoingSms = new OutgoingSms(CONFIG,"213561315",LONG_TEXT, DateUtil.now());
+		smsService.send(outgoingSms);
+		SmsRecord actual = smsRecordDao.getAll(true).get(0);
+		assertSmsRecord(expected, actual);
+	}
+
+	@Test
+	public void sendWithLongMessageConfigurationCustomParamsAndRecipient() {
+		SmsRecord expected = new SmsRecordBuilder()
+				.withConfig(CONFIG)
+				.withMessageContent(EXPECTED_PART_OF_MESSAGE)
+				.withProviderStatus(null)
+				.withProviderId(null)
+				.withPhoneNumber("213561315")
+				.withDeliveryStatus(DeliveryStatusesConstants.PENDING)
+				.build();
+		Map<String, Object> PARAMS = new HashMap<>();
+		PARAMS.put("deliveryStatus",DeliveryStatusesConstants.PENDING);
+		OutgoingSms outgoingSms = new OutgoingSms(CONFIG, "213561315", LONG_TEXT, PARAMS);
 		smsService.send(outgoingSms);
 		SmsRecord actual = smsRecordDao.getAll(true).get(0);
 		assertSmsRecord(expected, actual);

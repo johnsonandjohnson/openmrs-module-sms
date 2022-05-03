@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebAppConfiguration
-public class WhatsappControllerBundleITTest<bodyParam> extends BaseModuleWebContextSensitiveTest {
+public class WhatsappControllerBundleITTest extends BaseModuleWebContextSensitiveTest {
 
 	private static final String CONFIG_NAME = "sample-it-config";
 
@@ -91,9 +91,6 @@ public class WhatsappControllerBundleITTest<bodyParam> extends BaseModuleWebCont
 
 	@Test
 	public void handleWhatsappControllerFunctionalExistsConfig() throws Exception {
-		Status status =new Status();
-		status.setMessageIdKey("123");
-		status.setStatusKey("12344");
 		mockMvc
 				.perform(
 						post(String.format("/whatsapp/%s", CONFIG_NAME))
