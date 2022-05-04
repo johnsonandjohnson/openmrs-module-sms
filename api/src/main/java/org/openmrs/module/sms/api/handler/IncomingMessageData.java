@@ -30,7 +30,7 @@ public final class IncomingMessageData {
 		this.config = config;
 		this.senderPhoneNumber = senderPhoneNumber;
 		this.message = message;
-		this.receivedAt = receivedAt;
+		this.receivedAt = receivedAt!= null ? new Date(receivedAt.getTime()) : null;
 		this.deliveryStatus = deliveryStatus;
 		this.providerMessageId = providerMessageId;
 	}

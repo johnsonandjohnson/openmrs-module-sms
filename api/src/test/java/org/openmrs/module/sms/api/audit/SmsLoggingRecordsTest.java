@@ -40,6 +40,16 @@ public class SmsLoggingRecordsTest {
         assertSmsRecords(actual.getRows().get(0), expected.getRecords().get(0));
     }
 
+    @Test
+    public void verifyToString() {
+        SmsRecords smsRecords = new SmsRecordsBuilder().build();
+        SmsLoggingRecords smsLoggingRecords = new SmsLoggingRecords(EXPECTED_PAGE, EXPECTED_ROWS,
+            EXPECTED_TOTAL_RECORDS, smsRecords);
+        String expected = smsLoggingRecords.toString();
+        String actual = String.format("SmsLoggingRecords{page=%d, total=%d, records=%d, rows=%s}", smsLoggingRecords.getPage(), smsLoggingRecords.getTotal(), smsLoggingRecords.getRecords(), smsLoggingRecords.getRows());
+        assertThat(actual ,is(expected));
+    }
+
     private void assertSmsRecords(SmsLoggingRecord actual, SmsRecord expected) {
         assertThat(actual.getConfig(), is(expected.getConfig()));
         assertThat(actual.getPhoneNumber(), is(expected.getPhoneNumber()));

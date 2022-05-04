@@ -29,8 +29,8 @@ public class Interval extends BaseDTO {
 	}
 
 	public Interval(Date from, Date to) {
-		this.from = from;
-		this.to = to;
+		this.from = from!= null ? new Date(from.getTime()) : null;
+		this.to = to!= null ? new Date(to.getTime()) : null;
 	}
 
 	public Date getFrom() {
@@ -38,7 +38,7 @@ public class Interval extends BaseDTO {
 	}
 
 	public void setFrom(Date from) {
-		this.from = from;
+		this.from = from!= null ? new Date(from.getTime()) : null;
 	}
 
 	public Date getTo() {
@@ -46,6 +46,6 @@ public class Interval extends BaseDTO {
 	}
 
 	public void setTo(Date to) {
-		this.to = to;
+		this.to = to!= null ? new Date(to.getTime()) : null;
 	}
 }
