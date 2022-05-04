@@ -1,8 +1,24 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ * <p>
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
+
 package org.openmrs.module.sms.web.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.audit.SmsAuditService;
+import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.configs.Config;
 import org.openmrs.module.sms.api.handler.IncomingMessageDataBuilder;
@@ -24,19 +40,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.openmrs.module.sms.api.audit.SmsDirection.INBOUND;
+import java.net.HttpURLConnection;
+import java.util.*;
 
 /** Handles events triggered from whatApp {server}/openmrs/ws/whatsapp/{Config} */
+@Api(value = "Handles events triggered from whatApp", tags = {"REST API to handle events triggered from whatApp"})
 @Controller
 @RequestMapping(value = "/whatsapp")
 public class WhatsAppController extends RestController {
 
   private static final Log LOGGER = LogFactory.getLog(WhatsAppController.class);
+  private static final String STATUSES = "statuses";
+  private static final String MESSAGES = "messages";
 
   private SmsAuditService smsAuditService;
   private TemplateService templateService;
@@ -55,10 +70,18 @@ public class WhatsAppController extends RestController {
     this.incomingMessageService = incomingMessageService;
   }
 
+  @ApiOperation(value = "Handles events triggered from whatApp", notes = "Handles events triggered from whatApp")
+  @ApiResponses(value = {
+          @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "On successful handling events triggered from whatApp"),
+          @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = "Failure to handle events triggered from whatApp"),
+          @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Error in handling events triggered from whatApp")})
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   @RequestMapping(value = "/{configName}", method = RequestMethod.POST)
-  public void handle(@PathVariable String configName, @RequestBody Map<String, Object> bodyParam) {
+  public void handle(@ApiParam(name = "configName", value = "The name of the configuration")
+          @PathVariable String configName,
+                     @ApiParam(name = "bodyParam", value = "The request body param")
+                     @RequestBody Map<String, Object> bodyParam) {
     LOGGER.info(
         String.format("whatsapp  event - configName = %s, bodyParam = %s", configName, bodyParam));
 
@@ -68,6 +91,7 @@ public class WhatsAppController extends RestController {
               "Received whatsapp  event for '%s' config but no matching config will try the default config",
               configName);
       LOGGER.error(msg);
+      return;
     }
 
     Config config = configService.getConfigOrDefault(configName);
@@ -93,7 +117,7 @@ public class WhatsAppController extends RestController {
         final SmsRecord smsRecord =
             new SmsRecord(
                 config.getName(),
-                INBOUND,
+                SmsDirection.INBOUND,
                 messageAccessor.getSender(),
                 messageAccessor.getMessage(),
                 DateUtil.now(),
@@ -119,18 +143,18 @@ public class WhatsAppController extends RestController {
 
   private void buildParams(
       @RequestBody Map<String, Object> bodyParam,
-      List<Map<String, String>> statusList,
-      List<Map<String, String>> incomingMessageList) {
+      Collection<Map<String, String>> statusList,
+      Collection<Map<String, String>> incomingMessageList) {
     for (Map.Entry<String, Object> en : bodyParam.entrySet()) {
-      if (en.getKey().equals("statuses") && en.getValue() instanceof List) {
-        List<Object> objList = (List) en.getValue();
+      if (STATUSES.equals(en.getKey()) && en.getValue() instanceof List) {
+        List<Object> objList = Collections.singletonList(en.getValue());
         for (Object ele : objList) {
           HashMap<String, Object> obj = (HashMap<String, Object>) ele;
           statusList.add(getCombinedParams(null, obj));
         }
       }
-      if (en.getKey().equals("messages") && en.getValue() instanceof List) {
-        List<Object> objList = (List) en.getValue();
+      if (MESSAGES.equals(en.getKey()) && en.getValue() instanceof List) {
+        List<Object> objList = Collections.singletonList(en.getValue());
         for (Object ele : objList) {
           HashMap<String, Object> obj = (HashMap<String, Object>) ele;
           incomingMessageList.add(getCombinedParams(null, obj));
