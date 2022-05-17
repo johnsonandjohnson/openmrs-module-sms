@@ -11,7 +11,7 @@ import java.util.Map;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class AutomaticResponseDataTest extends BaseModuleContextSensitiveTest {
+public class AutomaticResponseDataTest {
 
 	private static final String  MESSAGE = "Test_Message";
 	private static final String CONFIG = "config";
