@@ -85,8 +85,7 @@ public class WhatsappControllerBundleITTest extends BaseModuleWebContextSensitiv
 						post(String.format("/whatsapp/%s", MISSING_CONFIG_NAME))
 								.contentType(TestUtil.APPLICATION_JSON)
 								.content(TestUtil.encodeString()))
-				.andExpect(status().is(HttpStatus.OK.value()))
-				.andExpect(content().string(""));
+				.andExpect(status().is(HttpStatus.OK.value()));
 	}
 
 	@Test
