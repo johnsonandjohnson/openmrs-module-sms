@@ -1,6 +1,7 @@
 package org.openmrs.module.sms.api.http;
 
 import org.apache.commons.httpclient.Header;
+import org.apache.commons.lang3.ArrayUtils;
 import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatusesConstants;
@@ -45,13 +46,13 @@ public class MultilineResponseHandler extends ResponseHandler {
 
       String providerStatus = getTemplateOutgoingResponse().extractProviderStatus(responseLine);
 
-      if (messageIdAndRecipient == null) {
+      if(ArrayUtils.isEmpty(messageIdAndRecipient) ) {
         Integer failureCount = sms.getFailureCount() + 1;
         String[] messageAndRecipient;
 
         messageAndRecipient =
             getTemplateOutgoingResponse().extractFailureMessageAndRecipient(responseLine);
-        if (messageAndRecipient == null) {
+        if (ArrayUtils.isEmpty(messageAndRecipient)) {
           getEvents()
               .add(
                    SmsEventsHelper.outboundEvent(
