@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebAppConfiguration
-public class SmsSettingControllerTest extends BaseModuleWebContextSensitiveTest {
+public class SmsSettingControllerITTest extends BaseModuleWebContextSensitiveTest {
 
 	private MockMvc mockMvc;
 
