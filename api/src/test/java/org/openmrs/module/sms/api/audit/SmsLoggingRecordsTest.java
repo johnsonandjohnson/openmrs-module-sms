@@ -18,46 +18,52 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @PrepareForTest({DateUtil.class})
 public class SmsLoggingRecordsTest {
 
-    private static final int EXPECTED_PAGE = 1;
-    private static final int EXPECTED_ROWS = 52;
-    private static final long EXPECTED_TOTAL_RECORDS = 225;
-    private static final String EXPECTED_DATE = "2010-11-16 15:40";
+  private static final int EXPECTED_PAGE = 1;
+  private static final int EXPECTED_ROWS = 52;
+  private static final long EXPECTED_TOTAL_RECORDS = 225;
+  private static final String EXPECTED_DATE = "2010-11-16 15:40";
 
-    @Before
-    public void setUp() throws Exception {
-        mockStatic(DateUtil.class);
-        doReturn(EXPECTED_DATE).when(DateUtil.class, "getDateWithLocalTimeZone", anyObject());
-    }
+  @Before
+  public void setUp() throws Exception {
+    mockStatic(DateUtil.class);
+    doReturn(EXPECTED_DATE).when(DateUtil.class, "getDateWithLocalTimeZone", anyObject());
+  }
 
-    @Test
-    public void shouldMapSmsRecordsAsExpected() {
-        SmsRecords expected = new SmsRecordsBuilder().build();
-        SmsLoggingRecords actual = new SmsLoggingRecords(EXPECTED_PAGE, EXPECTED_ROWS,
-                EXPECTED_TOTAL_RECORDS, expected);
-        assertThat(actual.getRows().size(), is(expected.getRecords().size()));
-        assertThat(actual.getPage(), is(EXPECTED_PAGE));
-        assertThat(actual.getRecords(), is(EXPECTED_TOTAL_RECORDS));
-        assertSmsRecords(actual.getRows().get(0), expected.getRecords().get(0));
-    }
+  @Test
+  public void shouldMapSmsRecordsAsExpected() {
+    SmsRecords expected = new SmsRecordsBuilder().build();
+    SmsLoggingRecords actual =
+        new SmsLoggingRecords(EXPECTED_PAGE, EXPECTED_ROWS, EXPECTED_TOTAL_RECORDS, expected);
+    assertThat(actual.getRows().size(), is(expected.getRecords().size()));
+    assertThat(actual.getPage(), is(EXPECTED_PAGE));
+    assertThat(actual.getRecords(), is(EXPECTED_TOTAL_RECORDS));
+    assertSmsRecords(actual.getRows().get(0), expected.getRecords().get(0));
+  }
 
-    @Test
-    public void verifyToString() {
-        SmsRecords smsRecords = new SmsRecordsBuilder().build();
-        SmsLoggingRecords smsLoggingRecords = new SmsLoggingRecords(EXPECTED_PAGE, EXPECTED_ROWS,
-            EXPECTED_TOTAL_RECORDS, smsRecords);
-        String expected = smsLoggingRecords.toString();
-        String actual = String.format("SmsLoggingRecords{page=%d, total=%d, records=%d, rows=%s}", smsLoggingRecords.getPage(), smsLoggingRecords.getTotal(), smsLoggingRecords.getRecords(), smsLoggingRecords.getRows());
-        assertThat(actual ,is(expected));
-    }
+  @Test
+  public void verifyToString() {
+    SmsRecords smsRecords = new SmsRecordsBuilder().build();
+    SmsLoggingRecords smsLoggingRecords =
+        new SmsLoggingRecords(EXPECTED_PAGE, EXPECTED_ROWS, EXPECTED_TOTAL_RECORDS, smsRecords);
+    String expected = smsLoggingRecords.toString();
+    String actual =
+        String.format(
+            "SmsLoggingRecords{page=%d, total=%d, records=%d, rows=%s}",
+            smsLoggingRecords.getPage(),
+            smsLoggingRecords.getTotal(),
+            smsLoggingRecords.getRecords(),
+            smsLoggingRecords.getRows());
+    assertThat(actual, is(expected));
+  }
 
-    private void assertSmsRecords(SmsLoggingRecord actual, SmsRecord expected) {
-        assertThat(actual.getConfig(), is(expected.getConfig()));
-        assertThat(actual.getPhoneNumber(), is(expected.getPhoneNumber()));
-        assertThat(actual.getMessageContent(), is(expected.getMessageContent()));
-        assertThat(actual.getTimestamp(), is(EXPECTED_DATE));
-        assertThat(actual.getDeliveryStatus(), is(expected.getDeliveryStatus()));
-        assertThat(actual.getProviderStatus(), is(expected.getProviderStatus()));
-        assertThat(actual.getOpenMrsId(), is(expected.getOpenMrsId()));
-        assertThat(actual.getProviderId(), is(expected.getProviderId()));
-    }
+  private void assertSmsRecords(SmsLoggingRecord actual, SmsRecord expected) {
+    assertThat(actual.getConfig(), is(expected.getConfig()));
+    assertThat(actual.getPhoneNumber(), is(expected.getPhoneNumber()));
+    assertThat(actual.getMessageContent(), is(expected.getMessageContent()));
+    assertThat(actual.getTimestamp(), is(EXPECTED_DATE));
+    assertThat(actual.getDeliveryStatus(), is(expected.getDeliveryStatus()));
+    assertThat(actual.getProviderStatus(), is(expected.getProviderStatus()));
+    assertThat(actual.getOpenMrsId(), is(expected.getOpenMrsId()));
+    assertThat(actual.getProviderId(), is(expected.getProviderId()));
+  }
 }

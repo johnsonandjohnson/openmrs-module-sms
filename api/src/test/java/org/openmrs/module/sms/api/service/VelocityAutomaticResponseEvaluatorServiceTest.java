@@ -18,37 +18,41 @@ import static org.junit.Assert.assertFalse;
 
 public class VelocityAutomaticResponseEvaluatorServiceTest extends BaseModuleContextSensitiveTest {
 
-	private IncomingMessageData incomingMessageData;
+  private IncomingMessageData incomingMessageData;
 
-	private final String CONFIG_NAME = "nexmo";
+  private final String CONFIG_NAME = "nexmo";
+  private final String MESSAGE = "TEST_DATA";
+  private final String SENDER = "22210212";
+	private final String PROVIDER_ID = "TEST_ID";
+		
+  private AutomaticResponseEvaluationMessageContext automaticResponseEvaluationMessageContext;
 
-	private final String MESSAGE = "TEST_DATA";
+  @Before
+  public void setup() {
+    Config config = new Config();
+    config.setName(CONFIG_NAME);
+    config.setAutomaticResponseScript("");
+    incomingMessageData =
+        new IncomingMessageDataBuilder()
+            .setConfig(config)
+            .setMessage(MESSAGE)
+            .setProviderMessageId(PROVIDER_ID)
+            .setReceivedAt(DateUtil.now())
+            .setReceivedForAFistTime(Boolean.TRUE)
+            .setDeliveryStatus(DeliveryStatusesConstants.SCHEDULED)
+            .setSender(SENDER)
+            .build();
+    automaticResponseEvaluationMessageContext =
+        new AutomaticResponseEvaluationMessageContext(incomingMessageData);
+  }
 
-	private final String SENDER = "22210212";
-
-	private AutomaticResponseEvaluationMessageContext automaticResponseEvaluationMessageContext;
-
-	@Before
-	public void setup() {
-		Config config = new Config();
-		config.setName(CONFIG_NAME);
-		config.setAutomaticResponseScript("");
-		incomingMessageData = new IncomingMessageDataBuilder()
-				.setConfig(config)
-				.setMessage(MESSAGE)
-				.setProviderMessageId("TEST_ID")
-				.setReceivedAt(DateUtil.now())
-				.setReceivedForAFistTime(Boolean.TRUE)
-				.setDeliveryStatus(DeliveryStatusesConstants.SCHEDULED)
-				.setSender(SENDER)
-				.build();
-		automaticResponseEvaluationMessageContext = new AutomaticResponseEvaluationMessageContext(incomingMessageData);
-	}
-
-	@Test
-	public void shouldReturnEmpty(){
-		VelocityAutomaticResponseEvaluatorService velocityAutomaticResponseEvaluatorService = new VelocityAutomaticResponseEvaluatorService();
-		Optional<AutomaticResponseData> automaticResponseData = velocityAutomaticResponseEvaluatorService.evaluate(automaticResponseEvaluationMessageContext);
-		assertFalse(automaticResponseData.isPresent());
-	}
+  @Test
+  public void shouldReturnEmpty() {
+    VelocityAutomaticResponseEvaluatorService velocityAutomaticResponseEvaluatorService =
+        new VelocityAutomaticResponseEvaluatorService();
+    Optional<AutomaticResponseData> automaticResponseData =
+        velocityAutomaticResponseEvaluatorService.evaluate(
+            automaticResponseEvaluationMessageContext);
+    assertFalse(automaticResponseData.isPresent());
+  }
 }

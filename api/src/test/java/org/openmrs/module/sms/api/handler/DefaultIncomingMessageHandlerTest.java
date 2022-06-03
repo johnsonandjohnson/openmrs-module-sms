@@ -21,62 +21,67 @@ import static org.junit.Assert.assertFalse;
 import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
 
 public class DefaultIncomingMessageHandlerTest extends BaseModuleContextSensitiveTest {
-	
-	DefaultIncomingMessageHandler defaultIncomingMessageHandler;
-	
-	IncomingMessageAccessor incomingMessageAccessor;
-	
-	private static final int expected_priority = 10;
-	
-	private final String message_id = UUID.randomUUID().toString();
-	
-	private final String message_key = "message";
-	
-	private final String sender_key = "sender";
-	
-	private final String status_key = "status";
-	
-	@Before
-	public void setUp(){
-		defaultIncomingMessageHandler = new DefaultIncomingMessageHandler();
-		AutomaticResponseEvaluatorService automaticResponseEvaluatorService = new VelocityAutomaticResponseEvaluatorService();
-		defaultIncomingMessageHandler.setAutomaticResponseEvaluatorService(automaticResponseEvaluatorService);
-		Incoming incoming = new Incoming();
-		incoming.setMsgIdKey(message_id);
-		incoming.setMessageKey(message_key);
-		incoming.setSenderKey(sender_key);
-		incoming.setSenderRegex("(.*)");
-		incoming.setMessageRegex("(.*)");
-		Status status = new Status();
-		status.setStatusKey(status_key);
-		Template template = new Template();
-		template.setIncoming(incoming);
-		template.setStatus(status);
-		Map<String, String> providerData = new HashMap<>();
-		providerData.put(message_key,"Message");
-		providerData.put(message_id,"897");
-		providerData.put(sender_key,"1234345");
-		providerData.put(status_key,"Delivered");
-		incomingMessageAccessor = new IncomingMessageAccessor(template,providerData);
-	}
-	
-	@Test
-	public void priority() {
-		int actual = defaultIncomingMessageHandler.priority();
-		assertThat(actual ,is(expected_priority));
-	}
-	
-	@Test
-	public void shouldReturnFalseForMessageNotReceivedFirstTime() {
-		IncomingMessageData incomingMessageData = new IncomingMessageDataBuilder(incomingMessageAccessor).setReceivedForAFistTime(Boolean.FALSE).build();
-		assertFalse(defaultIncomingMessageHandler.handle(incomingMessageData));
-	}
-	
-	@Test
-	public void shouldReturnFalseMessageReceivedFirstTimeWithoutAutomaticResponseScript() {
-		Config config = new Config();
-		config.setName("Nexmo");
-		IncomingMessageData incomingMessageData = new IncomingMessageDataBuilder(incomingMessageAccessor).setConfig(config).setReceivedForAFistTime(Boolean.TRUE).build();
-		assertFalse(defaultIncomingMessageHandler.handle(incomingMessageData));
-	}
+
+  DefaultIncomingMessageHandler defaultIncomingMessageHandler;
+
+  IncomingMessageAccessor incomingMessageAccessor;
+
+  private static final int expected_priority = 10;
+  private final String message_id = UUID.randomUUID().toString();
+  private final String message_key = "message";
+  private final String sender_key = "sender";
+  private final String status_key = "status";
+
+  @Before
+  public void setUp() {
+    defaultIncomingMessageHandler = new DefaultIncomingMessageHandler();
+    AutomaticResponseEvaluatorService automaticResponseEvaluatorService =
+        new VelocityAutomaticResponseEvaluatorService();
+    defaultIncomingMessageHandler.setAutomaticResponseEvaluatorService(
+        automaticResponseEvaluatorService);
+    Incoming incoming = new Incoming();
+    incoming.setMsgIdKey(message_id);
+    incoming.setMessageKey(message_key);
+    incoming.setSenderKey(sender_key);
+    incoming.setSenderRegex("(.*)");
+    incoming.setMessageRegex("(.*)");
+    Status status = new Status();
+    status.setStatusKey(status_key);
+    Template template = new Template();
+    template.setIncoming(incoming);
+    template.setStatus(status);
+    Map<String, String> providerData = new HashMap<>();
+    providerData.put(message_key, "Message");
+    providerData.put(message_id, "897");
+    providerData.put(sender_key, "1234345");
+    providerData.put(status_key, "Delivered");
+    incomingMessageAccessor = new IncomingMessageAccessor(template, providerData);
+  }
+
+  @Test
+  public void priority() {
+    int actual = defaultIncomingMessageHandler.priority();
+    assertThat(actual, is(expected_priority));
+  }
+
+  @Test
+  public void shouldReturnFalseForMessageNotReceivedFirstTime() {
+    IncomingMessageData incomingMessageData =
+        new IncomingMessageDataBuilder(incomingMessageAccessor)
+            .setReceivedForAFistTime(Boolean.FALSE)
+            .build();
+    assertFalse(defaultIncomingMessageHandler.handle(incomingMessageData));
+  }
+
+  @Test
+  public void shouldReturnFalseMessageReceivedFirstTimeWithoutAutomaticResponseScript() {
+    Config config = new Config();
+    config.setName("Nexmo");
+    IncomingMessageData incomingMessageData =
+        new IncomingMessageDataBuilder(incomingMessageAccessor)
+            .setConfig(config)
+            .setReceivedForAFistTime(Boolean.TRUE)
+            .build();
+    assertFalse(defaultIncomingMessageHandler.handle(incomingMessageData));
+  }
 }

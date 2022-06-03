@@ -36,13 +36,12 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @PrepareForTest({Context.class})
 public class StatusSmsEventListenerTest {
 
-  @Mock
-  StatusSmsEventListener statusSmsEventListener;
+  @Mock StatusSmsEventListener statusSmsEventListener;
 
-  Session session;
-  
-  SmsHttpService smsHttpService;
-  
+  private Session session;
+
+  private SmsHttpService smsHttpService;
+
   private static final String CONFIG = "config";
   private static final String MESSAGE = "message";
   private static final String OPENMRS_ID = "openmrs_id";
@@ -65,9 +64,9 @@ public class StatusSmsEventListenerTest {
     statusSmsEventListener = new StatusSmsEventListener();
     session = mock(Session.class);
     ActiveMQMapMessage activeMQMapMessage = new ActiveMQMapMessage();
-    activeMQMapMessage.setString("config","nexmo");
-    activeMQMapMessage.setString("message","messages");
-    when(session.createMessage()).thenReturn( activeMQMapMessage);
+    activeMQMapMessage.setString("config", "nexmo");
+    activeMQMapMessage.setString("message", "messages");
+    when(session.createMessage()).thenReturn(activeMQMapMessage);
     smsHttpService = mock(SmsHttpService.class);
     doReturn(smsHttpService)
         .when(Context.class, "getRegisteredComponent", "sms.SmsHttpService", SmsHttpService.class);
@@ -86,7 +85,9 @@ public class StatusSmsEventListenerTest {
   }
 
   @Test
-  public void onMessage() throws JMSException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+  public void onMessage()
+      throws JMSException, InvocationTargetException, NoSuchMethodException,
+          IllegalAccessException {
     Message message = session.createMessage();
     message.setObjectProperty(SmsEventParamsConstants.CONFIG, CONFIG);
     message.setObjectProperty(SmsEventParamsConstants.RECIPIENTS, RECIPIENTS_LIST);
@@ -99,8 +100,9 @@ public class StatusSmsEventListenerTest {
     statusSmsEventListener.onMessage(message);
     verify(smsHttpService).send(anyObject());
   }
-  
-  private DaemonToken getDaemonToken() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+
+  private DaemonToken getDaemonToken()
+      throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
     Module module = new Module(TestConstants.MODULE_ID);
     module.setModuleId(TestConstants.MODULE_ID);
     Method method = ModuleFactory.class.getDeclaredMethod("getDaemonToken", Module.class);

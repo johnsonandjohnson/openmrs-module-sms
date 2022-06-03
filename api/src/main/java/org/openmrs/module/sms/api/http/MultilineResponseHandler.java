@@ -14,7 +14,6 @@ import org.openmrs.module.sms.api.util.SmsEventsHelper;
 import java.util.Collections;
 import java.util.List;
 
-
 /** Deals with multi-line responses, like the ones sent by Clickatell. */
 public class MultilineResponseHandler extends ResponseHandler {
 
@@ -46,7 +45,7 @@ public class MultilineResponseHandler extends ResponseHandler {
 
       String providerStatus = getTemplateOutgoingResponse().extractProviderStatus(responseLine);
 
-      if(ArrayUtils.isEmpty(messageIdAndRecipient) ) {
+      if (ArrayUtils.isEmpty(messageIdAndRecipient)) {
         Integer failureCount = sms.getFailureCount() + 1;
         String[] messageAndRecipient;
 
@@ -55,7 +54,7 @@ public class MultilineResponseHandler extends ResponseHandler {
         if (ArrayUtils.isEmpty(messageAndRecipient)) {
           getEvents()
               .add(
-                   SmsEventsHelper.outboundEvent(
+                  SmsEventsHelper.outboundEvent(
                       getConfig().retryOrAbortSubject(failureCount),
                       getConfig().getName(),
                       sms.getRecipients(),
