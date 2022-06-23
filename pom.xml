@@ -18,9 +18,9 @@
     </description>
 
     <scm>
-        <connection>scm:git:https://sourcecode.jnj.com/scm/itx-bpv/omrs-sms.git</connection>
-        <developerConnection>scm:git:https://sourcecode.jnj.com/scm/itx-bpv/omrs-sms.git</developerConnection>
-        <url>https://sourcecode.jnj.com/scm/itx-bpv/omrs-sms.git</url>
+        <connection>scm:git:https://sourcecode.jnj.com/scm/itx-bpv/openmrs-module-sms.git</connection>
+        <developerConnection>scm:git:https://sourcecode.jnj.com/scm/itx-bpv/openmrs-module-sms.git</developerConnection>
+        <url>https://sourcecode.jnj.com/scm/itx-bpv/openmrs-module-sms.git</url>
         <tag>HEAD</tag>
     </scm>
 

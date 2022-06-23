@@ -52,7 +52,7 @@ Note: make sure that you have write access to LOCAL_OWA_FOLDER and its content.
 
 Adjust variables listed below to your environment, open terminal and run them
 ```bash
-SMS_REPO=/home/user/cfl/omrs-sms
+SMS_REPO=/home/user/cfl/openmrs-module-sms
 SMS_OMOD=sms-1.0.0-SNAPSHOT.omod
 CFL_REPO=/home/user/cfl/cfl-openmrs
 

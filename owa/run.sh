@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HOME_DIR=~
-SMS_REPO=$HOME_DIR/cfl/omrs-sms
+SMS_REPO=$HOME_DIR/cfl/openmrs-module-sms
 SMS_OMOD=sms-1.0.0-SNAPSHOT.omod
 SMS_OMOD_PREFIX=sms
 CFL_REPO=$HOME_DIR/cfl/cfl-openmrs
