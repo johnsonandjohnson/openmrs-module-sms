@@ -2,10 +2,6 @@
   "name": "sms",
   "version": "0.1.0",
   "description": "OWA project for Sms Module",
-  "repository": {
-    "type": "git",
-    "url": "https://bitbucket.org/soldevelo/omrs-sms"
-  },
   "dependencies": {
     "@bit/soldevelo-cfl.omrs-components.customize": "^1.0.8",
     "@bit/soldevelo-omrs.cfl-components.error-description": "^1.0.0",
@@ -143,6 +139,6 @@
     "Web",
     "App"
   ],
-  "author": "SolDevelo",
+  "author": "Connect for Life",
   "license": "MPL-2.0"
 }
