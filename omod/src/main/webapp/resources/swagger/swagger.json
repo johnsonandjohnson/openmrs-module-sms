@@ -393,12 +393,12 @@
             "$ref" : "#/definitions/Config"
           }
         },
+        "defaultConfig" : {
+          "$ref" : "#/definitions/Config"
+        },
         "empty" : {
           "type" : "boolean",
           "default" : false
-        },
-        "defaultConfig" : {
-          "$ref" : "#/definitions/Config"
         }
       }
     },
@@ -460,8 +460,18 @@
     "MultipartFile" : {
       "type" : "object",
       "properties" : {
+        "originalFilename" : {
+          "type" : "string"
+        },
+        "contentType" : {
+          "type" : "string"
+        },
         "name" : {
           "type" : "string"
+        },
+        "empty" : {
+          "type" : "boolean",
+          "default" : false
         },
         "bytes" : {
           "type" : "array",
@@ -470,22 +480,12 @@
             "format" : "byte"
           }
         },
-        "empty" : {
-          "type" : "boolean",
-          "default" : false
-        },
         "size" : {
           "type" : "integer",
           "format" : "int64"
         },
         "inputStream" : {
           "$ref" : "#/definitions/InputStream"
-        },
-        "contentType" : {
-          "type" : "string"
-        },
-        "originalFilename" : {
-          "type" : "string"
         }
       }
     },

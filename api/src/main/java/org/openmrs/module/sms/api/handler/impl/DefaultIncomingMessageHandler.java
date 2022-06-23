@@ -38,10 +38,14 @@ public class DefaultIncomingMessageHandler implements IncomingMessageHandler {
   @Override
   public boolean handle(IncomingMessageData message) {
     // Don't process repeated messages
-    if (!message.isReceivedForAFistTime()) {
-      return false;
+    if (message.isReceivedForAFistTime()) {
+      processMessages(message);
     }
 
+    return false;
+  }
+
+  private void processMessages(IncomingMessageData message) {
     final Optional<AutomaticResponseData> automaticResponse =
         automaticResponseEvaluatorService.evaluate(
             new AutomaticResponseEvaluationMessageContext(message));
@@ -55,8 +59,6 @@ public class DefaultIncomingMessageHandler implements IncomingMessageHandler {
               automaticResponse.get().getCustomParameters());
       smsService.send(automaticResponseSms);
     }
-
-    return false;
   }
 
   public void setAutomaticResponseEvaluatorService(
