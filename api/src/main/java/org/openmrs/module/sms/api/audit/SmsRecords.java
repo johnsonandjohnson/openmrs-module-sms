@@ -17,7 +17,7 @@ import java.util.List;
 /** SMS audit records from the database. Represents a subset of all records. */
 public class SmsRecords implements Serializable {
 
-  private static final long serialVersionUID = 5635211296748218742L;
+  private static final long serialVersionUID = 1L;
 
   /** The total number of SMS records in the current context. */
   private int count = 0;
