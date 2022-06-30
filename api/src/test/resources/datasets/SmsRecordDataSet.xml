@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ This Source Code Form is subject to the terms of the Mozilla Public License,
+  ~ v. 2.0. If a copy of the MPL was not distributed with this file, You can
+  ~ obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+  ~ the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+  ~ <p>
+  ~ Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+  ~ graphic logo is a trademark of OpenMRS Inc.
+  -->
+
+<dataset>
+    <sms_records
+            sms_records_id="1"
+            config="nexmo"
+            smsDirection="1"
+            phoneNumber="222233331"
+            messageContent="Test message."
+            timestamp="2010-11-16 15:02:12"
+            deliveryStatus="DISPATCHED"
+            providerStatus="0"
+            openMrsId="1b374ce7-d8f8-4ae5-b16c-78a35cb02ed2"
+            providerId="f68cd3ff-3a83-4657-91e2-d240e5fd8ecf"
+            errorMessage=""
+            creator="1"
+            date_created="2010-11-16 15:57:09.0"
+            voided="false"
+            void_reason=""
+            uuid="16f280e0-3e91-48b4-acb2-c29c30595b45"
+    />
+
+    <sms_records
+            sms_records_id="2"
+            config="nexmo"
+            smsDirection="1"
+            phoneNumber="222233331"
+            messageContent="Test message."
+            timestamp="2010-11-16 15:02:12"
+            deliveryStatus="DISPATCHED"
+            providerStatus="0"
+            openMrsId="ddffba98-aadb-4f37-90ed-b469b15515c1"
+            providerId="e1e7406b-4285-4b34-908a-771a4f2f8370"
+            errorMessage=""
+            creator="1"
+            date_created="2010-11-16 15:57:09.0"
+            voided="true"
+            void_reason=""
+            uuid="e1c969a8-8c87-4058-ab2c-d3da042f4def"
+    />
+</dataset>

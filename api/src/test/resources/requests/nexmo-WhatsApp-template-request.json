@@ -1,0 +1,26 @@
+{
+  "from":{
+    "type":"whatsapp",
+    "number":"500123123"
+  },
+  "to":{
+    "type":"whatsapp",
+    "number":"600123123"
+  },
+  "message":{
+    "content":{
+      "type":"template",
+      "template":{
+        "name":"namespace_uuid:testTemplate",
+        "parameters":[
+          {"default":"ParamValue1"},
+          {"default":"ParamValue2"}
+        ]
+      }
+    },
+    "whatsapp": {
+      "policy": "deterministic",
+      "locale": "en-GB"
+    }
+  }
+}

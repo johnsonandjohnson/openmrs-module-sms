@@ -1,0 +1,16 @@
+{
+  "from":{
+    "type":"whatsapp",
+    "number":"500123123"
+  },
+  "to":{
+    "type":"whatsapp",
+    "number":"600123123"
+  },
+  "message":{
+    "content":{
+      "type":"text",
+      "text":"Hello World!"
+    }
+  }
+}

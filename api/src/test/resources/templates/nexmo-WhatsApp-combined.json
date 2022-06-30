@@ -1,0 +1,51 @@
+ {
+   "name":"nexmo_whatsapp_combined",
+   "configurables":[
+      "username",
+      "password",
+      "from"
+   ],
+   "outgoing":{
+      "maxSmsSize":"400",
+      "millisecondsBetweenMessages":"1",
+      "exponentialBackOffRetries":"true",
+      "maxRecipient":"1",
+      "hasAuthentication":"true",
+      "request":{
+         "type":"POST",
+         "jsonContentType":"true",
+         "urlPath":"https://messages-sandbox.nexmo.com/v0.1/messages",
+         "bodyParameters":{
+            "from":"{\"type\": \"whatsapp\", \"number\": \"[from]\" }",
+            "to":"{ \"type\": \"whatsapp\", \"number\": \"[recipients]\" }",
+            "message[#{#parameterValues == null}]":"{\"content\":{\"type\":\"text\",\"text\":\"[message]\"}}",
+            "message[#{#parameterValues != null}]":"{\"content\":{\"type\":\"template\",\"template\":{\"name\":\"[message]\",\"parameters\":[({\"default\":\"[parameterValues]\"})]}},\"whatsapp\":{\"policy\":\"deterministic\",\"locale\":\"en-GB\"}}"
+         }
+      },
+      "response":{
+         "successStatus":"202",
+         "multiLineRecipientResponse":"true",
+         "singleRecipientResponse":"true",
+         "successResponse":".*\"message_uuid\":\"([0-9a-z,-]*)",
+         "extractSingleSuccessMessageId":".*\"message_uuid\":\"([0-9a-z,-]*)",
+         "extractGeneralFailureMessage":"^detail(.*)$"
+      }
+   },
+   "status":{
+      "messageIdKey":"message_uuid",
+      "statusKey":"status",
+      "statusSuccess":"delivered|submitted|read",
+      "statusFailure":"rejected|undeliverable"
+   },
+   "incoming":{
+      "messageKey":"message",
+      "timestampKey":"timestamp",
+      "senderRegex":".*\"number\":\"([0-9a-z,-]*)",
+      "recipientRegex":".*\"number\":\"([0-9a-z,-]*)",
+      "messageRegex":".*\"text\":\"(.*?)\"",
+      "msgIdKey":"message_uuid",
+      "senderKey":"from",
+      "recipientKey":"to"
+   }
+}
+

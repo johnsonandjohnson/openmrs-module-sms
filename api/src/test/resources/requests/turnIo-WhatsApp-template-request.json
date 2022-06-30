@@ -1,0 +1,17 @@
+{
+  "to": "600123123",
+  "type": "hsm",
+  "hsm": {
+    "namespace": "namespace_uuid",
+    "element_name": "testTemplate",
+    "language": {
+      "policy": "deterministic",
+      "code": "en_EN"
+    },
+    "localizable_params": [
+      {
+        "default": "ParamValue1"
+      }
+    ]
+  }
+}

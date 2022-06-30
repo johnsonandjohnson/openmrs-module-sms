@@ -1,0 +1,49 @@
+{
+  "name": "who_turn_io",
+  "configurables": [
+    "authorization",
+    "from",
+    "namespace"
+  ],
+  "outgoing": {
+    "maxSmsSize": "400",
+    "millisecondsBetweenMessages": "1",
+    "exponentialBackOffRetries": "true",
+    "maxRecipient": "1",
+    "hasAuthentication": "false",
+    "request": {
+      "type": "POST",
+      "jsonContentType": "true",
+      "urlPath": "https://whatsapp.who.turn.io/v1/messages",
+      "headerParameters": {
+        "Authorization" : "[authorization]",
+        "X-Turn-Contact-Check" : "1"
+      },
+      "bodyParameters": {
+        "to": "\"[recipients]\"",
+        "type": "hsm",
+        "hsm": "{\"namespace\": \"[namespace]\",\"element_name\": \"[message]\", \"language\": {\"policy\": \"deterministic\", \"code\": \"[language]\" }, \"localizable_params\": [[parameters]]}"
+      }
+    },
+    "response": {
+      "successStatus": "200",
+      "multiLineRecipientResponse": "true",
+      "singleRecipientResponse": "true",
+      "successResponse": ".*\"id\":\"([0-9A-Za-z,-]*)",
+      "extractSingleSuccessMessageId": ".*\"id\":\"(.*?)\"",
+      "extractGeneralFailureMessage": "^detail(.*)$"
+    }
+  },
+  "status": {
+    "messageIdKey": "id",
+    "statusKey": "status",
+    "statusSuccess": "sent|delivered|read",
+    "statusFailure": "failed"
+  },
+  "incoming": {
+    "messageKey": "text",
+    "senderKey": "from",
+    "msgIdKey": "id",
+    "timestampKey": "timestamp"
+  }
+}
