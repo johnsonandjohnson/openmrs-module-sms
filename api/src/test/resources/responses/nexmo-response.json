@@ -1,0 +1,13 @@
+{
+  "message-count": "1",
+  "messages": [
+    {
+      "to": "REDACTED",
+      "message-id": "140033007DD8AB9A",
+      "status": "0",
+      "remaining-balance": "1.96570000",
+      "message-price": "0.03430000",
+      "network": "26001"
+    }
+  ]
+}
