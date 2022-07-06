@@ -463,9 +463,6 @@
         "originalFilename" : {
           "type" : "string"
         },
-        "contentType" : {
-          "type" : "string"
-        },
         "name" : {
           "type" : "string"
         },
@@ -486,6 +483,9 @@
         },
         "inputStream" : {
           "$ref" : "#/definitions/InputStream"
+        },
+        "contentType" : {
+          "type" : "string"
         }
       }
     },

@@ -9,7 +9,7 @@
  */
 
 import { REQUEST, SUCCESS, FAILURE } from './action-type.util'
-import axiosInstance from '@bit/soldevelo-omrs.cfl-components.shared/axios'
+import axiosInstance from '../components/shared/axios'
 import * as Default from '../utils/messages'
 import { getIntl } from "@openmrs/react-components/lib/components/localization/withLocalization";
 import { handleRequest } from '../utils/request-status-util';

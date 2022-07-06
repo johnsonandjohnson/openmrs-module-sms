@@ -9,7 +9,7 @@
  */
 
 import { REQUEST, SUCCESS, FAILURE } from './action-type.util'
-import axiosInstance from '@bit/soldevelo-omrs.cfl-components.shared/axios'
+import axiosInstance from '../components/shared/axios'
 import 'react-toastify/dist/ReactToastify.css';
 import { SmsModel } from '../shared/model/sms.model';
 import * as Default from '../utils/messages';
