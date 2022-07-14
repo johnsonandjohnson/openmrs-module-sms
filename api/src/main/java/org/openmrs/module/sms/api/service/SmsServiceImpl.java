@@ -164,7 +164,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
                   SmsEventSubjectsConstants.PENDING,
                   config.getName(),
                   recipients,
-                  part,
+                  part.replace("\n", " "),
                   openMrsId,
                   null,
                   null,
