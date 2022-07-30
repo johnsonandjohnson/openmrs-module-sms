@@ -52,6 +52,15 @@
         <metadatasharingVersion>1.6.0</metadatasharingVersion>
         <uiframeworkVersion>3.4</uiframeworkVersion>
         <swaggerCoreVersion>1.6.2</swaggerCoreVersion>
+        <reportingVersion>1.20.0</reportingVersion>
+        <apachePoiVersion>4.1.1</apachePoiVersion>
+        <commonsIOVersion>2.11.0</commonsIOVersion>
+        <commonsCollections4Version>4.3</commonsCollections4Version>
+        <commonsCompressVersion>1.18</commonsCompressVersion>
+        <xmlBeansVersion>3.1.0</xmlBeansVersion>
+        <dom4jVersion>1.6.1</dom4jVersion>
+        <calculationVersion>1.1</calculationVersion>
+        <serializationXstream>0.2.12</serializationXstream>
     </properties>
 
     <dependencyManagement>
@@ -146,6 +155,58 @@
                         <artifactId>slf4j-api</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>reporting-api</artifactId>
+                <version>${reportingVersion}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commonsIOVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${apachePoiVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${apachePoiVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml-schemas</artifactId>
+                <version>${apachePoiVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commonsCollections4Version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commonsCompressVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.xmlbeans</groupId>
+                <artifactId>xmlbeans</artifactId>
+                <version>${xmlBeansVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>dom4j</groupId>
+                <artifactId>dom4j</artifactId>
+                <version>${dom4jVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>calculation-api</artifactId>
+                <version>${calculationVersion}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

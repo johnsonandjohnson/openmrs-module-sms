@@ -137,9 +137,25 @@
     <bean id="sms.settings.manager" class="org.openmrs.module.sms.api.service.SettingsManagerServiceImpl"/>
 
     <bean id="sms.eventService" class="org.openmrs.module.sms.api.service.SmsEventServiceImpl"/>
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>org.openmrs.module.sms.api.service.SmsEventService</value>
+                <ref local="sms.eventService"/>
+            </list>
+        </property>
+    </bean>
 
     <bean id="sms.schedulerService" class="org.openmrs.module.sms.api.service.SmsSchedulerServiceImpl">
         <property name="schedulerService" ref="schedulerService"/>
+    </bean>
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>org.openmrs.module.sms.api.service.SmsSchedulerService</value>
+                <ref local="sms.schedulerService"/>
+            </list>
+        </property>
     </bean>
 
     <bean id="templateService" class="org.openmrs.module.sms.api.service.TemplateServiceImpl">
@@ -223,4 +239,27 @@
         <property name="automaticResponseEvaluatorService" ref="sms.VelocityAutomaticResponseEvaluatorService" />
         <property name="smsService" ref="sms.SmsService" />
     </bean>
+
+    <bean id="sms.adHocSMSInputSourceProcessorService" class="org.openmrs.module.sms.api.service.impl.AdHocSMSInputSourceProcessorServiceImpl" />
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>org.openmrs.module.sms.api.service.AdHocSMSInputSourceProcessorService</value>
+                <ref local="sms.adHocSMSInputSourceProcessorService"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="sms.adHocSMSSQLDataSetProcessor" class="org.openmrs.module.sms.api.adhocsms.AdHocSMSSQLDataSetProcessor">
+        <constructor-arg ref="dbSessionFactory"/>
+    </bean>
+    <bean id="sms.scheduleAdHocSMSesService" class="org.openmrs.module.sms.api.service.impl.ScheduleAdHocSMSesServiceImpl" />
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>org.openmrs.module.sms.api.service.ScheduleAdHocSMSesService</value>
+                <ref local="sms.scheduleAdHocSMSesService"/>
+            </list>
+        </property>
+    </bean>
+
 </beans>
