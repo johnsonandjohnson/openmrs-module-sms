@@ -10,6 +10,7 @@
 
 package org.openmrs.module.sms;
 
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,10 +20,14 @@ import org.openmrs.module.BaseModuleActivator;
 import org.openmrs.module.DaemonToken;
 import org.openmrs.module.DaemonTokenAware;
 import org.openmrs.module.sms.api.event.AbstractSmsEventListener;
+import org.openmrs.module.sms.api.event.BaseListener;
 import org.openmrs.module.sms.api.event.SmsEventListenerFactory;
+import org.openmrs.module.sms.api.scheduler.job.ScheduledMessageJob;
 import org.openmrs.module.sms.api.service.IncomingMessageService;
 import org.openmrs.module.sms.api.service.TemplateServiceImpl;
 import org.openmrs.module.sms.api.util.SMSConstants;
+import org.openmrs.module.sms.api.util.SchedulerUtil;
+import org.openmrs.scheduler.TaskDefinition;
 
 /**
  * This class contains the logic that is run every time this module is either started or shutdown
@@ -37,6 +42,7 @@ public class SmsActivator extends BaseModuleActivator implements DaemonTokenAwar
     createGlobalProperties();
     SmsEventListenerFactory.registerEventListeners();
     Context.getRegisteredComponent("templateService", TemplateServiceImpl.class).loadTemplates();
+    rescheduleScheduledMessageJobs();
   }
 
   @Override
@@ -52,6 +58,8 @@ public class SmsActivator extends BaseModuleActivator implements DaemonTokenAwar
         .forEach(eventListener -> eventListener.setDaemonToken(daemonToken));
     Context.getRegisteredComponents(IncomingMessageService.class)
         .forEach(service -> service.setDaemonToken(daemonToken));
+    Context.getRegisteredComponents(BaseListener.class)
+        .forEach(listener -> listener.setDaemonToken(daemonToken));
   }
 
   private void createGlobalProperties() {
@@ -67,6 +75,9 @@ public class SmsActivator extends BaseModuleActivator implements DaemonTokenAwar
         SMSConstants.GP_SMS_VELOCITY_CONTEXT_SERVICE_MAP,
         SMSConstants.GP_SMS_VELOCITY_CONTEXT_SERVICE_MAP_DEFAULT_VALUE,
         SMSConstants.GP_SMS_VELOCITY_CONTEXT_SERVICE_MAP_DESC);
+    createGlobalSettingIfNotExists(SMSConstants.SCHEDULED_SMS_MESSAGES_DETAILS_GP_KEY,
+        SMSConstants.SCHEDULED_SMS_MESSAGES_DETAILS_GP_DEFAULT_VALUE,
+        SMSConstants.SCHEDULED_SMS_MESSAGES_DETAILS_GP_DESCRIPTION);
   }
 
   private void createGlobalSettingIfNotExists(String key, String value, String description) {
@@ -79,5 +90,11 @@ public class SmsActivator extends BaseModuleActivator implements DaemonTokenAwar
             String.format("SMS Module created '%s' global property with value - %s", key, value));
       }
     }
+  }
+
+  private void rescheduleScheduledMessageJobs() {
+    List<TaskDefinition> tasksToReschedule = SchedulerUtil.getTasksByNamePrefix(
+        ScheduledMessageJob.JOB_NAME_PREFIX);
+    tasksToReschedule.forEach(SchedulerUtil::scheduleTask);
   }
 }

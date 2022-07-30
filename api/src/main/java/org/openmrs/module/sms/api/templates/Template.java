@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * Models how we can talk to a specific SMS provider.
  *
@@ -82,7 +81,7 @@ public class Template {
   private PostMethod generatePOSTRequest(Map<String, Object> props) {
     final PostMethod postMethod = new PostMethod(outgoing.getRequest().getUrlPath(props));
 
-    if (outgoing.getRequest().getJsonContentType() != null) {
+    if (Boolean.TRUE.equals(outgoing.getRequest().getJsonContentType())) {
       final Map<String, String> jsonParams =
           getJsonParameters(outgoing.getRequest().getBodyParameters(), props);
 
@@ -187,7 +186,8 @@ public class Template {
     for (Map.Entry<String, String> entry : bodyParameters.entrySet()) {
       final String bodyParametersName = entry.getKey();
       if (TemplateOptionalParameterUtil.shouldParameterBeIncluded(bodyParametersName, props)) {
-        final String value = TemplatePlaceholderReplaceUtil.placeholderOrLiteral(entry.getValue(), props);
+        final String value =
+            TemplatePlaceholderReplaceUtil.placeholderOrLiteral(entry.getValue(), props);
         result.put(TemplateOptionalParameterUtil.trimOptionalExpression(bodyParametersName), value);
       }
     }

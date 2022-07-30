@@ -1,0 +1,26 @@
+[
+  {
+    "Phone": "123456789",
+    "SMS Text": "test json msg1",
+    "Parameters": {
+    },
+    "Contact time": "18:20",
+    "Config": "nexmoWhatsapp1"
+  },
+  {
+    "Phone": "987654321",
+    "SMS Text": "test json msg2",
+    "Parameters": {
+    },
+    "Contact time": "18:21",
+    "Config": "nexmoWhatsapp2"
+  },
+  {
+    "Phone": "1122334455",
+    "SMS Text": "test json msg3",
+    "Parameters": {
+    },
+    "Contact time": "18:22",
+    "Config": "nexmoWhatsapp3"
+  }
+]

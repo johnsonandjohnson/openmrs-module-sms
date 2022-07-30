@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
@@ -89,6 +91,26 @@ public class DateUtilTest {
         Date date = createDate(2010, Calendar.NOVEMBER, 16, 15, 43, 59, "UTC");
         String actual = DateUtil.dateToString(date);
         assertThat(actual, equalTo(expected));
+    }
+
+    @Test
+    public void shouldReturnCorrectDateWithTimeOfDay() {
+        final TimeZone testTimeZone = TimeZone.getTimeZone("UTC");
+        final Calendar calendar = Calendar.getInstance(testTimeZone);
+        calendar.set(2021, Calendar.MAY, 6, 13, 23, 45);
+        calendar.set(Calendar.MILLISECOND, 765);
+        final Date date = calendar.getTime();
+        final String timeStr = "14:11";
+
+        final Date result = DateUtil.getDateWithTimeOfDay(date, timeStr, testTimeZone);
+
+        final Calendar expectedCalendar = Calendar.getInstance(testTimeZone);
+        expectedCalendar.set(2021, Calendar.MAY, 6, 14, 11, 0);
+        expectedCalendar.set(Calendar.MILLISECOND, 0);
+        final Date expectedDate = expectedCalendar.getTime();
+
+        assertNotNull(result);
+        assertThat(result, is(expectedDate));
     }
 
     private Date createDate(int year, int month, int day, int hour, int minute, int second, String timezone) {

@@ -1,8 +1,13 @@
 package org.openmrs.module.sms.api.web;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.module.sms.builder.IntervalBuilder;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -11,7 +16,16 @@ import java.util.TimeZone;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(DateUtil.class)
 public class IntervalTest {
+  private final Date testNow = new Date(1670248800L);
+
+  @Before
+  public void setupMock() throws Exception {
+    PowerMockito.mockStatic(DateUtil.class);
+    PowerMockito.when(DateUtil.class, "now", new Object[0]).thenReturn(testNow);
+  }
 
   @Test
   public void intervalFunctionality() {

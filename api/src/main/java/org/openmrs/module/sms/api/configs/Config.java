@@ -11,6 +11,7 @@
 package org.openmrs.module.sms.api.configs;
 
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatusesConstants;
+import org.openmrs.module.sms.api.util.SmsEventSubjectsConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -168,8 +169,8 @@ public class Config {
    */
   public String retryOrAbortSubject(Integer failureCount) {
     if (failureCount < maxRetries) {
-      return DeliveryStatusesConstants.RETRYING;
+      return SmsEventSubjectsConstants.RETRYING;
     }
-    return DeliveryStatusesConstants.ABORTED;
+    return SmsEventSubjectsConstants.ABORTED;
   }
 }

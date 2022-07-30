@@ -10,7 +10,9 @@
 
 package org.openmrs.module.sms.api.util;
 
+import java.util.StringJoiner;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
@@ -29,6 +31,13 @@ public final class DateUtil {
   private static final String ISO_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
   private static final String DEFAULT_TIME_ZONE = "UTC";
+
+  public static final String HOUR_AND_MINUTE_PATTERN = "HH:mm";
+
+  public static final String SIMPLE_DATE_FORMAT = "yyyy-MM-dd";
+
+  public static final String BASIC_DATE_TIME_FORMAT = new StringJoiner(" ").add(SIMPLE_DATE_FORMAT)
+      .add(HOUR_AND_MINUTE_PATTERN).toString();
 
   public static Date parse(String dateTime) {
     return parse(dateTime, null);
@@ -103,5 +112,36 @@ public final class DateUtil {
     return TimeZone.getTimeZone(DEFAULT_TIME_ZONE);
   }
 
-  private DateUtil() {}
+  public static Date getDateWithTimeOfDay(Date date, String timeOfDay, TimeZone timeZone) {
+    final SimpleDateFormat timeFormat = new SimpleDateFormat(HOUR_AND_MINUTE_PATTERN);
+    timeFormat.setTimeZone(timeZone);
+
+    try {
+      final Calendar timePart = DateUtils.toCalendar(timeFormat.parse(timeOfDay));
+      timePart.setTimeZone(timeZone);
+
+      final Calendar result = org.apache.commons.lang3.time.DateUtils.toCalendar(date);
+      result.setTimeZone(timeZone);
+      result.set(Calendar.HOUR_OF_DAY, timePart.get(Calendar.HOUR_OF_DAY));
+      result.set(Calendar.MINUTE, timePart.get(Calendar.MINUTE));
+      result.set(Calendar.SECOND, 0);
+      result.set(Calendar.MILLISECOND, 0);
+      return result.getTime();
+    } catch (ParseException pe) {
+      throw new IllegalArgumentException(
+          "Illegal value of timeOfDay="
+              + timeOfDay
+              + "; expected pattern: "
+              + HOUR_AND_MINUTE_PATTERN,
+          pe);
+    }
+  }
+
+  public static String getDateInGivenFormat(Date date, String dateFormat) {
+    SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+    return formatter.format(date);
+  }
+
+  private DateUtil() {
+  }
 }

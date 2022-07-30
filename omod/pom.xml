@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.openmrs.module</groupId>
         <artifactId>sms</artifactId>
-        <version>1.2.7</version>
+        <version>1.2.10</version>
     </parent>
 
     <artifactId>sms-omod</artifactId>
@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>sms-api</artifactId>
-            <version>1.2.7</version>
+            <version>1.2.10</version>
         </dependency>
         <dependency>
             <groupId>org.openmrs.web</groupId>
@@ -70,12 +70,40 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>uiframework-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>reporting-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>calculation-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>serialization.xstream-api-1.9</artifactId>
+            <version>${serializationXstream}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>serialization.xstream-api-1.10</artifactId>
+            <version>${serializationXstream}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>serialization.xstream-api-2.0</artifactId>
+            <version>${serializationXstream}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -145,7 +173,7 @@
                                 <version>v1</version>
                                 <description>REST API for SMS Module.</description>
                             </info>
-                            <swaggerDirectory>${basedir}/src/main/webapp/resources/swagger/</swaggerDirectory>
+                            <swaggerDirectory>${basedir}/src/main/resources/</swaggerDirectory>
                         </apiSource>
                     </apiSources>
                 </configuration>

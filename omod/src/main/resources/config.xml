@@ -31,7 +31,7 @@
 
     <require_modules>
         <require_module version="${eventVersion}">org.openmrs.event</require_module>
-        <require_module version="${uiframeworkVersion}">org.openmrs.module.uiframework</require_module>
+        <require_module version="${reportingVersion}">org.openmrs.module.reporting</require_module>
     </require_modules>
 
     <extension>
@@ -40,7 +40,7 @@
     </extension>
 
     <aware_of_modules>
-        <aware_of_module>org.openmrs.module.legacyui</aware_of_module>
+        <aware_of_module version="${legacyVersion}">org.openmrs.module.legacyui</aware_of_module>
         <aware_of_module version="${metadatasharingVersion}">org.openmrs.module.metadatasharing</aware_of_module>
     </aware_of_modules>
 

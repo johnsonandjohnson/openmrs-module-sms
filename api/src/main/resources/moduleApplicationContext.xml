@@ -14,65 +14,34 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:jee="http://www.springframework.org/schema/jee"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
             http://www.springframework.org/schema/context
-            http://www.springframework.org/schema/context/spring-context-3.0.xsd
-            http://www.springframework.org/schema/jee
-            http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
-            http://www.springframework.org/schema/tx
-            http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-            http://www.springframework.org/schema/aop
-            http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-            http://www.springframework.org/schema/util
-            http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <context:component-scan base-package="org.openmrs.module.sms"/>
 
     <bean id="sms.SmsRecordDao" class="org.openmrs.module.sms.api.dao.impl.SmsRecordDaoImpl">
-        <property name="dbSessionFactory">
-            <ref bean="dbSessionFactory"/>
-        </property>
+        <property name="dbSessionFactory" ref="dbSessionFactory"/>
     </bean>
 
     <!-- Wraps SmsService methods in DB transactions and OpenMRS interceptors,
     which set audit info like dateCreated, changedBy, etc.-->
     <bean id="sms.SmsService"
           class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager">
-            <ref bean="transactionManager"/>
-        </property>
+        <property name="transactionManager" ref="transactionManager"/>
         <property name="target">
             <bean class="org.openmrs.module.sms.api.service.SmsServiceImpl">
-                <constructor-arg index="0">
-                    <ref local="sms.eventService"/>
-                </constructor-arg>
-                <constructor-arg index="1">
-                    <ref local="sms.schedulerService"/>
-                </constructor-arg>
-                <constructor-arg index="2">
-                    <ref local="templateService"/>
-                </constructor-arg>
-                <constructor-arg index="3">
-                    <ref local="sms.configService"/>
-                </constructor-arg>
-                <constructor-arg index="4">
-                    <ref local="sms.SmsRecordDao"/>
-                </constructor-arg>
+                <constructor-arg index="0" ref="sms.eventService"/>
+                <constructor-arg index="1" ref="sms.schedulerService"/>
+                <constructor-arg index="2" ref="templateService"/>
+                <constructor-arg index="3" ref="sms.configService"/>
+                <constructor-arg index="4" ref="sms.SmsRecordDao"/>
             </bean>
         </property>
-        <property name="preInterceptors">
-            <ref bean="serviceInterceptors"/>
-        </property>
-        <property name="transactionAttributeSource">
-            <ref bean="transactionAttributeSource"/>
-        </property>
+        <property name="preInterceptors" ref="serviceInterceptors"/>
+        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
     </bean>
 
     <!-- Adds SmsService to OpenMRS context so it can be accessed
@@ -95,26 +64,14 @@
         </property>
         <property name="target">
             <bean class="org.openmrs.module.sms.api.service.SmsSettingsServiceImpl">
-                <property name="templateService">
-                    <ref local="templateService"/>
-                </property>
-                <property name="configService">
-                    <ref local="sms.configService"/>
-                </property>
-                <property name="templateJsonParser">
-                    <ref local="sms.templateJsonParser"/>
-                </property>
-                <property name="settingsManagerService">
-                    <ref local="sms.settings.manager"/>
-                </property>
+                <property name="templateService" ref="templateService"/>
+                <property name="configService" ref="sms.configService"/>
+                <property name="templateJsonParser" ref="sms.templateJsonParser"/>
+                <property name="settingsManagerService" ref="sms.settings.manager"/>
             </bean>
         </property>
-        <property name="preInterceptors">
-            <ref bean="serviceInterceptors"/>
-        </property>
-        <property name="transactionAttributeSource">
-            <ref bean="transactionAttributeSource"/>
-        </property>
+        <property name="preInterceptors" ref="serviceInterceptors"/>
+        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
     </bean>
 
     <!-- Adds SettingsService to OpenMRS context so it can be accessed
@@ -129,62 +86,60 @@
     </bean>
 
     <bean id="sms.configService" class="org.openmrs.module.sms.api.service.ConfigServiceImpl">
-        <constructor-arg index="0">
-            <ref local="sms.settings.manager"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="sms.settings.manager"/>
     </bean>
 
     <bean id="sms.settings.manager" class="org.openmrs.module.sms.api.service.SettingsManagerServiceImpl"/>
 
     <bean id="sms.eventService" class="org.openmrs.module.sms.api.service.SmsEventServiceImpl"/>
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>org.openmrs.module.sms.api.service.SmsEventService</value>
+                <ref bean="sms.eventService"/>
+            </list>
+        </property>
+    </bean>
 
     <bean id="sms.schedulerService" class="org.openmrs.module.sms.api.service.SmsSchedulerServiceImpl">
         <property name="schedulerService" ref="schedulerService"/>
     </bean>
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>org.openmrs.module.sms.api.service.SmsSchedulerService</value>
+                <ref bean="sms.schedulerService"/>
+            </list>
+        </property>
+    </bean>
 
     <bean id="templateService" class="org.openmrs.module.sms.api.service.TemplateServiceImpl">
-        <constructor-arg index="0">
-            <ref local="sms.settings.manager"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="sms.settings.manager"/>
     </bean>
 
     <bean parent="serviceContext">
         <property name="moduleService">
             <list merge="true">
                 <value>org.openmrs.module.sms.api.service.TemplateService</value>
-                <ref local="templateService"/>
+                <ref bean="templateService"/>
             </list>
         </property>
     </bean>
 
     <bean id="sms.SmsHttpService" class="org.openmrs.module.sms.api.http.SmsHttpService">
-        <property name="smsRecordDao">
-            <ref local="sms.SmsRecordDao"/>
-        </property>
-        <property name="templateService">
-            <ref local="templateService"/>
-        </property>
-        <property name="configService">
-            <ref local="sms.configService"/>
-        </property>
-        <property name="smsEventService">
-            <ref local="sms.eventService"/>
-        </property>
+        <property name="smsRecordDao" ref="sms.SmsRecordDao"/>
+        <property name="templateService" ref="templateService"/>
+        <property name="configService" ref="sms.configService"/>
+        <property name="smsEventService" ref="sms.eventService"/>
     </bean>
 
     <bean id="sms.SmsAuditService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager">
-            <ref bean="transactionManager"/>
-        </property>
+        <property name="transactionManager" ref="transactionManager"/>
         <property name="target">
             <bean class="org.openmrs.module.sms.api.audit.SmsAuditServiceImpl" />
         </property>
-        <property name="preInterceptors">
-            <ref bean="serviceInterceptors"/>
-        </property>
-        <property name="transactionAttributeSource">
-            <ref bean="transactionAttributeSource"/>
-        </property>
+        <property name="preInterceptors" ref="serviceInterceptors"/>
+        <property name="transactionAttributeSource" ref="transactionAttributeSource"/>
     </bean>
 
     <bean parent="serviceContext">
@@ -197,9 +152,7 @@
     </bean>
 
     <bean id="sms.templateJsonParser" class="org.openmrs.module.sms.api.json.TemplateJsonParser">
-        <property name="templateService">
-            <ref local="templateService"/>
-        </property>
+        <property name="templateService" ref="templateService"/>
     </bean>
 
     <bean id="sms.statusSmsEventListener" class="org.openmrs.module.sms.api.event.StatusSmsEventListener"/>
@@ -208,9 +161,7 @@
     <bean id="springValidationFactory" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"
           primary="true"/>
     <bean id="sms.validationComponent" class="org.openmrs.module.sms.api.validate.ValidationComponent" >
-        <property name="factory">
-            <ref local="springValidationFactory"/>
-        </property>
+        <property name="factory" ref="springValidationFactory"/>
     </bean>
 
     <bean id="sms.TemplateHandler" class="org.openmrs.module.sms.handler.metadatasharing.TemplateHandler" />
@@ -223,4 +174,33 @@
         <property name="automaticResponseEvaluatorService" ref="sms.VelocityAutomaticResponseEvaluatorService" />
         <property name="smsService" ref="sms.SmsService" />
     </bean>
+
+    <bean id="sms.adHocSMSInputSourceProcessorService" class="org.openmrs.module.sms.api.service.impl.AdHocSMSInputSourceProcessorServiceImpl" />
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>org.openmrs.module.sms.api.service.AdHocSMSInputSourceProcessorService</value>
+                <ref bean="sms.adHocSMSInputSourceProcessorService"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="sms.adHocSMSExcelFileProcessor" class="org.openmrs.module.sms.api.adhocsms.AdHocSMSExcelFileProcessor" />
+    <bean id="sms.adHocSMSJSONFileProcessor" class="org.openmrs.module.sms.api.adhocsms.AdHocSMSJSONFileProcessor" />
+    <bean id="sms.adHocSMSSQLDataSetProcessor" class="org.openmrs.module.sms.api.adhocsms.AdHocSMSSQLDataSetProcessor">
+        <constructor-arg ref="dbSessionFactory"/>
+    </bean>
+
+    <bean id="sms.scheduleAdHocSMSesService" class="org.openmrs.module.sms.api.service.impl.ScheduleAdHocSMSesServiceImpl" />
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>org.openmrs.module.sms.api.service.ScheduleAdHocSMSesService</value>
+                <ref bean="sms.scheduleAdHocSMSesService"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="sms.scheduledMessagesGlobalPropertyListener" class="org.openmrs.module.sms.api.event.ScheduledMessagesGlobalPropertyListener" />
+
 </beans>
