@@ -9,9 +9,9 @@
  */
 
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
 import { Header } from '@openmrs/react-components';
-import PrivateRoute from "@bit/soldevelo-omrs.cfl-components.private-route/private-route";
+import PrivateRoute from "./components/private-route/private-route";
 
 import App from './components/app';
 import Logs from './components/logs/logs';
@@ -19,8 +19,8 @@ import BreadCrumb from './components/bread-crumb';
 import Send from './components/send/send';
 import Settings from './components/settings/index';
 import { SMS_PRIVILEGE } from "./config/privileges";
-import Customize from '@bit/soldevelo-cfl.omrs-components.customize'
-import { initializeLocalizationWrapper } from '@bit/soldevelo-omrs.cfl-components.localization-wrapper';
+import Customize from './components/customize/customize';
+import { initializeLocalizationWrapper } from './components/localization-wrapper/localization-wrapper';
 import messagesEN from "./translations/en.json";
 
 initializeLocalizationWrapper({

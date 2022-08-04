@@ -17,9 +17,9 @@ import settings, { ISettingsState } from './settings.reducer';
 import fileImport, { FileImportState }from './file-import.reducer';
 import timezone, {TimezoneState} from "./timezone.reducer";
 import privateRouteReducer, {PrivateRouteState}
-  from '@bit/soldevelo-omrs.cfl-components.private-route/private-route.reducer';
+  from '../components/private-route/private-route.reducer';
 import customizeReducer, {CustomizeState}
-  from '@bit/soldevelo-cfl.omrs-components.customize/customize.reducer';
+  from '../components/customize/customize.reducer';
 
 export interface IRootState {
   readonly logs: LogsState;

@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { getLogs } from '../../reducers/logs.reducer';
 import { IRootState } from '../../reducers';
 import LogsFilters, { TimePeriod } from './logs-filter';
-import Table from '@bit/soldevelo-omrs.cfl-components.table';
+import Table from '../table/table';
 
 export interface ILogsTableProps extends StateProps, DispatchProps {};
 

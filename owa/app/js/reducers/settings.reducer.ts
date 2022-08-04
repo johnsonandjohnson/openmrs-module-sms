@@ -9,7 +9,7 @@
  */
 
 import { REQUEST, SUCCESS, FAILURE } from './action-type.util'
-import axiosInstance from '@bit/soldevelo-omrs.cfl-components.shared/axios'
+import axiosInstance from '../components/shared/axios'
 import { ConfigUI, IConfig } from '../shared/model/config.model';
 import { ITemplate } from '../shared/model/template.model';
 import { handleRequest } from '../components/toast/request-status-util';
