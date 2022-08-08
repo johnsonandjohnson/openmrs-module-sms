@@ -20,8 +20,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.exception.SmsRuntimeException;
 import org.openmrs.module.sms.api.task.SmsScheduledTask;
-import org.openmrs.module.sms.api.util.SMSConstants;
 import org.openmrs.module.sms.api.util.DateUtil;
+import org.openmrs.module.sms.api.util.SmsEventParamsConstants;
 import org.openmrs.scheduler.SchedulerException;
 import org.openmrs.scheduler.SchedulerService;
 import org.openmrs.scheduler.TaskDefinition;
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
 public class SmsSchedulerServiceTest {
 
   private static final String TEST_SUBJECT = "subject";
-  private static final String JOB_ID_VALUE = "2";
+  private static final String OPENMRS_ID_VALUE = "2";
 
   @Mock private SchedulerService schedulerService;
 
@@ -53,7 +53,7 @@ public class SmsSchedulerServiceTest {
   @Before
   public void setUp() {
     Map<String, Object> parameters = new HashMap<>();
-    parameters.put(SMSConstants.PARAM_JOB_ID, JOB_ID_VALUE);
+    parameters.put(SmsEventParamsConstants.OPENMRS_ID, OPENMRS_ID_VALUE);
     smsEvent = new SmsEvent(TEST_SUBJECT, parameters);
 
     taskDefinitionCaptor = ArgumentCaptor.forClass(TaskDefinition.class);
@@ -61,7 +61,7 @@ public class SmsSchedulerServiceTest {
 
   @Test
   public void shouldProperlyScheduleTask() throws Exception {
-    when(schedulerService.getTaskByName(TEST_SUBJECT + "-" + JOB_ID_VALUE))
+    when(schedulerService.getTaskByName(TEST_SUBJECT + "-" + OPENMRS_ID_VALUE))
         .thenReturn(new TaskDefinition());
 
     smsSchedulerService.safeScheduleRunOnceJob(smsEvent, DateUtil.now(), new SmsScheduledTask());
@@ -70,20 +70,20 @@ public class SmsSchedulerServiceTest {
     verify(schedulerService).scheduleTask(taskDefinitionCaptor.capture());
 
     TaskDefinition captured = taskDefinitionCaptor.getValue();
-    assertThat(captured.getName(), equalTo(TEST_SUBJECT + "-" + JOB_ID_VALUE));
+    assertThat(captured.getName(), equalTo(TEST_SUBJECT + "-" + OPENMRS_ID_VALUE));
     assertThat(captured.getTaskClass(), equalTo(SmsScheduledTask.class.getName()));
     assertThat(captured.getStartTime(), notNullValue());
     assertThat(captured.getStartOnStartup(), equalTo(false));
     assertThat(captured.getRepeatInterval(), equalTo(0L));
 
     Map<String, String> properties = new HashMap<>();
-    properties.put(SMSConstants.PARAM_JOB_ID, JOB_ID_VALUE);
+    properties.put(SmsEventParamsConstants.OPENMRS_ID, OPENMRS_ID_VALUE);
     assertThat(captured.getProperties(), equalTo(properties));
   }
 
   @Test
   public void shouldScheduleEvenIfUnScheduleFailed() throws Exception {
-    when(schedulerService.getTaskByName(TEST_SUBJECT + "-" + JOB_ID_VALUE))
+    when(schedulerService.getTaskByName(TEST_SUBJECT + "-" + OPENMRS_ID_VALUE))
         .thenReturn(new TaskDefinition());
     doThrow(SchedulerException.class)
         .when(schedulerService)
@@ -97,7 +97,7 @@ public class SmsSchedulerServiceTest {
 
   @Test(expected = SmsRuntimeException.class)
   public void shouldThrowExceptionIfScheduleFailed() throws Exception {
-    when(schedulerService.getTaskByName(TEST_SUBJECT + "-" + JOB_ID_VALUE))
+    when(schedulerService.getTaskByName(TEST_SUBJECT + "-" + OPENMRS_ID_VALUE))
         .thenReturn(new TaskDefinition());
     doThrow(SchedulerException.class)
         .when(schedulerService)

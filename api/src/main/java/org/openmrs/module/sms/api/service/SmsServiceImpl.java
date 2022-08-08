@@ -10,6 +10,9 @@
 
 package org.openmrs.module.sms.api.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -21,17 +24,12 @@ import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.task.SmsScheduledTask;
 import org.openmrs.module.sms.api.templates.Template;
-import org.openmrs.module.sms.api.util.SMSConstants;
 import org.openmrs.module.sms.api.util.DateUtil;
+import org.openmrs.module.sms.api.util.OpenMRSIDGeneratorUtil;
 import org.openmrs.module.sms.api.util.SmsEventParamsConstants;
 import org.openmrs.module.sms.api.util.SmsEventSubjectsConstants;
 import org.openmrs.module.sms.api.util.SmsEventsHelper;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 // todo: final pass over how we use openMrsId system-wide
 
@@ -116,10 +114,6 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
     return ret;
   }
 
-  private String generateOpenMrsId() {
-    return UUID.randomUUID().toString().replace("-", "");
-  }
-
   /** Sends an SMS */
   @Override
   @Transactional
@@ -158,7 +152,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
         scheduleSms(sms, config, messageParts, recipients);
       } else {
         for (String part : messageParts) {
-          String openMrsId = generateOpenMrsId();
+          String openMrsId = OpenMRSIDGeneratorUtil.generateOpenMRSID();
           smsEventService.sendEventMessage(
              SmsEventsHelper.outboundEvent(
                   SmsEventSubjectsConstants.PENDING,
@@ -197,7 +191,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
       OutgoingSms sms, Config config, List<String> messageParts, List<String> recipients) {
     Date dt = sms.getDeliveryTime();
     for (String part : messageParts) {
-      String openMrsId = generateOpenMrsId();
+      String openMrsId = OpenMRSIDGeneratorUtil.generateOpenMRSID();
       SmsEvent event =
          SmsEventsHelper.outboundEvent(
               SmsEventSubjectsConstants.SCHEDULED,
@@ -211,7 +205,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
               null,
               sms.getCustomParams());
       // OpenMRS scheduler needs unique job ids, so adding openMrsId as job_id_key will do that
-      event.getParameters().put(SMSConstants.PARAM_JOB_ID, openMrsId);
+      event.getParameters().put(SmsEventParamsConstants.OPENMRS_ID, openMrsId);
       event.getParameters().put(SmsEventParamsConstants.DELIVERY_TIME, dt);
       schedulerService.safeScheduleRunOnceJob(event, dt, new SmsScheduledTask());
       LOGGER.info(

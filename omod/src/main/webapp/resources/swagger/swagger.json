@@ -17,9 +17,65 @@
   }, {
     "name" : "REST API to handle outgoing requests"
   }, {
+    "name" : "REST API to schedule AdHoc SMSes based on data from different input sources"
+  }, {
     "name" : "REST API to send and receive templates/configs to/from the UI"
   } ],
   "paths" : {
+    "/scheduleAdHocSMS" : {
+      "post" : {
+        "tags" : [ "REST API to schedule AdHoc SMSes based on data from different input sources" ],
+        "summary" : "None",
+        "description" : "Schedules AdHoc SMSes based on data from file",
+        "operationId" : "scheduleAdHocSMSesFromFile",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "file",
+          "description" : "file",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/MultipartFile"
+          }
+        }, {
+          "name" : "sheetName",
+          "in" : "query",
+          "description" : "sheetName",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "AdHoc SMSes have been successfully scheduled"
+          },
+          "500" : {
+            "description" : "Failed to schedule AdHoc SMSes"
+          }
+        }
+      }
+    },
+    "/scheduleAdHocSMS/{dataSetUuid}" : {
+      "post" : {
+        "tags" : [ "REST API to schedule AdHoc SMSes based on data from different input sources" ],
+        "summary" : "None",
+        "description" : "Schedules AdHoc SMSes based on data from SQL data set",
+        "operationId" : "scheduleAdHocSMSesFromDataSet",
+        "parameters" : [ {
+          "name" : "dataSetUuid",
+          "in" : "path",
+          "description" : "dataSetUuid",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "AdHoc SMSes have been successfully scheduled"
+          },
+          "500" : {
+            "description" : "Failed to schedule AdHoc SMSes"
+          }
+        }
+      }
+    },
     "/sms/configs" : {
       "get" : {
         "tags" : [ "REST API to send and receive templates/configs to/from the UI" ],

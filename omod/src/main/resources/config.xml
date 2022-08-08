@@ -32,6 +32,7 @@
     <require_modules>
         <require_module version="${eventVersion}">org.openmrs.event</require_module>
         <require_module version="${uiframeworkVersion}">org.openmrs.module.uiframework</require_module>
+        <require_module version="${reportingVersion}">org.openmrs.module.reporting</require_module>
     </require_modules>
 
     <extension>

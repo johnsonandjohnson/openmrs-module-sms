@@ -14,8 +14,8 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.openmrs.module.sms.api.util.SMSConstants;
 import org.openmrs.module.sms.api.util.DateUtil;
+import org.openmrs.module.sms.api.util.SMSConstants;
 import org.openmrs.module.sms.api.util.SmsEventParamsConstants;
 import org.openmrs.module.sms.api.util.SmsTaskUtil;
 
@@ -63,7 +63,7 @@ public class SmsEvent {
     }
 
     public String generateTaskName() {
-        return SmsTaskUtil.generateTaskName(getSubject(), getJobId());
+        return SmsTaskUtil.generateTaskName(getSubject(), getOpenMrsId());
     }
 
     public boolean paramsContainKey(String key) {
