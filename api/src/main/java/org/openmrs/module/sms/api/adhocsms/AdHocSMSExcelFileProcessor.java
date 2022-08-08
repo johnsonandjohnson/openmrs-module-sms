@@ -1,5 +1,12 @@
 package org.openmrs.module.sms.api.adhocsms;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,20 +16,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.module.sms.api.data.AdHocSMSData;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class AdHocSMSExcelFileProcessor {
+public class AdHocSMSExcelFileProcessor implements AdHocSMSInputSourceProcessor {
 
   public static final List<String> EXCEL_FILES_EXTENSION = Arrays.asList("xls", "xlsx");
+
+  public static final String SHEET_NAME_PROP_NAME = "sheetName";
 
   private static final Log LOGGER = LogFactory.getLog(AdHocSMSExcelFileProcessor.class);
 
@@ -36,11 +36,42 @@ public class AdHocSMSExcelFileProcessor {
 
   private static final int CONTACT_TIME_COLUMN_INDEX = 3;
 
-  private static final int PROVIDER_COLUMN_INDEX = 4;
+  private static final int CONFIG_COLUMN_INDEX = 4;
 
-  public List<AdHocSMSData> getSMSDataFromExcelFile(InputStream inputStream, String sheetName) {
+  private static final Map<Integer, BiConsumer<AdHocSMSData, String>> COLUMNS_INDEX_VALUE_MAP = new HashMap<>();
+
+  static {
+    COLUMNS_INDEX_VALUE_MAP.put(PHONE_NUMBER_COLUMN_INDEX, (AdHocSMSData::setPhone));
+    COLUMNS_INDEX_VALUE_MAP.put(SMS_TEXT_COLUMN_INDEX, (AdHocSMSData::setSmsText));
+    COLUMNS_INDEX_VALUE_MAP.put(PARAMETERS_COLUMN_INDEX, ((adHocSMSData, cellValue) -> {
+      try {
+        adHocSMSData.setParameters(cellValue);
+      } catch (IOException ex) {
+        LOGGER.error(
+            String.format("Error occurred while converting parameters string value %s into map",
+                cellValue), ex);
+      }
+    }));
+    COLUMNS_INDEX_VALUE_MAP.put(CONTACT_TIME_COLUMN_INDEX, (AdHocSMSData::setContactTime));
+    COLUMNS_INDEX_VALUE_MAP.put(CONFIG_COLUMN_INDEX, (AdHocSMSData::setConfig));
+  }
+
+  @Override
+  public boolean shouldProcessData(AdHocSMSInputSourceProcessorContext context) {
+    String fileExtension = context.getOptions()
+        .get(AdHocSMSInputSourceProcessor.EXTENSION_FILE_PROP_NAME);
+    if (StringUtils.isNotBlank(fileExtension)) {
+      return EXCEL_FILES_EXTENSION.contains(fileExtension.toLowerCase());
+    }
+
+    return false;
+  }
+
+  @Override
+  public List<AdHocSMSData> getAdHocSMSData(AdHocSMSInputSourceProcessorContext context) {
+    String sheetName = context.getOptions().get(SHEET_NAME_PROP_NAME);
     List<AdHocSMSData> smsDataList = new ArrayList<>();
-    try (Workbook workbook = WorkbookFactory.create(inputStream)) {
+    try (Workbook workbook = WorkbookFactory.create(context.getFile())) {
       Sheet sheet = getSheet(workbook, sheetName);
       for (Row row : sheet) {
         if (isRowInvalid(row)) {
@@ -52,7 +83,7 @@ public class AdHocSMSExcelFileProcessor {
         smsDataList.add(buildAdHocSMSObject(row));
       }
     } catch (IOException ex) {
-      LOGGER.error("Error while processing Excel file");
+      LOGGER.error("Error while processing Excel file", ex);
     }
 
     return smsDataList;
@@ -79,7 +110,7 @@ public class AdHocSMSExcelFileProcessor {
 
   private boolean isHeaderRow(Row row) {
     for (Cell cell : row) {
-      if (AdHocSMSData.COLUMN_NAMES.contains(new DataFormatter().formatCellValue(cell))) {
+      if (AdHocSMSData.COLUMN_NAMES.contains(getValueFromCell(cell))) {
         return true;
       }
     }
@@ -88,40 +119,15 @@ public class AdHocSMSExcelFileProcessor {
   }
 
   private AdHocSMSData buildAdHocSMSObject(Row row) {
-    DataFormatter dataFormatter = new DataFormatter();
     AdHocSMSData adHocSMSData = new AdHocSMSData();
     for (int i = 0; i < NUMBER_OF_COLUMNS; i++) {
-      if (i == PHONE_NUMBER_COLUMN_INDEX) {
-        adHocSMSData.setPhone(dataFormatter.formatCellValue(row.getCell(i)));
-      }
-      if (i == SMS_TEXT_COLUMN_INDEX) {
-        adHocSMSData.setSmsText(dataFormatter.formatCellValue(row.getCell(i)));
-      }
-      if (i == PARAMETERS_COLUMN_INDEX) {
-        adHocSMSData.setParameters(
-            convertParametersStringToMap(dataFormatter.formatCellValue(row.getCell(i))));
-      }
-      if (i == CONTACT_TIME_COLUMN_INDEX) {
-        adHocSMSData.setContactTime(dataFormatter.formatCellValue(row.getCell(i)));
-      }
-      if (i == PROVIDER_COLUMN_INDEX) {
-        adHocSMSData.setConfig(dataFormatter.formatCellValue(row.getCell(i)));
-      }
+      COLUMNS_INDEX_VALUE_MAP.get(i).accept(adHocSMSData, getValueFromCell(row.getCell(i)));
     }
 
     return adHocSMSData;
   }
 
-  private Map<String, Object> convertParametersStringToMap(String value) {
-    Map<String, Object> parametersMap = new HashMap<>();
-    try {
-      if (StringUtils.isNotBlank(value)) {
-        parametersMap = new ObjectMapper().readValue(value, Map.class);
-      }
-    } catch (IOException ex) {
-      LOGGER.error("Error occurred while converting String value into map");
-    }
-
-    return parametersMap;
+  private String getValueFromCell(Cell cell) {
+    return new DataFormatter().formatCellValue(cell);
   }
 }

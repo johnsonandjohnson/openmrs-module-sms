@@ -1,5 +1,6 @@
 package org.openmrs.module.sms.api.data;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -46,7 +47,7 @@ public class AdHocSMSData {
   public AdHocSMSData(Map<String, String> resultMap) throws IOException {
     this.phone = resultMap.get(PHONE_ALIAS);
     this.smsText = resultMap.get(SMS_TEXT_ALIAS);
-    this.parameters = convertResultParametersToMap(resultMap.get(PARAMETERS_ALIAS));
+    this.parameters = new ObjectMapper().readValue(resultMap.get(PARAMETERS_ALIAS), Map.class);
     this.contactTime = resultMap.get(CONTACT_TIME_ALIAS);
     this.config = resultMap.get(CONFIG_ALIAS);
   }
@@ -75,6 +76,11 @@ public class AdHocSMSData {
     this.parameters = parameters;
   }
 
+  @JsonIgnore
+  public void setParameters(String parameters) throws IOException {
+    this.parameters = new ObjectMapper().readValue(parameters, Map.class);
+  }
+
   public String getContactTime() {
     return contactTime;
   }
@@ -89,9 +95,5 @@ public class AdHocSMSData {
 
   public void setConfig(String config) {
     this.config = config;
-  }
-
-  private Map<String, Object> convertResultParametersToMap(String value) throws IOException {
-    return new ObjectMapper().readValue(value, Map.class);
   }
 }

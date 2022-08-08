@@ -516,10 +516,10 @@
     "MultipartFile" : {
       "type" : "object",
       "properties" : {
-        "contentType" : {
+        "originalFilename" : {
           "type" : "string"
         },
-        "originalFilename" : {
+        "contentType" : {
           "type" : "string"
         },
         "name" : {

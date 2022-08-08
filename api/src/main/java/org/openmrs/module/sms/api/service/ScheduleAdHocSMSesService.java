@@ -5,14 +5,12 @@ import org.openmrs.module.sms.api.data.AdHocSMSData;
 import java.util.List;
 
 /**
- * SendAdHocSMSesService API
- * <p>
- * Used for actions related to scheduling AdHoc SMSes.
+ * Service related to scheduling ad hoc SMSes actions
  */
 public interface ScheduleAdHocSMSesService {
 
   /**
-   * Schedules AdHoc SMSes based on list of {@link AdHocSMSData} objects.
+   * Schedules AdHoc SMSes based on list of {@link AdHocSMSData} objects
    *
    * @param smsData list of {@link AdHocSMSData} objects
    */

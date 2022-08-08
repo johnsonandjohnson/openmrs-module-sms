@@ -4,6 +4,8 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.hibernate.SQLQuery;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,12 +61,18 @@ public class AdHocSMSSQLDataSetProcessorTest {
         testDataSet);
     when(dbSession.createSQLQuery(testDataSet.getSqlQuery())).thenReturn(sqlQuery);
 
-    adHocSMSSQLDataSetProcessor.getSMSDataFromSQLDataSet(DATASET_DEFINITION_UUID);
+    adHocSMSSQLDataSetProcessor.getAdHocSMSData(buildInputSourceProcessorContext());
 
     verify(dataSetDefinitionService).getDefinitionByUuid(DATASET_DEFINITION_UUID);
     verify(dbSessionFactory).getCurrentSession();
     verify(dbSession).createSQLQuery(QUERY);
     verify(sqlQuery).list();
+  }
+
+  private AdHocSMSInputSourceProcessorContext buildInputSourceProcessorContext() {
+    Map<String, String> contextOptionsMap = new HashMap<>();
+    contextOptionsMap.put("dataSetUuid", DATASET_DEFINITION_UUID);
+    return new AdHocSMSInputSourceProcessorContext(null, contextOptionsMap);
   }
 
   private SqlDataSetDefinition buildTestSQLDataSetDefinition() {

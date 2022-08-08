@@ -58,10 +58,10 @@ public class ScheduleAdHocSMSesServiceTest {
 
   private List<AdHocSMSData> buildTestAdHocSMSDataList() {
     return Arrays.asList(
-        buildTestAdHocSMSDataObject("111222333", "text1", new HashMap<>(), "10:00", "config1"),
+        buildTestAdHocSMSDataObject("111222333", "text1", new HashMap<>(), "2022-08-27 13:40", "config1"),
         buildTestAdHocSMSDataObject("555666777", "text2", new HashMap<>(), "2022-08-25 16:25",
             "config2"),
-        buildTestAdHocSMSDataObject("22446688", "text3", new HashMap<>(), "13:15", "config3"));
+        buildTestAdHocSMSDataObject("22446688", "text3", new HashMap<>(), "2022-11-08 08:45", "config3"));
   }
 
   private AdHocSMSData buildTestAdHocSMSDataObject(String phone, String smsText,

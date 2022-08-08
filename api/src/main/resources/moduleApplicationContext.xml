@@ -249,9 +249,13 @@
             </list>
         </property>
     </bean>
+
+    <bean id="sms.adHocSMSExcelFileProcessor" class="org.openmrs.module.sms.api.adhocsms.AdHocSMSExcelFileProcessor" />
+    <bean id="sms.adHocSMSJSONFileProcessor" class="org.openmrs.module.sms.api.adhocsms.AdHocSMSJSONFileProcessor" />
     <bean id="sms.adHocSMSSQLDataSetProcessor" class="org.openmrs.module.sms.api.adhocsms.AdHocSMSSQLDataSetProcessor">
         <constructor-arg ref="dbSessionFactory"/>
     </bean>
+
     <bean id="sms.scheduleAdHocSMSesService" class="org.openmrs.module.sms.api.service.impl.ScheduleAdHocSMSesServiceImpl" />
     <bean parent="serviceContext">
         <property name="moduleService">

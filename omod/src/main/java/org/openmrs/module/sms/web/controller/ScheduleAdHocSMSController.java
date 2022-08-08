@@ -5,10 +5,20 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.adhocsms.AdHocSMSExcelFileProcessor;
-import org.openmrs.module.sms.api.adhocsms.AdHocSMSJSONFileProcessor;
+import org.openmrs.module.sms.api.adhocsms.AdHocSMSInputSourceProcessor;
+import org.openmrs.module.sms.api.adhocsms.AdHocSMSInputSourceProcessorContext;
+import org.openmrs.module.sms.api.adhocsms.AdHocSMSSQLDataSetProcessor;
 import org.openmrs.module.sms.api.data.AdHocSMSData;
 import org.openmrs.module.sms.api.service.AdHocSMSInputSourceProcessorService;
 import org.openmrs.module.sms.api.service.ScheduleAdHocSMSesService;
@@ -23,17 +33,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.List;
-
 @Api(value = "Schedules AdHoc SMSes based on data from different input sources",
     tags = "REST API to schedule AdHoc SMSes based on data from different input sources")
 @RestController("sms.scheduleAdHocSMSController")
 @RequestMapping(value = "/scheduleAdHocSMS")
-public class ScheduleAdHocSMSController {
+public class ScheduleAdHocSMSController extends
+    org.openmrs.module.sms.web.controller.RestController {
+
+  private static final Log LOGGER = LogFactory.getLog(ScheduleAdHocSMSController.class);
 
   @Autowired
   @Qualifier("sms.adHocSMSInputSourceProcessorService")
@@ -54,18 +61,13 @@ public class ScheduleAdHocSMSController {
       @ApiParam(name = "file", value = "file") @RequestParam(value = "file") MultipartFile file,
       @ApiParam(name = "sheetName", value = "sheetName") @RequestParam(value = "sheetName", required = false) String sheetName)
       throws IOException {
-    String extensionFile = FilenameUtils.getExtension(file.getOriginalFilename());
-    InputStream inputStream = file.getInputStream();
-
-    List<AdHocSMSData> smsData = new ArrayList<>();
-    if (StringUtils.equalsIgnoreCase(extensionFile,
-        AdHocSMSJSONFileProcessor.JSON_FILE_EXTENSION)) {
-      smsData = adHocSMSInputSourceProcessorService.getSMSDataFromJSONFile(inputStream);
-    } else if (AdHocSMSExcelFileProcessor.EXCEL_FILES_EXTENSION.contains(extensionFile)) {
-      smsData = adHocSMSInputSourceProcessorService.getSMSDataFromExcelFile(inputStream, sheetName);
+    AdHocSMSInputSourceProcessorContext context = buildContextForInputFiles(file, sheetName);
+    List<AdHocSMSData> smsData = adHocSMSInputSourceProcessorService.getAdHocSMSData(context);
+    if (CollectionUtils.isNotEmpty(smsData)) {
+      scheduleAdHocSMSesService.scheduleAdHocSMSes(smsData);
+    } else {
+      LOGGER.info("No SMSes scheduled to be sent");
     }
-
-    scheduleAdHocSMSesService.scheduleAdHocSMSes(smsData);
   }
 
   @ApiOperation(value = "None", notes = "Schedules AdHoc SMSes based on data from SQL data set")
@@ -77,9 +79,31 @@ public class ScheduleAdHocSMSController {
   @ResponseStatus(HttpStatus.OK)
   public void scheduleAdHocSMSesFromDataSet(
       @ApiParam(name = "dataSetUuid", value = "dataSetUuid") @PathVariable String dataSetUuid) {
-    List<AdHocSMSData> smsData = adHocSMSInputSourceProcessorService.getSMSDataFromSQLDataSet(
-        dataSetUuid);
+    AdHocSMSInputSourceProcessorContext context = buildContextForSQLDataset(dataSetUuid);
+    List<AdHocSMSData> smsData = adHocSMSInputSourceProcessorService.getAdHocSMSData(context);
+    if (CollectionUtils.isNotEmpty(smsData)) {
+      scheduleAdHocSMSesService.scheduleAdHocSMSes(smsData);
+    } else {
+      LOGGER.info("No SMSes scheduled to be sent");
+    }
+  }
 
-    scheduleAdHocSMSesService.scheduleAdHocSMSes(smsData);
+  private AdHocSMSInputSourceProcessorContext buildContextForInputFiles(MultipartFile file,
+      String sheetName)
+      throws IOException {
+    String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+    InputStream inputStream = file.getInputStream();
+    Map<String, String> options = new HashMap<>();
+    options.put(AdHocSMSInputSourceProcessor.EXTENSION_FILE_PROP_NAME, fileExtension);
+    options.put(AdHocSMSExcelFileProcessor.SHEET_NAME_PROP_NAME, sheetName);
+
+    return new AdHocSMSInputSourceProcessorContext(inputStream, options);
+  }
+
+  private AdHocSMSInputSourceProcessorContext buildContextForSQLDataset(String dataSetUuid) {
+    Map<String, String> options = new HashMap<>();
+    options.put(AdHocSMSSQLDataSetProcessor.DATA_SET_UUID_PROP_NAME, dataSetUuid);
+
+    return new AdHocSMSInputSourceProcessorContext(null, options);
   }
 }

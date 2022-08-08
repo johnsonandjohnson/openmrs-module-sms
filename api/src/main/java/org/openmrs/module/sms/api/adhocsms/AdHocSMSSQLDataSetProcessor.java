@@ -1,5 +1,10 @@
 package org.openmrs.module.sms.api.adhocsms;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.persistence.EntityNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SQLQuery;
@@ -10,15 +15,13 @@ import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.SqlDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.service.DataSetDefinitionService;
 import org.openmrs.module.sms.api.data.AdHocSMSData;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-public class AdHocSMSSQLDataSetProcessor {
+public class AdHocSMSSQLDataSetProcessor implements AdHocSMSInputSourceProcessor {
 
   private static final Log LOGGER = LogFactory.getLog(AdHocSMSSQLDataSetProcessor.class);
+
+  public static final String DATA_SET_UUID_PROP_NAME = "dataSetUuid";
 
   private DbSessionFactory dbSessionFactory;
 
@@ -26,16 +29,24 @@ public class AdHocSMSSQLDataSetProcessor {
     this.dbSessionFactory = dbSessionFactory;
   }
 
-  public List<AdHocSMSData> getSMSDataFromSQLDataSet(String dataSetUuid) {
+  @Override
+  public boolean shouldProcessData(AdHocSMSInputSourceProcessorContext context) {
+    return context.getOptions().containsKey(DATA_SET_UUID_PROP_NAME);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<AdHocSMSData> getAdHocSMSData(AdHocSMSInputSourceProcessorContext context) {
+    String dataSetUuid = context.getOptions().get(DATA_SET_UUID_PROP_NAME);
     DataSetDefinition dataSet = Context.getService(DataSetDefinitionService.class)
         .getDefinitionByUuid(dataSetUuid);
-    List<AdHocSMSData> resultList = new ArrayList<>();
-    if (dataSet != null) {
-      SQLQuery sqlQuery = getSQLQuery(dataSet);
-      resultList = getSMSData(sqlQuery.list());
+    if (dataSet == null) {
+      throw new EntityNotFoundException(
+          String.format("Data set definition with uuid %s not found", dataSetUuid));
     }
 
-    return resultList;
+    SQLQuery sqlQuery = getSQLQuery(dataSet);
+    return getSMSData(sqlQuery.list());
   }
 
   public void setDbSessionFactory(DbSessionFactory dbSessionFactory) {
@@ -58,7 +69,7 @@ public class AdHocSMSSQLDataSetProcessor {
         resultList.add(new AdHocSMSData((Map<String, String>) object));
       }
     } catch (IOException ex) {
-      LOGGER.error("Error occurred while mapping query results into AdHocSMSData class");
+      LOGGER.error("Error occurred while mapping query results into AdHocSMSData class", ex);
     }
 
     return resultList;

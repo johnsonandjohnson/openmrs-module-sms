@@ -1,5 +1,8 @@
 package org.openmrs.module.sms.api.service.impl;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
@@ -12,15 +15,12 @@ import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.module.sms.api.util.OpenMRSIDGeneratorUtil;
 import org.openmrs.module.sms.api.util.SmsEventSubjectsConstants;
 import org.openmrs.module.sms.api.util.SmsEventsHelper;
-import org.openmrs.module.sms.api.validate.validator.AdHocDeliveryDateTimeValidatorUtils;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 
 public class ScheduleAdHocSMSesServiceImpl implements ScheduleAdHocSMSesService {
 
   private static final Log LOGGER = LogFactory.getLog(ScheduleAdHocSMSesServiceImpl.class);
+
+  private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
 
   @Override
   public void scheduleAdHocSMSes(List<AdHocSMSData> smsData) {
@@ -56,11 +56,6 @@ public class ScheduleAdHocSMSesServiceImpl implements ScheduleAdHocSMSesService 
   }
 
   private Date getSMSDeliveryDate(String dateTime) {
-    if (AdHocDeliveryDateTimeValidatorUtils.isValidTime(dateTime)) {
-      return DateUtil.getDateWithTimeOfDay(DateUtil.now(), dateTime, DateUtil.getLocalTimeZone());
-    }
-
-    return DateUtil.parse(dateTime,
-        String.join(" ", DateUtil.SIMPLE_DATE_FORMAT, DateUtil.HOUR_AND_MINUTE_PATTERN));
+    return DateUtil.parse(dateTime, DATE_FORMAT);
   }
 }

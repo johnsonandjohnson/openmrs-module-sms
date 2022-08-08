@@ -1,30 +1,35 @@
 package org.openmrs.module.sms.api.adhocsms;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.openmrs.module.sms.api.data.AdHocSMSData;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-public class AdHocSMSJSONFileProcessor {
+public class AdHocSMSJSONFileProcessor implements AdHocSMSInputSourceProcessor {
 
   public static final String JSON_FILE_EXTENSION = "json";
 
   private static final Log LOGGER = LogFactory.getLog(AdHocSMSJSONFileProcessor.class);
 
-  public List<AdHocSMSData> getSMSDataFromJSONFile(InputStream inputStream) {
+  @Override
+  public boolean shouldProcessData(AdHocSMSInputSourceProcessorContext context) {
+    return JSON_FILE_EXTENSION.equalsIgnoreCase(context.getOptions().get(
+        AdHocSMSInputSourceProcessor.EXTENSION_FILE_PROP_NAME));
+  }
+
+  @Override
+  public List<AdHocSMSData> getAdHocSMSData(AdHocSMSInputSourceProcessorContext context) {
     List<AdHocSMSData> adHocSMSData = new ArrayList<>();
     try {
-      adHocSMSData = new ObjectMapper().readValue(inputStream,
+      adHocSMSData = new ObjectMapper().readValue(context.getFile(),
           new TypeReference<List<AdHocSMSData>>() {
           });
     } catch (IOException ex) {
-      LOGGER.error("Error while processing JSON file");
+      LOGGER.error("Error while processing JSON file", ex);
     }
 
     return adHocSMSData;
