@@ -10,11 +10,12 @@
 
 package org.openmrs.module.sms.api.configs;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.module.sms.api.audit.constants.DeliveryStatusesConstants;
-
-import static org.junit.Assert.assertEquals;
+import org.openmrs.module.sms.api.util.SmsEventSubjectsConstants;
 
 public class ConfigTest {
 
@@ -29,8 +30,8 @@ public class ConfigTest {
 
   @Test
   public void shouldReturnRetryThenAbortSubject() {
-    assertEquals(DeliveryStatusesConstants.RETRYING, config.retryOrAbortSubject(FAILURE_COUNT - 1));
-    assertEquals(DeliveryStatusesConstants.ABORTED, config.retryOrAbortSubject(FAILURE_COUNT));
+    assertEquals(SmsEventSubjectsConstants.RETRYING, config.retryOrAbortSubject(FAILURE_COUNT - 1));
+    assertEquals(SmsEventSubjectsConstants.ABORTED, config.retryOrAbortSubject(FAILURE_COUNT));
   }
 
   @Test

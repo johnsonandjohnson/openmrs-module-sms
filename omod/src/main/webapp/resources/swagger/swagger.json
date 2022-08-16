@@ -516,6 +516,9 @@
     "MultipartFile" : {
       "type" : "object",
       "properties" : {
+        "contentType" : {
+          "type" : "string"
+        },
         "originalFilename" : {
           "type" : "string"
         },
@@ -539,9 +542,6 @@
         },
         "inputStream" : {
           "$ref" : "#/definitions/InputStream"
-        },
-        "contentType" : {
-          "type" : "string"
         }
       }
     },
