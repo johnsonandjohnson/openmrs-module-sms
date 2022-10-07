@@ -66,13 +66,17 @@ public final class SMSConstants {
   public static final String GP_DISABLE_INCOMING_MESSAGE_HANDLERS =
       "sms.incoming.message.handlers.disabled";
 
-  /** User-friendly description of {@link #GP_DISABLE_INCOMING_MESSAGE_HANDLERS}. */
+  /**
+   * User-friendly description of {@link #GP_DISABLE_INCOMING_MESSAGE_HANDLERS}.
+   */
   public static final String GP_DISABLE_INCOMING_MESSAGE_HANDLERS_DESC =
       "Specifies if all incoming message handlers have to be disabled. "
           + "Disabling all handlers, means any SMS/WhatsApp communication coming to the system is going to "
           + "be ignored (the audit is still performed, the incoming messages are saved in DB!). Default: false";
 
-  /** The default value of {@link #GP_DISABLE_INCOMING_MESSAGE_HANDLERS}. */
+  /**
+   * The default value of {@link #GP_DISABLE_INCOMING_MESSAGE_HANDLERS}.
+   */
   public static final String GP_DISABLE_INCOMING_MESSAGE_HANDLERS_DEFAULT_VALUE = "false";
 
   /**
@@ -92,5 +96,12 @@ public final class SMSConstants {
 
   public static final String GP_SMS_VELOCITY_CONTEXT_SERVICE_MAP_DEFAULT_VALUE = "";
 
-  private SMSConstants() {}
+  public static final String SCHEDULED_SMS_MESSAGES_DETAILS_GP_KEY = "sms.scheduledMessagesDetails";
+
+  public static final String SCHEDULED_SMS_MESSAGES_DETAILS_GP_DEFAULT_VALUE = "[{}]";
+
+  public static final String SCHEDULED_SMS_MESSAGES_DETAILS_GP_DESCRIPTION = "Provides details for scheduled SMS messages";
+
+  private SMSConstants() {
+  }
 }
