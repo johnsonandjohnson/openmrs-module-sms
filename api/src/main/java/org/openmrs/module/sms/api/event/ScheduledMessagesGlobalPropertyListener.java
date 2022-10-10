@@ -19,7 +19,6 @@ import org.apache.commons.lang.StringUtils;
 import org.openmrs.GlobalProperty;
 import org.openmrs.event.Event.Action;
 import org.openmrs.module.sms.api.adhocsms.ScheduledMessageDetails;
-import org.openmrs.module.sms.api.scheduler.job.JobDefinition;
 import org.openmrs.module.sms.api.scheduler.job.ScheduledMessageJob;
 import org.openmrs.module.sms.api.util.CronUtil;
 import org.openmrs.module.sms.api.util.DateUtil;
@@ -69,11 +68,10 @@ public class ScheduledMessagesGlobalPropertyListener extends GlobalPropertyActio
   }
 
   private TaskDefinition prepareTask(ScheduledMessageDetails messageDetails) {
-    JobDefinition job = new ScheduledMessageJob(messageDetails);
     TaskDefinition task = new TaskDefinition();
-    task.setName(job.getTaskName());
+    task.setName(ScheduledMessageJob.getTaskName(messageDetails));
     task.setRepeatInterval(0L);
-    task.setTaskClass(job.getTaskClass().getName());
+    task.setTaskClass(ScheduledMessageJob.getTaskClass().getName());
     task.setStartTime(CronUtil.getNextDate(messageDetails.getCronExpression(), DateUtil.now()));
     task.setStartOnStartup(false);
     task.setProperties(wrapByMap(ScheduledMessageJob.JOB_PROPERTIES_KEY,

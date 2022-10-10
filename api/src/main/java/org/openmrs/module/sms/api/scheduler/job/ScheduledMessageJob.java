@@ -29,8 +29,9 @@ import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.module.sms.api.util.ScheduledMessageDetailsUtil;
 import org.openmrs.module.sms.api.util.SchedulerUtil;
 import org.openmrs.module.sms.api.util.SmsTaskUtil;
+import org.openmrs.scheduler.tasks.AbstractTask;
 
-public class ScheduledMessageJob extends JobDefinition {
+public class ScheduledMessageJob extends AbstractTask {
 
   public static final String JOB_NAME_PREFIX = "ScheduledMessage";
 
@@ -39,13 +40,6 @@ public class ScheduledMessageJob extends JobDefinition {
   private static final Log LOGGER = LogFactory.getLog(ScheduledMessageJob.class);
 
   private ScheduledMessageDetails scheduledMessageDetails;
-
-  public ScheduledMessageJob() {
-  }
-
-  public ScheduledMessageJob(ScheduledMessageDetails scheduledMessageDetails) {
-    this.scheduledMessageDetails = scheduledMessageDetails;
-  }
 
   @Override
   public void execute() {
@@ -68,21 +62,14 @@ public class ScheduledMessageJob extends JobDefinition {
     }
   }
 
-  @Override
-  public boolean shouldStartAtFirstCreation() {
-    return false;
-  }
-
-  @Override
-  public String getTaskName() {
+  public static String getTaskName(ScheduledMessageDetails messageDetails) {
     String taskName = new StringJoiner(":").add(JOB_NAME_PREFIX)
-        .add(scheduledMessageDetails.getName()).toString();
+        .add(messageDetails.getName()).toString();
     return taskName.length() > SmsTaskUtil.NAME_MAX_LENGTH ? taskName.substring(0,
         SmsTaskUtil.NAME_MAX_LENGTH) : taskName;
   }
 
-  @Override
-  public Class getTaskClass() {
+  public static Class getTaskClass() {
     return ScheduledMessageJob.class;
   }
 
