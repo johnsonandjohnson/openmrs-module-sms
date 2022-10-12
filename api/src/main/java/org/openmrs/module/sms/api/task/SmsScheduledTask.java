@@ -14,6 +14,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.http.SmsHttpService;
 import org.openmrs.module.sms.api.service.OutgoingSms;
+import org.openmrs.module.sms.api.util.DateUtil;
 
 public class SmsScheduledTask extends AbstractSmsTask {
 
@@ -21,5 +22,6 @@ public class SmsScheduledTask extends AbstractSmsTask {
     public void executeTask() {
         Context.getRegisteredComponent("sms.SmsHttpService", SmsHttpService.class)
                 .send(new OutgoingSms(new SmsEvent(SmsEvent.convertProperties(getTaskDefinition().getProperties()))));
+        getTaskDefinition().setLastExecutionTime(DateUtil.now());
     }
 }

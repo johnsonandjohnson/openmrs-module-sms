@@ -266,4 +266,6 @@
         </property>
     </bean>
 
+    <bean id="sms.scheduledMessagesGlobalPropertyListener" class="org.openmrs.module.sms.api.event.ScheduledMessagesGlobalPropertyListener" />
+
 </beans>

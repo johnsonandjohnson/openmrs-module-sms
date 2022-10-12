@@ -10,6 +10,7 @@
 
 package org.openmrs.module.sms.api.util;
 
+import java.util.StringJoiner;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.logging.Log;
@@ -34,6 +35,9 @@ public final class DateUtil {
   public static final String HOUR_AND_MINUTE_PATTERN = "HH:mm";
 
   public static final String SIMPLE_DATE_FORMAT = "yyyy-MM-dd";
+
+  public static final String BASIC_DATE_TIME_FORMAT = new StringJoiner(" ").add(SIMPLE_DATE_FORMAT)
+      .add(HOUR_AND_MINUTE_PATTERN).toString();
 
   public static Date parse(String dateTime) {
     return parse(dateTime, null);
@@ -131,6 +135,11 @@ public final class DateUtil {
               + HOUR_AND_MINUTE_PATTERN,
           pe);
     }
+  }
+
+  public static String getDateInGivenFormat(Date date, String dateFormat) {
+    SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+    return formatter.format(date);
   }
 
   private DateUtil() {
