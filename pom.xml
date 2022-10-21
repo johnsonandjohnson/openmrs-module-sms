@@ -50,8 +50,7 @@
         <jacocoVersion>0.8.2</jacocoVersion>
         <surefireVersion>2.17</surefireVersion>
         <metadatasharingVersion>1.6.0</metadatasharingVersion>
-        <uiframeworkVersion>3.4</uiframeworkVersion>
-        <swaggerCoreVersion>1.6.2</swaggerCoreVersion>
+        <swaggerCoreVersion>1.6.7</swaggerCoreVersion>
         <reportingVersion>1.20.0</reportingVersion>
         <apachePoiVersion>4.1.1</apachePoiVersion>
         <commonsIOVersion>2.11.0</commonsIOVersion>
@@ -126,13 +125,6 @@
                 <groupId>org.openmrs.module</groupId>
                 <artifactId>metadatasharing-api</artifactId>
                 <version>${metadatasharingVersion}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.openmrs.module</groupId>
-                <artifactId>uiframework-api</artifactId>
-                <version>${uiframeworkVersion}</version>
-                <type>jar</type>
                 <scope>provided</scope>
             </dependency>
             <!-- Swagger dependencies-->
