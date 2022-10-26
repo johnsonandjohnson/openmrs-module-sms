@@ -38,7 +38,7 @@ public class AdminListTest {
 
     @Test
     public void getLinks_shouldReturnCorrectLinks() {
-        final String expectedSwaggerUri = PROJECT_ID + "/swagger/index.html";
+        final String expectedSwaggerUri = PROJECT_ID + "/apiDocs.htm";
         final String expectedSwaggerTitle = PROJECT_ID + ".refapp.title";
 
         final AdminList adminList = new AdminList();

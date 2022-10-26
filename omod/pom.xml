@@ -70,10 +70,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>uiframework-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-core</artifactId>
         </dependency>
@@ -177,7 +173,7 @@
                                 <version>v1</version>
                                 <description>REST API for SMS Module.</description>
                             </info>
-                            <swaggerDirectory>${basedir}/src/main/webapp/resources/swagger/</swaggerDirectory>
+                            <swaggerDirectory>${basedir}/src/main/resources/</swaggerDirectory>
                         </apiSource>
                     </apiSources>
                 </configuration>

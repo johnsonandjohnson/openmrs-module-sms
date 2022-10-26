@@ -43,7 +43,7 @@ public class AdminList extends AdministrationSectionExt {
   public Map<String, String> getLinks() {
 
     Map<String, String> map = new HashMap<>();
-    map.put("/ms/uiframework/resource/sms/swagger/index.html", "sms.refapp.title");
+    map.put("module/sms/apiDocs.htm", "sms.refapp.title");
     return map;
   }
 
