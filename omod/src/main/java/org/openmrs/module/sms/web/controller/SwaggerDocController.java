@@ -22,5 +22,4 @@ public class SwaggerDocController {
   public void get() {
     // do nothing
   }
-
 }

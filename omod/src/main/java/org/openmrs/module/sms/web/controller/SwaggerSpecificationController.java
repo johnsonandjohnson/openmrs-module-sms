@@ -25,8 +25,8 @@ import java.io.IOException;
 public class SwaggerSpecificationController {
 
   @RequestMapping(method = RequestMethod.GET)
-  public @ResponseBody
-  Object getSwaggerSpecification() throws IOException {
+  @ResponseBody
+  public Object getSwaggerSpecification() throws IOException {
     Resource resource = new ClassPathResource("/swagger.json");
     return new ObjectMapper().readValue(resource.getInputStream(), Object.class);
   }
