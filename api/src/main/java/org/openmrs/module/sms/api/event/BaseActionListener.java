@@ -110,7 +110,7 @@ public abstract class BaseActionListener extends BaseListener {
    * @return the property value or null if there is no such property
    */
   protected String getMessagePropertyValue(Message message, String propertyName) {
-    LOGGER.debug(String.format("Handle getMessagePropertyValue for '%s' property", propertyName));
+    LOGGER.debug("Handle getMessagePropertyValue for '{}' property", propertyName);
     try {
       validateMessage(message);
       return ((MapMessage) message).getString(propertyName);

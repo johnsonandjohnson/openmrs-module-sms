@@ -18,12 +18,15 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.module.sms.ContextMockedTest;
 import org.openmrs.module.sms.api.adhocsms.AdHocSMSInputSourceProcessorContext;
 import org.openmrs.module.sms.api.adhocsms.ScheduledMessageDetails;
 import org.openmrs.module.sms.api.data.AdHocSMSData;
 import org.openmrs.module.sms.api.util.ScheduledMessageDetailsUtil;
+import org.openmrs.module.sms.api.util.SmsTaskUtil;
 import org.openmrs.scheduler.SchedulerException;
 import org.openmrs.scheduler.TaskDefinition;
 
@@ -43,6 +46,20 @@ public class ScheduledMessageJobTest extends ContextMockedTest {
     verify(scheduleAdHocSMSesService).scheduleAdHocSMSes(anyListOf(AdHocSMSData.class));
     verify(schedulerService).saveTaskDefinition(task);
     verify(schedulerService).scheduleTask(task);
+  }
+
+  @Test
+  public void shouldReturnTaskNameWithCorrectLength() {
+    ScheduledMessageDetails shortName = new ScheduledMessageDetails();
+    shortName.setName("ShortName");
+    ScheduledMessageDetails longName = new ScheduledMessageDetails();
+    longName.setName("VeryLongNameWithOver50Characters123567890123456789");
+
+    String shortTaskName = ScheduledMessageJob.getTaskName(shortName);
+    Assert.assertTrue(shortTaskName.length() <= SmsTaskUtil.NAME_MAX_LENGTH);
+
+    String longTaskName = ScheduledMessageJob.getTaskName(longName);
+    Assert.assertTrue(longTaskName.length() <= SmsTaskUtil.NAME_MAX_LENGTH);
   }
 
   private TaskDefinition buildScheduledMessageTask() {

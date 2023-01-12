@@ -31,7 +31,6 @@ import org.openmrs.module.sms.api.util.SmsEventSubjectsConstants;
 import org.openmrs.module.sms.api.util.SmsEventsHelper;
 import org.springframework.transaction.annotation.Transactional;
 
-// todo: final pass over how we use openMrsId system-wide
 
 /**
  * Send an SMS, we really don't send here, but rather pass it on to the SmsHttpService which does
@@ -158,7 +157,7 @@ public class SmsServiceImpl extends BaseOpenmrsService implements SmsService {
                   SmsEventSubjectsConstants.PENDING,
                   config.getName(),
                   recipients,
-                  part.replace("\n", " "),
+                  part.replace('\n', ' '),
                   openMrsId,
                   null,
                   null,

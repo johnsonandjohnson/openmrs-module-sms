@@ -55,7 +55,7 @@ public class AdHocSMSSQLDataSetProcessor implements AdHocSMSInputSourceProcessor
           String.format("Data set definition with uuid %s not found", dataSetUuid));
     }
 
-    SQLQuery sqlQuery = getSQLQuery(dataSet);
+    SQLQuery sqlQuery = getSQLQuery((SqlDataSetDefinition) dataSet);
     return getSMSData(sqlQuery.list());
   }
 
@@ -63,8 +63,7 @@ public class AdHocSMSSQLDataSetProcessor implements AdHocSMSInputSourceProcessor
     this.dbSessionFactory = dbSessionFactory;
   }
 
-  private SQLQuery getSQLQuery(DataSetDefinition dataSet) {
-    SqlDataSetDefinition sqlDataSetDefinition = (SqlDataSetDefinition) dataSet;
+  private SQLQuery getSQLQuery(SqlDataSetDefinition sqlDataSetDefinition) {
     SQLQuery sqlQuery = dbSessionFactory.getCurrentSession()
         .createSQLQuery(sqlDataSetDefinition.getSqlQuery());
     sqlQuery.setResultTransformer((Transformers.ALIAS_TO_ENTITY_MAP));
