@@ -10,13 +10,6 @@
 
 package org.openmrs.module.sms.api.adhocsms;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,11 +21,22 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.openmrs.module.sms.api.data.AdHocSMSData;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
+
 public class AdHocSMSExcelFileProcessor implements AdHocSMSInputSourceProcessor {
 
-  public static final List<String> EXCEL_FILES_EXTENSION = Arrays.asList("xls", "xlsx");
-
   public static final String SHEET_NAME_PROP_NAME = "sheetName";
+
+  private static final Set<String> EXCEL_FILES_EXTENSION =
+      new HashSet<>(Arrays.asList("xls", "xlsx"));
 
   private static final Log LOGGER = LogFactory.getLog(AdHocSMSExcelFileProcessor.class);
 
@@ -48,28 +52,33 @@ public class AdHocSMSExcelFileProcessor implements AdHocSMSInputSourceProcessor 
 
   private static final int CONFIG_COLUMN_INDEX = 4;
 
-  private static final Map<Integer, BiConsumer<AdHocSMSData, String>> COLUMNS_INDEX_VALUE_MAP = new HashMap<>();
+  private static final Map<Integer, BiConsumer<AdHocSMSData, String>> COLUMNS_INDEX_VALUE_MAP =
+      new HashMap<>();
 
   static {
     COLUMNS_INDEX_VALUE_MAP.put(PHONE_NUMBER_COLUMN_INDEX, (AdHocSMSData::setPhone));
     COLUMNS_INDEX_VALUE_MAP.put(SMS_TEXT_COLUMN_INDEX, (AdHocSMSData::setSmsText));
-    COLUMNS_INDEX_VALUE_MAP.put(PARAMETERS_COLUMN_INDEX, ((adHocSMSData, cellValue) -> {
-      try {
-        adHocSMSData.setParameters(cellValue);
-      } catch (IOException ex) {
-        LOGGER.error(
-            String.format("Error occurred while converting parameters string value %s into map",
-                cellValue), ex);
-      }
-    }));
+    COLUMNS_INDEX_VALUE_MAP.put(
+        PARAMETERS_COLUMN_INDEX,
+        ((adHocSMSData, cellValue) -> {
+          try {
+            adHocSMSData.setParameters(cellValue);
+          } catch (IOException ex) {
+            LOGGER.error(
+                String.format(
+                    "Error occurred while converting parameters string value %s into map",
+                    cellValue),
+                ex);
+          }
+        }));
     COLUMNS_INDEX_VALUE_MAP.put(CONTACT_TIME_COLUMN_INDEX, (AdHocSMSData::setContactTime));
     COLUMNS_INDEX_VALUE_MAP.put(CONFIG_COLUMN_INDEX, (AdHocSMSData::setConfig));
   }
 
   @Override
   public boolean shouldProcessData(AdHocSMSInputSourceProcessorContext context) {
-    String fileExtension = context.getOptions()
-        .get(AdHocSMSInputSourceProcessor.EXTENSION_FILE_PROP_NAME);
+    String fileExtension =
+        context.getOptions().get(AdHocSMSInputSourceProcessor.EXTENSION_FILE_PROP_NAME);
     if (StringUtils.isNotBlank(fileExtension)) {
       return EXCEL_FILES_EXTENSION.contains(fileExtension.toLowerCase());
     }
@@ -85,9 +94,10 @@ public class AdHocSMSExcelFileProcessor implements AdHocSMSInputSourceProcessor 
       Sheet sheet = getSheet(workbook, sheetName);
       for (Row row : sheet) {
         if (isRowInvalid(row)) {
-          LOGGER.warn(String.format(
-              "Row number %d has invalid format. It will be skipped during processing",
-              row.getRowNum() + 1));
+          LOGGER.warn(
+              String.format(
+                  "Row number %d has invalid format. It will be skipped during processing",
+                  row.getRowNum() + 1));
           continue;
         }
         smsDataList.add(buildAdHocSMSObject(row));

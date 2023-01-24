@@ -13,7 +13,6 @@ package org.openmrs.module.sms.api.scheduler.job;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringJoiner;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,10 +62,8 @@ public class ScheduledMessageJob extends AbstractTask {
   }
 
   public static String getTaskName(ScheduledMessageDetails messageDetails) {
-    String taskName = new StringJoiner(":").add(JOB_NAME_PREFIX)
-        .add(messageDetails.getName()).toString();
-    return taskName.length() > SmsTaskUtil.NAME_MAX_LENGTH ? taskName.substring(0,
-        SmsTaskUtil.NAME_MAX_LENGTH) : taskName;
+    String taskName = JOB_NAME_PREFIX + ":" + messageDetails.getName();
+    return taskName.substring(0, Math.min(taskName.length(), SmsTaskUtil.NAME_MAX_LENGTH));
   }
 
   public static Class getTaskClass() {

@@ -53,7 +53,7 @@ public class ScheduleAdHocSMSesServiceImpl implements ScheduleAdHocSMSesService 
         SmsEventSubjectsConstants.SCHEDULED,
         smsData.getConfig(),
         Collections.singletonList(smsData.getPhone()),
-        smsData.getSmsText().replace("\n", " "),
+        smsData.getSmsText().replace('\n', ' '),
         OpenMRSIDGeneratorUtil.generateOpenMRSID(),
         null,
         null,

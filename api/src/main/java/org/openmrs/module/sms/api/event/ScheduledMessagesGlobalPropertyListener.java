@@ -73,7 +73,7 @@ public class ScheduledMessagesGlobalPropertyListener extends GlobalPropertyActio
     task.setRepeatInterval(0L);
     task.setTaskClass(ScheduledMessageJob.getTaskClass().getName());
     task.setStartTime(CronUtil.getNextDate(messageDetails.getCronExpression(), DateUtil.now()));
-    task.setStartOnStartup(false);
+    task.setStartOnStartup(Boolean.FALSE);
     task.setProperties(wrapByMap(ScheduledMessageJob.JOB_PROPERTIES_KEY,
         ScheduledMessageDetailsUtil.toJSONString(messageDetails)));
 
