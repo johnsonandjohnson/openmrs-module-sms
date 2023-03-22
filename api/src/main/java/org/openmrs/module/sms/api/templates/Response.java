@@ -17,17 +17,13 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import java.net.HttpURLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** How to to deal with provider-specific http responses */
 @SuppressWarnings({"PMD.TooManyFields"})
-public class Response {
+public class Response extends HttpResponse {
 
-  private static final int HTTP_SUCCESS_MIN = HttpURLConnection.HTTP_OK;
-  private static final int HTTP_99 = 99;
-  private static final int HTTP_SUCCESS_MAX = HttpURLConnection.HTTP_OK + HTTP_99;
   private static final String SEARCH_GROUPS_EXCEPTION_FORMAT =
       "Invalid number of search groups, expected: 1, actual: %s.";
 
@@ -36,9 +32,6 @@ public class Response {
 
   /** Whether the provider has a different type of response for single recipient messages. */
   @JsonProperty private Boolean singleRecipientResponse = Boolean.FALSE;
-
-  /** The success status expected. */
-  @JsonProperty private String successStatus;
 
   /** If not empty, indicates that the provider sends responses for successful requests. */
   @JsonProperty private String successResponse;
@@ -72,19 +65,6 @@ public class Response {
   @JsonIgnore private Pattern extractSuccessMessageIdAndRecipientPattern;
   @JsonIgnore private Pattern extractFailureMessageAndRecipientPattern;
   @JsonIgnore private Pattern extractProviderStatusPattern;
-
-  /**
-   * Checks whether the given status is a success status.
-   *
-   * @param status the status to check
-   * @return true if this is a success status, false otherwise
-   */
-  public Boolean isSuccessStatus(Integer status) {
-    if (StringUtils.isBlank(successStatus)) {
-      return (status >= HTTP_SUCCESS_MIN && status <= HTTP_SUCCESS_MAX);
-    }
-    return status.toString().matches(successStatus);
-  }
 
   /** @return true if this provider returns responses for successful requests */
   public Boolean hasSuccessResponse() {

@@ -16,10 +16,14 @@ import org.openmrs.module.DaemonToken;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+@ContextConfiguration(
+    locations = {"classpath:applicationContext-service.xml", "classpath*:moduleApplicationContext.xml",
+        "classpath*:TestingApplicationContext.xml"}, inheritLocations = false)
 public abstract class ContextSensitiveWithActivatorTest extends BaseModuleContextSensitiveTest {
 
     private SmsActivator activator;

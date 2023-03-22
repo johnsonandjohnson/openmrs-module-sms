@@ -1,0 +1,28 @@
+{
+  "defaultConfigName": "FDI Test Config",
+  "configs": [
+    {
+      "name": "FDI Test Config",
+      "maxRetries": 0,
+      "excludeLastFooter": true,
+      "splitHeader": "...",
+      "splitFooter": "...",
+      "templateName": "Future Dynamic Innovations SMS v0.4",
+      "props": [
+        {
+          "name": "api_username",
+          "value": "APIUsername1"
+        },
+        {
+          "name": "api_password",
+          "value": "APIPassword1"
+        },
+        {
+          "name": "from",
+          "value": "FDI"
+        }
+      ],
+      "automaticResponseScript": null
+    }
+  ]
+}

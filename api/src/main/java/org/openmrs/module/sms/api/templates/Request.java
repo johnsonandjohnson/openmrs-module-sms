@@ -47,6 +47,8 @@ public class Request {
   /** True if the provider expected a json content type. */
   @JsonProperty private Boolean jsonContentType = Boolean.FALSE;
 
+  @JsonProperty private String overrideUserAgent;
+
   /** Properties used for building the current processed url path. */
   @JsonIgnore private Map<String, Object> props;
 
@@ -152,6 +154,14 @@ public class Request {
    */
   public void setJsonContentType(Boolean jsonContentType) {
     this.jsonContentType = jsonContentType;
+  }
+
+  public String getOverrideUserAgent() {
+    return overrideUserAgent;
+  }
+
+  public void setOverrideUserAgent(String overrideUserAgent) {
+    this.overrideUserAgent = overrideUserAgent;
   }
 
   @Override
