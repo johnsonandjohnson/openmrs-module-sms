@@ -10,16 +10,14 @@
 
 package org.openmrs.module.sms.api.audit;
 
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.openmrs.module.sms.api.web.Interval;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.openmrs.module.sms.api.web.Interval;
 
 
 /**
@@ -300,7 +298,7 @@ public class SmsRecordSearchCriteria {
 
     private void addStringRestriction(Criteria criteria, String fieldName, String value) {
         if (StringUtils.isNotBlank(value)) {
-            criteria.add(Restrictions.like(fieldName, value, MatchMode.ANYWHERE));
+            criteria.add(Restrictions.eq(fieldName, value));
         }
     }
 

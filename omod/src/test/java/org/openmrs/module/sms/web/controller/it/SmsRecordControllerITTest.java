@@ -10,6 +10,16 @@
 
 package org.openmrs.module.sms.web.controller.it;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -25,17 +35,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 //CHECKSTYLE:OFF: MagicNumber
 @WebAppConfiguration
@@ -114,7 +113,7 @@ public class SmsRecordControllerITTest extends BaseModuleWebContextSensitiveTest
     public void shouldFilterByPhoneNumber() throws Exception {
 
         MvcResult result = mockMvc.perform(get("/sms/log/")
-                .param("phoneNumber", "531"))
+                .param("phoneNumber", PHONE_NUMBER))
                 .andExpect(status().is(HttpStatus.OK.value())).andReturn();
 
         assertThat(result, is(notNullValue()));
@@ -128,7 +127,7 @@ public class SmsRecordControllerITTest extends BaseModuleWebContextSensitiveTest
     public void shouldFilterByConfig() throws Exception {
 
         MvcResult result = mockMvc.perform(get("/sms/log/")
-                .param("config", "wilio"))
+                .param("config", CONFIG3))
                 .andExpect(status().is(HttpStatus.OK.value())).andReturn();
 
         assertThat(result, is(notNullValue()));
@@ -142,12 +141,12 @@ public class SmsRecordControllerITTest extends BaseModuleWebContextSensitiveTest
     public void shouldFilterByMessage() throws Exception {
 
         MvcResult result = mockMvc.perform(get("/sms/log/")
-                .param("messageContent", "Message"))
+                .param("messageContent", TEST_MESSAGE2))
                 .andExpect(status().is(HttpStatus.OK.value())).andReturn();
 
         assertThat(result, is(notNullValue()));
         SmsRecordsPageable smsRecordsPageable = getSmsRecordsPageable(result);
-        assertThat(smsRecordsPageable.getTotalRecords(), equalTo(2));
+        assertThat(smsRecordsPageable.getTotalRecords(), equalTo(1));
         assertThat(smsRecordsPageable.getPageIndex(), equalTo(1));
         assertThat(smsRecordsPageable.getPageSize(), equalTo(100));
     }
@@ -156,8 +155,8 @@ public class SmsRecordControllerITTest extends BaseModuleWebContextSensitiveTest
     public void shouldFilterByMessageAndPhoneNumber() throws Exception {
 
         MvcResult result = mockMvc.perform(get("/sms/log/")
-                .param("messageContent", "Message")
-                .param("phoneNumber", "432"))
+                .param("messageContent", TEST_MESSAGE2)
+                .param("phoneNumber", PHONE_NUMBER2))
                 .andExpect(status().is(HttpStatus.OK.value())).andReturn();
 
         assertThat(result, is(notNullValue()));

@@ -1,0 +1,58 @@
+{
+  "outgoing": {
+    "request": {
+      "urlPath": "https://api.nexmo.com/v0.1/dispatch",
+      "recipientsSeparator": null,
+      "queryParameters": {},
+      "bodyParameters": {
+        "template": "\"failover\"",
+        "workflow": "[{\"from\":{\"type\":\"whatsapp\",\"number\":\"[from]\"},\"to\":{\"type\":\"whatsapp\",\"number\":\"[recipients]\"},\"message\":{\"content\":{\"type\":\"template\",\"template\":{\"name\":\"[message]\",\"parameters\":[({\"default\":\"[parameterValues]\"})]}},\"whatsapp\":{\"policy\":\"deterministic\",\"locale\":\"[locale]\"}},\"failover\":{\"expiry_time\":600,\"condition_status\":\"read\"}},{\"from\":{\"type\":\"sms\",\"number\":\"[failover_from]\"},\"to\":{\"type\":\"sms\",\"number\":\"[recipients]\"},\"message\":{\"content\":{\"type\":\"text\",\"text\":\"[failover_message]\"}}}]"
+      },
+      "headerParameters": {},
+      "type": "POST",
+      "jsonContentType": true
+    },
+    "response": {
+      "multiLineRecipientResponse": true,
+      "singleRecipientResponse": true,
+      "successStatus": "202",
+      "successResponse": ".*\"dispatch_uuid\":\"([0-9a-z,-]*)",
+      "extractSingleSuccessMessageId": ".*\"dispatch_uuid\":\"([0-9a-z,-]*)",
+      "extractSingleFailureMessage": null,
+      "extractGeneralFailureMessage": "^detail(.*)$",
+      "extractSuccessMessageIdAndRecipient": null,
+      "extractFailureMessageAndRecipient": null,
+      "extractProviderStatus": null,
+      "headerMessageId": null
+    },
+    "hasAuthentication": true,
+    "exponentialBackOffRetries": true,
+    "millisecondsBetweenMessages": 1000,
+    "maxSmsSize": 400,
+    "maxRecipient": 1,
+    "recipientSeparator": ","
+  },
+  "status": {
+    "messageIdKey": "message_uuid",
+    "statusKey": "status",
+    "statusSuccess": "delivered|submitted|read",
+    "statusFailure": "rejected|undeliverable"
+  },
+  "incoming": {
+    "messageKey": "message",
+    "messageRegex": ".*\"text\":\"(.*?)\"",
+    "senderKey": "from",
+    "senderRegex": ".*\"number\":\"([0-9a-z,-]*)",
+    "recipientKey": "to",
+    "recipientRegex": ".*\"number\":\"([0-9a-z,-]*)",
+    "timestampKey": "timestamp",
+    "msgIdKey": "message_uuid"
+  },
+  "name": "Nexmo Dengue 0.1",
+  "configurables": [
+    "username",
+    "password",
+    "from",
+    "failover_from"
+  ]
+}

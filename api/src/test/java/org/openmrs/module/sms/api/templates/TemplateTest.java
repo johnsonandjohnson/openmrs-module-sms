@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,6 +54,9 @@ public class TemplateTest {
 
 	private static final String NEXMO_WHATSAPP_COMBINED_MESSAGE_TEMPLATE =
 			"templates/nexmo-WhatsApp-combined.json";
+
+	private static final String NEXMO_WHATSAPP_FAILOVER_MESSAGE_TEMPLATE = "templates/nexmo-WhatsApp-failover.json";
+	private static final String NEXMO_WHATSAPP_FAILOVER_MESSAGE_REQUEST = "requests/nexmo-WhatsApp-failover.json";
 
 	private static final String TURN_IO_PROVIDER_ID = "gBEGkYiEB1VXAglK1ZE_qA1YKPrU";
 
@@ -173,6 +177,21 @@ public class TemplateTest {
 
 		assertEquals(TURN_IO_PROVIDER_ID, providerID);
 	}
+
+	@Test
+	public void shouldGenerateJSONForNexmoFailoverWorkflow() throws IOException {
+		final Map<String, Object> properties = new HashMap<>();
+		properties.put("from", "12012000000");
+		properties.put("failover_from", "48573000000");
+		properties.put("recipients", "48603000000");
+		properties.put("locale", "en-US");
+		properties.put("message", "9c34314d-0663-4e14-bcf7-482cedc7d4e9:sample_shipping_confirmation");
+		properties.put("failover_message", "Your package has been shipped. It will be delivered in 3 business days.");
+		properties.put("parameterValues", Collections.singletonList("3"));
+
+		testRequestBodyGeneration(NEXMO_WHATSAPP_FAILOVER_MESSAGE_TEMPLATE, NEXMO_WHATSAPP_FAILOVER_MESSAGE_REQUEST, properties);
+	}
+
 
 	private void testRequestBodyGeneration(
 			String templateFileName, String expectedRequestBodyFileName, Map<String, Object> properties)

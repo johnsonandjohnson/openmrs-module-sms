@@ -1,0 +1,52 @@
+{
+  "template": "failover",
+  "workflow": [
+    {
+      "from": {
+        "type": "whatsapp",
+        "number": "12012000000"
+      },
+      "to": {
+        "type": "whatsapp",
+        "number": "48603000000"
+      },
+      "message": {
+        "content": {
+          "type": "template",
+          "template": {
+            "name": "9c34314d-0663-4e14-bcf7-482cedc7d4e9:sample_shipping_confirmation",
+            "parameters": [
+              {
+                "default": "3"
+              }
+            ]
+          }
+        },
+        "whatsapp": {
+          "policy": "deterministic",
+          "locale": "en-US"
+        }
+      },
+      "failover": {
+        "expiry_time": 600,
+        "condition_status": "read"
+      }
+    },
+    {
+      "from": {
+        "type": "sms",
+        "number": "48573000000"
+      },
+      "to": {
+        "type": "sms",
+        "number": "48603000000"
+      },
+      "message": {
+        "content": {
+          "type": "text",
+          "text": "Your package has been shipped. It will be delivered in 3 business days."
+        }
+      }
+    }
+  ]
+}
