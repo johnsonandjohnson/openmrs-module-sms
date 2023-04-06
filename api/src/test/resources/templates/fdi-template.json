@@ -1,0 +1,82 @@
+{
+  "outgoing": {
+    "request": {
+      "urlPath": "https://messaging.fdibiz.com/api/v1/mt/single",
+      "recipientsSeparator": null,
+      "queryParameters": {},
+      "bodyParameters": {
+        "msisdn": "\"[recipients]\"",
+        "message": "\"[message]\"",
+        "msgRef": "\"[openMrsId]\"",
+        "sender_id": "\"[from]\""
+      },
+      "headerParameters": {},
+      "type": "POST",
+      "jsonContentType": true,
+      "overrideUserAgent": "CfL/6.0"
+    },
+    "response": {
+      "multiLineRecipientResponse": true,
+      "singleRecipientResponse": true,
+      "successStatus": "200",
+      "successResponse": ".*\"gatewayRef\"\\s*:\\s*\"([0-9a-z,-]*)",
+      "extractSingleSuccessMessageId": ".*\"gatewayRef\"\\s*:\\s*\"([0-9a-z,-]*)",
+      "extractSingleFailureMessage": null,
+      "extractGeneralFailureMessage": ".*\"message\"\\s*:\\s*\"([^\"]+)\".*",
+      "extractSuccessMessageIdAndRecipient": null,
+      "extractFailureMessageAndRecipient": null,
+      "extractProviderStatus": null,
+      "headerMessageId": null
+    },
+    "hasAuthentication": true,
+    "authenticationSchema": "JWT",
+    "exponentialBackOffRetries": true,
+    "millisecondsBetweenMessages": 500,
+    "maxSmsSize": 400,
+    "maxRecipient": 1,
+    "recipientSeparator": ",",
+    "authentication": {
+      "request": {
+        "urlPath": "https://messaging.fdibiz.com/api/v1/auth/",
+        "queryParameters": {},
+        "bodyParameters": {
+          "api_username": "\"[api_username]\"",
+          "api_password": "\"[api_password]\""
+        },
+        "headerParameters": {},
+        "type": "POST",
+        "jsonContentType": true,
+        "overrideUserAgent": "CfL/6.0"
+      },
+      "response": {
+        "successStatus": "200",
+        "successResponse": ".*\"access_token\":\\s*\"([^\"]+)\".*",
+        "extractAuthenticationToken": ".*\"access_token\":\\s*\"([^\"]+)\".*",
+        "extractExpiresAt": ".*\"expires_at\":\\s*\"([^\"]+)\".*",
+        "expiresAtFormat": "yyyy-MM-dd'T'HH:mm:ssVV"
+      }
+    }
+  },
+  "status": {
+    "messageIdKey": "message_uuid",
+    "statusKey": "status",
+    "statusSuccess": "delivered|submitted|read",
+    "statusFailure": "rejected|undeliverable"
+  },
+  "incoming": {
+    "messageKey": "message",
+    "messageRegex": ".*\"text\":\"(.*?)\"",
+    "senderKey": "from",
+    "senderRegex": ".*\"number\":\"([0-9a-z,-]*)",
+    "recipientKey": "to",
+    "recipientRegex": ".*\"number\":\"([0-9a-z,-]*)",
+    "timestampKey": "timestamp",
+    "msgIdKey": "message_uuid"
+  },
+  "name": "Future Dynamic Innovations SMS v0.4",
+  "configurables": [
+    "api_username",
+    "api_password",
+    "from"
+  ]
+}

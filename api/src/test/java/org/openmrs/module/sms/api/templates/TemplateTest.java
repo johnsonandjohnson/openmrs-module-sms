@@ -31,249 +31,270 @@ import static org.junit.Assert.assertNull;
 
 public class TemplateTest {
 
-	private static final String PROVIDER_STATUS_TEMPLATE = "templates/provider-status-template.json";
-	private static final String NEXMO_RESPONSE_JSON = "responses/nexmo-response.json";
+  private static final String PROVIDER_STATUS_TEMPLATE = "templates/provider-status-template.json";
+  private static final String NEXMO_RESPONSE_JSON = "responses/nexmo-response.json";
 
-	private static final String TURN_IO_TEMPLATE = "templates/turnIO-template.json";
-	private static final String TURN_IO_RESPONSE_JSON = "responses/turnIO-response.json";
+  private static final String TURN_IO_TEMPLATE = "templates/turnIO-template.json";
+  private static final String TURN_IO_RESPONSE_JSON = "responses/turnIO-response.json";
 
-	private static final String NEXMO_WHATSAPP_TEXT_MESSAGE_TEMPLATE =
-			"templates/nexmo-WhatsApp-text.json";
-	private static final String NEXMO_WHATSAPP_TEXT_MESSAGE_REQUEST =
-			"requests/nexmo-WhatsApp-text-request.json";
+  private static final String NEXMO_WHATSAPP_TEXT_MESSAGE_TEMPLATE =
+      "templates/nexmo-WhatsApp-text.json";
+  private static final String NEXMO_WHATSAPP_TEXT_MESSAGE_REQUEST =
+      "requests/nexmo-WhatsApp-text-request.json";
 
-	private static final String NEXMO_WHATSAPP_TEMPLATE_MESSAGE_TEMPLATE =
-			"templates/nexmo-WhatsApp-template.json";
-	private static final String NEXMO_WHATSAPP_TEMPLATE_MESSAGE_REQUEST =
-			"requests/nexmo-WhatsApp-template-request.json";
+  private static final String NEXMO_WHATSAPP_TEMPLATE_MESSAGE_TEMPLATE =
+      "templates/nexmo-WhatsApp-template.json";
+  private static final String NEXMO_WHATSAPP_TEMPLATE_MESSAGE_REQUEST =
+      "requests/nexmo-WhatsApp-template-request.json";
 
-	private static final String TURNIO_WHATSAPP_TEMPLATE_MESSAGE_TEMPLATE =
-			"templates/turnIo-WhatsApp-template.json";
-	private static final String TURNIO_WHATSAPP_TEMPLATE_MESSAGE_REQUEST =
-			"requests/turnIo-WhatsApp-template-request.json";
+  private static final String TURNIO_WHATSAPP_TEMPLATE_MESSAGE_TEMPLATE =
+      "templates/turnIo-WhatsApp-template.json";
+  private static final String TURNIO_WHATSAPP_TEMPLATE_MESSAGE_REQUEST =
+      "requests/turnIo-WhatsApp-template-request.json";
 
-	private static final String NEXMO_WHATSAPP_COMBINED_MESSAGE_TEMPLATE =
-			"templates/nexmo-WhatsApp-combined.json";
+  private static final String NEXMO_WHATSAPP_COMBINED_MESSAGE_TEMPLATE =
+      "templates/nexmo-WhatsApp-combined.json";
 
-	private static final String NEXMO_WHATSAPP_FAILOVER_MESSAGE_TEMPLATE = "templates/nexmo-WhatsApp-failover.json";
-	private static final String NEXMO_WHATSAPP_FAILOVER_MESSAGE_REQUEST = "requests/nexmo-WhatsApp-failover.json";
+  private static final String NEXMO_WHATSAPP_FAILOVER_MESSAGE_TEMPLATE =
+      "templates/nexmo-WhatsApp-failover.json";
+  private static final String NEXMO_WHATSAPP_FAILOVER_MESSAGE_REQUEST =
+      "requests/nexmo-WhatsApp-failover.json";
 
-	private static final String TURN_IO_PROVIDER_ID = "gBEGkYiEB1VXAglK1ZE_qA1YKPrU";
+  private static final String FDI_MESSAGE_TEMPLATE = "templates/fdi-template.json";
+  private static final String FDI_MESSAGE_REQUEST = "requests/fdi-template-request.json";
 
-	@Test
-	public void shouldGeneratePostMethodForVotoTemplate() throws IOException {
-		Template template = loadVotoTemplate();
+  private static final String TURN_IO_PROVIDER_ID = "gBEGkYiEB1VXAglK1ZE_qA1YKPrU";
 
-		String expectedJson =
-				"{\"status_callback_url\":\"http://:someUrl\",\"subscribers\":[{\"phone\":\"48700123123\",\"language\":\"en\"}]}";
+  @Test
+  public void shouldGeneratePostMethodForVotoTemplate() throws IOException {
+    Template template = loadVotoTemplate();
 
-		Map<String, Object> props = new HashMap<>();
-		props.put("message", "message");
-		props.put("recipients", "1");
-		props.put("callback", "http://:someUrl");
-		props.put("subscribers", "[{\"phone\":\"48700123123\",\"language\":\"en\"}]");
+    String expectedJson =
+        "{\"status_callback_url\":\"http://:someUrl\",\"subscribers\":[{\"phone\":\"48700123123\",\"language\":\"en\"}]}";
 
-		HttpMethod httpMethod = template.generateRequestFor(props);
+    Map<String, Object> props = new HashMap<>();
+    props.put("message", "message");
+    props.put("recipients", "1");
+    props.put("callback", "http://:someUrl");
+    props.put("subscribers", "[{\"phone\":\"48700123123\",\"language\":\"en\"}]");
 
-		final String json = extractRequestBodyJson(httpMethod);
-		assertEquals(expectedJson, json);
-	}
+    HttpMethod httpMethod = template.generateRequestFor(props);
 
-	@Test
-	public void shouldGeneratePostMethodForNexmoWhatsAppTextMessageTemplate() throws IOException {
-		final Map<String, Object> properties = new HashMap<>();
-		properties.put("from", "500123123");
-		properties.put("recipients", "600123123");
-		properties.put("message", "Hello World!");
+    final String json = extractRequestBodyJson(httpMethod);
+    assertEquals(expectedJson, json);
+  }
 
-		testRequestBodyGeneration(
-				NEXMO_WHATSAPP_TEXT_MESSAGE_TEMPLATE, NEXMO_WHATSAPP_TEXT_MESSAGE_REQUEST, properties);
-	}
+  @Test
+  public void shouldGeneratePostMethodForNexmoWhatsAppTextMessageTemplate() throws IOException {
+    final Map<String, Object> properties = new HashMap<>();
+    properties.put("from", "500123123");
+    properties.put("recipients", "600123123");
+    properties.put("message", "Hello World!");
 
-	@Test
-	public void shouldGeneratePostMethodForNexmoWhatsAppTemplateMessageTemplate() throws IOException {
-		final Map<String, Object> properties = new HashMap<>();
-		properties.put("from", "500123123");
-		properties.put("recipients", "600123123");
-		properties.put("message", "namespace_uuid:testTemplate");
-		properties.put("parameterValues", Arrays.asList("ParamValue1", "ParamValue2"));
+    testRequestBodyGeneration(
+        NEXMO_WHATSAPP_TEXT_MESSAGE_TEMPLATE, NEXMO_WHATSAPP_TEXT_MESSAGE_REQUEST, properties);
+  }
 
-		testRequestBodyGeneration(
-				NEXMO_WHATSAPP_TEMPLATE_MESSAGE_TEMPLATE,
-				NEXMO_WHATSAPP_TEMPLATE_MESSAGE_REQUEST,
-				properties);
-	}
+  @Test
+  public void shouldGeneratePostMethodForNexmoWhatsAppTemplateMessageTemplate() throws IOException {
+    final Map<String, Object> properties = new HashMap<>();
+    properties.put("from", "500123123");
+    properties.put("recipients", "600123123");
+    properties.put("message", "namespace_uuid:testTemplate");
+    properties.put("parameterValues", Arrays.asList("ParamValue1", "ParamValue2"));
 
-	@Test
-	public void shouldGeneratePostMethodForTurnIOWhatsAppTemplateMessageTemplate()
-			throws IOException {
-		final Map<String, Object> properties = new HashMap<>();
-		properties.put("authorization", "Basic ABC:123");
-		properties.put("from", "500123123");
-		properties.put("recipients", "600123123");
-		properties.put("namespace", "namespace_uuid");
-		properties.put("message", "testTemplate");
-		properties.put("language", "en_EN");
-		properties.put("parameters", "{ \"default\": \"ParamValue1\" }");
+    testRequestBodyGeneration(
+        NEXMO_WHATSAPP_TEMPLATE_MESSAGE_TEMPLATE,
+        NEXMO_WHATSAPP_TEMPLATE_MESSAGE_REQUEST,
+        properties);
+  }
 
-		testRequestBodyGeneration(
-				TURNIO_WHATSAPP_TEMPLATE_MESSAGE_TEMPLATE,
-				TURNIO_WHATSAPP_TEMPLATE_MESSAGE_REQUEST,
-				properties);
-	}
+  @Test
+  public void shouldGeneratePostMethodForTurnIOWhatsAppTemplateMessageTemplate()
+      throws IOException {
+    final Map<String, Object> properties = new HashMap<>();
+    properties.put("authorization", "Basic ABC:123");
+    properties.put("from", "500123123");
+    properties.put("recipients", "600123123");
+    properties.put("namespace", "namespace_uuid");
+    properties.put("message", "testTemplate");
+    properties.put("language", "en_EN");
+    properties.put("parameters", "{ \"default\": \"ParamValue1\" }");
 
-	@Test
-	public void shouldGeneratePostMethodForWhatsAppCombinedTemplateForText() throws IOException {
-		final Map<String, Object> properties = new HashMap<>();
-		properties.put("from", "500123123");
-		properties.put("recipients", "600123123");
-		properties.put("message", "Hello World!");
+    testRequestBodyGeneration(
+        TURNIO_WHATSAPP_TEMPLATE_MESSAGE_TEMPLATE,
+        TURNIO_WHATSAPP_TEMPLATE_MESSAGE_REQUEST,
+        properties);
+  }
 
-		testRequestBodyGeneration(
-				NEXMO_WHATSAPP_COMBINED_MESSAGE_TEMPLATE, NEXMO_WHATSAPP_TEXT_MESSAGE_REQUEST, properties);
-	}
+  @Test
+  public void shouldGeneratePostMethodForWhatsAppCombinedTemplateForText() throws IOException {
+    final Map<String, Object> properties = new HashMap<>();
+    properties.put("from", "500123123");
+    properties.put("recipients", "600123123");
+    properties.put("message", "Hello World!");
 
-	@Test
-	public void shouldGeneratePostMethodForWhatsAppCombinedTemplateForTemplate() throws IOException {
-		final Map<String, Object> properties = new HashMap<>();
-		properties.put("from", "500123123");
-		properties.put("recipients", "600123123");
-		properties.put("message", "namespace_uuid:testTemplate");
-		properties.put("parameterValues", Arrays.asList("ParamValue1", "ParamValue2"));
+    testRequestBodyGeneration(
+        NEXMO_WHATSAPP_COMBINED_MESSAGE_TEMPLATE, NEXMO_WHATSAPP_TEXT_MESSAGE_REQUEST, properties);
+  }
 
-		testRequestBodyGeneration(
-				NEXMO_WHATSAPP_COMBINED_MESSAGE_TEMPLATE,
-				NEXMO_WHATSAPP_TEMPLATE_MESSAGE_REQUEST,
-				properties);
-	}
+  @Test
+  public void shouldGeneratePostMethodForWhatsAppCombinedTemplateForTemplate() throws IOException {
+    final Map<String, Object> properties = new HashMap<>();
+    properties.put("from", "500123123");
+    properties.put("recipients", "600123123");
+    properties.put("message", "namespace_uuid:testTemplate");
+    properties.put("parameterValues", Arrays.asList("ParamValue1", "ParamValue2"));
 
-	@Test
-	public void shouldExtractProviderStatus() throws IOException {
-		Template template = loadTemplate(PROVIDER_STATUS_TEMPLATE);
-		String response = loadResponse(NEXMO_RESPONSE_JSON);
+    testRequestBodyGeneration(
+        NEXMO_WHATSAPP_COMBINED_MESSAGE_TEMPLATE,
+        NEXMO_WHATSAPP_TEMPLATE_MESSAGE_REQUEST,
+        properties);
+  }
 
-		String providerStatus = template.getOutgoing().getResponse().extractProviderStatus(response);
+  @Test
+  public void shouldExtractProviderStatus() throws IOException {
+    Template template = loadTemplate(PROVIDER_STATUS_TEMPLATE);
+    String response = loadResponse(NEXMO_RESPONSE_JSON);
 
-		assertEquals("0", providerStatus);
-	}
+    String providerStatus = template.getOutgoing().getResponse().extractProviderStatus(response);
 
-	@Test
-	public void shouldExtractNullIfProviderStatusNotSet() throws IOException {
-		Template template = loadVotoTemplate();
-		String response = loadResponse(NEXMO_RESPONSE_JSON);
+    assertEquals("0", providerStatus);
+  }
 
-		String providerStatus = template.getOutgoing().getResponse().extractProviderStatus(response);
+  @Test
+  public void shouldExtractNullIfProviderStatusNotSet() throws IOException {
+    Template template = loadVotoTemplate();
+    String response = loadResponse(NEXMO_RESPONSE_JSON);
 
-		assertNull(providerStatus);
-	}
+    String providerStatus = template.getOutgoing().getResponse().extractProviderStatus(response);
 
-	@Test
-	public void shouldExtractProviderIDForTurnIOWithUnderscore() throws IOException {
-		Template template = loadTemplate(TURN_IO_TEMPLATE);
-		String response = loadResponse(TURN_IO_RESPONSE_JSON);
+    assertNull(providerStatus);
+  }
 
-		String providerID =
-				template.getOutgoing().getResponse().extractSingleSuccessMessageId(response);
+  @Test
+  public void shouldExtractProviderIDForTurnIOWithUnderscore() throws IOException {
+    Template template = loadTemplate(TURN_IO_TEMPLATE);
+    String response = loadResponse(TURN_IO_RESPONSE_JSON);
 
-		assertEquals(TURN_IO_PROVIDER_ID, providerID);
-	}
+    String providerID =
+        template.getOutgoing().getResponse().extractSingleSuccessMessageId(response);
 
-	@Test
-	public void shouldGenerateJSONForNexmoFailoverWorkflow() throws IOException {
-		final Map<String, Object> properties = new HashMap<>();
-		properties.put("from", "12012000000");
-		properties.put("failover_from", "48573000000");
-		properties.put("recipients", "48603000000");
-		properties.put("locale", "en-US");
-		properties.put("message", "9c34314d-0663-4e14-bcf7-482cedc7d4e9:sample_shipping_confirmation");
-		properties.put("failover_message", "Your package has been shipped. It will be delivered in 3 business days.");
-		properties.put("parameterValues", Collections.singletonList("3"));
+    assertEquals(TURN_IO_PROVIDER_ID, providerID);
+  }
 
-		testRequestBodyGeneration(NEXMO_WHATSAPP_FAILOVER_MESSAGE_TEMPLATE, NEXMO_WHATSAPP_FAILOVER_MESSAGE_REQUEST, properties);
-	}
+  @Test
+  public void shouldGenerateJSONForNexmoFailoverWorkflow() throws IOException {
+    final Map<String, Object> properties = new HashMap<>();
+    properties.put("from", "12012000000");
+    properties.put("failover_from", "48573000000");
+    properties.put("recipients", "48603000000");
+    properties.put("locale", "en-US");
+    properties.put("message", "9c34314d-0663-4e14-bcf7-482cedc7d4e9:sample_shipping_confirmation");
+    properties.put(
+        "failover_message",
+        "Your package has been shipped. It will be delivered in 3 business days.");
+    properties.put("parameterValues", Collections.singletonList("3"));
 
+    testRequestBodyGeneration(
+        NEXMO_WHATSAPP_FAILOVER_MESSAGE_TEMPLATE,
+        NEXMO_WHATSAPP_FAILOVER_MESSAGE_REQUEST,
+        properties);
+  }
 
-	private void testRequestBodyGeneration(
-			String templateFileName, String expectedRequestBodyFileName, Map<String, Object> properties)
-			throws IOException {
-		// given
-		final ObjectMapper objectMapper = new ObjectMapper();
-		final Template template = loadTemplate(templateFileName);
-		final String expectedRequestBody = loadResponse(expectedRequestBodyFileName);
+  @Test
+  public void shouldGenerateJSONForFutureDynamicInnovations() throws IOException {
+    final Map<String, Object> properties = new HashMap<>();
+    properties.put("from", "FDI");
+    properties.put("recipients", "250780123456");
+    properties.put("message", "This is a message");
+    properties.put("callback", "https://examples.com/callback.php");
+    properties.put("openMrsId", "30bb083a-ae95-43b9-8ed5-051693d018af");
 
-		// when
-		final HttpMethod generatedRequest = template.generateRequestFor(properties);
-		final String generatedRequestJson = extractRequestBodyJson(generatedRequest);
+    testRequestBodyGeneration(FDI_MESSAGE_TEMPLATE, FDI_MESSAGE_REQUEST, properties);
+  }
 
-		// then
-		final Map expectedRequestJsonMap = objectMapper.readValue(expectedRequestBody, Map.class);
-		final Map generatedRequestJsonMap = objectMapper.readValue(generatedRequestJson, Map.class);
-		assertEquals(expectedRequestJsonMap, generatedRequestJsonMap);
-	}
+  private void testRequestBodyGeneration(
+      String templateFileName, String expectedRequestBodyFileName, Map<String, Object> properties)
+      throws IOException {
+    // given
+    final ObjectMapper objectMapper = new ObjectMapper();
+    final Template template = loadTemplate(templateFileName);
+    final String expectedRequestBody = loadResponse(expectedRequestBodyFileName);
 
-	private String extractRequestBodyJson(HttpMethod httpMethod) throws IOException {
-		RequestEntity requestEntity = ((PostMethod) httpMethod).getRequestEntity();
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		requestEntity.writeRequest(bos);
-		return new String(bos.toByteArray(), StandardCharsets.UTF_8);
-	}
+    // when
+    final HttpMethod generatedRequest = template.generateRequestFor(properties);
+    final String generatedRequestJson = extractRequestBodyJson(generatedRequest);
 
-	private Template loadVotoTemplate() throws IOException {
-		String jsonTemplate =
-				"{\n"
-						+ "        \"name\":\"Voto\",\n"
-						+ "        \"configurables\": [\n"
-						+ "            \"api_key\"\n"
-						+ "        ],\n"
-						+ "        \"outgoing\":{\n"
-						+ "            \"maxSmsSize\":\"160\",\n"
-						+ "            \"millisecondsBetweenMessages\":\"1\",\n"
-						+ "            \"exponentialBackOffRetries\":\"true\",\n"
-						+ "            \"maxRecipient\":\"1\",\n"
-						+ "            \"hasAuthentication\":\"false\",\n"
-						+ "            \"request\":{\n"
-						+ "                \"type\":\"POST\",\n"
-						+ "                \"urlPath\":\"https://url\",\n"
-						+ "                \"jsonContentType\":\"true\",\n"
-						+ "                \"bodyParameters\":{\n"
-						+ "                    \"status_callback_url\":\"[callback]\",\n"
-						+ "                    \"subscribers\":\"[subscribers]\"\n"
-						+ "                }\n"
-						+ "            },\n"
-						+ "            \"response\":{\n"
-						+ "            }\n"
-						+ "        },\n"
-						+ "        \"status\":{\n"
-						+ "        },\n"
-						+ "        \"incoming\":{\n"
-						+ "        }\n"
-						+ "    }";
-		ObjectMapper objectMapper = new ObjectMapper();
-		return objectMapper.readValue(jsonTemplate, Template.class);
-	}
+    // then
+    final Map expectedRequestJsonMap = objectMapper.readValue(expectedRequestBody, Map.class);
+    final Map generatedRequestJsonMap = objectMapper.readValue(generatedRequestJson, Map.class);
+    assertEquals(expectedRequestJsonMap, generatedRequestJsonMap);
+  }
 
-	private Template loadTemplate(String templateFile) throws IOException {
-		try (InputStream templateStream =
-				     getClass().getClassLoader().getResourceAsStream(templateFile)) {
+  private String extractRequestBodyJson(HttpMethod httpMethod) throws IOException {
+    RequestEntity requestEntity = ((PostMethod) httpMethod).getRequestEntity();
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    requestEntity.writeRequest(bos);
+    return new String(bos.toByteArray(), StandardCharsets.UTF_8);
+  }
 
-			if (templateStream == null) {
-				throw new IOException("Cannot read template file: " + templateFile);
-			}
+  private Template loadVotoTemplate() throws IOException {
+    String jsonTemplate =
+        "{\n"
+            + "        \"name\":\"Voto\",\n"
+            + "        \"configurables\": [\n"
+            + "            \"api_key\"\n"
+            + "        ],\n"
+            + "        \"outgoing\":{\n"
+            + "            \"maxSmsSize\":\"160\",\n"
+            + "            \"millisecondsBetweenMessages\":\"1\",\n"
+            + "            \"exponentialBackOffRetries\":\"true\",\n"
+            + "            \"maxRecipient\":\"1\",\n"
+            + "            \"hasAuthentication\":\"false\",\n"
+            + "            \"request\":{\n"
+            + "                \"type\":\"POST\",\n"
+            + "                \"urlPath\":\"https://url\",\n"
+            + "                \"jsonContentType\":\"true\",\n"
+            + "                \"bodyParameters\":{\n"
+            + "                    \"status_callback_url\":\"[callback]\",\n"
+            + "                    \"subscribers\":\"[subscribers]\"\n"
+            + "                }\n"
+            + "            },\n"
+            + "            \"response\":{\n"
+            + "            }\n"
+            + "        },\n"
+            + "        \"status\":{\n"
+            + "        },\n"
+            + "        \"incoming\":{\n"
+            + "        }\n"
+            + "    }";
+    ObjectMapper objectMapper = new ObjectMapper();
+    return objectMapper.readValue(jsonTemplate, Template.class);
+  }
 
-			String jsonTemplate = IOUtils.toString(templateStream);
+  private Template loadTemplate(String templateFile) throws IOException {
+    try (InputStream templateStream =
+        getClass().getClassLoader().getResourceAsStream(templateFile)) {
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			return objectMapper.readValue(jsonTemplate, Template.class);
-		}
-	}
+      if (templateStream == null) {
+        throw new IOException("Cannot read template file: " + templateFile);
+      }
 
-	private String loadResponse(String responseFile) throws IOException {
-		try (InputStream responseStream =
-				     getClass().getClassLoader().getResourceAsStream(responseFile)) {
-			if (responseStream == null) {
-				throw new IOException("Cannot read response file: " + responseFile);
-			}
-			return IOUtils.toString(responseStream);
-		}
-	}
+      String jsonTemplate = IOUtils.toString(templateStream);
+
+      ObjectMapper objectMapper = new ObjectMapper();
+      return objectMapper.readValue(jsonTemplate, Template.class);
+    }
+  }
+
+  private String loadResponse(String responseFile) throws IOException {
+    try (InputStream responseStream =
+        getClass().getClassLoader().getResourceAsStream(responseFile)) {
+      if (responseStream == null) {
+        throw new IOException("Cannot read response file: " + responseFile);
+      }
+      return IOUtils.toString(responseStream);
+    }
+  }
 }

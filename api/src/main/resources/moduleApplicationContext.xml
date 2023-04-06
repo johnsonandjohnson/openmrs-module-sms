@@ -126,7 +126,19 @@
         </property>
     </bean>
 
+    <bean id="sms.HttpClientService" class="org.openmrs.module.sms.api.http.HttpClientService"/>
+    <bean id="sms.HttpAuthenticationService" class="org.openmrs.module.sms.api.http.HttpAuthenticationService"/>
+    <bean id="sms.HttpAuthenticationBASICHandler" class="org.openmrs.module.sms.api.http.HttpAuthenticationBASICHandler"/>
+    <bean id="sms.JWTRepository" class="org.openmrs.module.sms.api.http.JWTRepository">
+        <property name="httpClientService" ref="sms.HttpClientService"/>
+    </bean>
+    <bean id="sms.HttpAuthenticationJWTHandler" class="org.openmrs.module.sms.api.http.HttpAuthenticationJWTHandler">
+        <property name="jwtRepository" ref="sms.JWTRepository"/>
+    </bean>
+
     <bean id="sms.SmsHttpService" class="org.openmrs.module.sms.api.http.SmsHttpService">
+        <property name="httpClientService" ref="sms.HttpClientService"/>
+        <property name="httpAuthenticationService" ref="sms.HttpAuthenticationService"/>
         <property name="smsRecordDao" ref="sms.SmsRecordDao"/>
         <property name="templateService" ref="templateService"/>
         <property name="configService" ref="sms.configService"/>

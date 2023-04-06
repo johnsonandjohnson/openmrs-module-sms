@@ -12,10 +12,12 @@ package org.openmrs.module.sms.api.templates;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.sms.api.util.SMSConstants;
 
 /** How providers deal with outgoing messages. */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Outgoing {
 
   /** The {@link Request} object used for generating an outgoing SMS request. */
@@ -26,6 +28,12 @@ public class Outgoing {
 
   /** True if the provider requires authentication. */
   @JsonProperty private Boolean hasAuthentication;
+
+  /** Authentication Schema. */
+  @JsonProperty private AuthenticationSchema authenticationSchema = AuthenticationSchema.BASIC;
+
+  /** Authentication Schema configuration. */
+  @JsonProperty private Authentication authentication;
 
   /** Whether we should back off exponentially between retries. Not used currently. */
   @JsonProperty private Boolean exponentialBackOffRetries;
@@ -118,6 +126,22 @@ public class Outgoing {
   /** @param hasAuthentication true if the provider requires authentication, false otherwise */
   public void setHasAuthentication(Boolean hasAuthentication) {
     this.hasAuthentication = hasAuthentication;
+  }
+
+  public AuthenticationSchema getAuthenticationSchema() {
+    return authenticationSchema;
+  }
+
+  public void setAuthenticationSchema(AuthenticationSchema authenticationSchema) {
+    this.authenticationSchema = authenticationSchema;
+  }
+
+  public Authentication getAuthentication() {
+    return authentication;
+  }
+
+  public void setAuthentication(Authentication authentication) {
+    this.authentication = authentication;
   }
 
   /**
@@ -237,5 +261,10 @@ public class Outgoing {
         + recipientSeparator
         + '\''
         + '}';
+  }
+
+  public enum AuthenticationSchema {
+    BASIC,
+    JWT;
   }
 }

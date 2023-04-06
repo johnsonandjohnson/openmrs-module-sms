@@ -10,12 +10,8 @@
 
 package org.openmrs.module.sms.api.http;
 
-import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
@@ -24,8 +20,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.sms.api.audit.SmsDirection;
 import org.openmrs.module.sms.api.audit.SmsRecord;
+import org.openmrs.module.sms.api.audit.constants.DeliveryStatusesConstants;
 import org.openmrs.module.sms.api.configs.Config;
-import org.openmrs.module.sms.api.configs.ConfigProp;
 import org.openmrs.module.sms.api.dao.SmsRecordDao;
 import org.openmrs.module.sms.api.event.SmsEvent;
 import org.openmrs.module.sms.api.service.ConfigService;
@@ -36,44 +32,27 @@ import org.openmrs.module.sms.api.templates.Response;
 import org.openmrs.module.sms.api.templates.Template;
 import org.openmrs.module.sms.api.util.DateUtil;
 import org.openmrs.module.sms.api.util.SmsEventsHelper;
+import org.openmrs.module.sms.api.util.TemplatePropertiesBuilder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.core.MediaType;
+import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 /** This is the main meat - here we talk to the providers using HTTP. */
 public class SmsHttpService {
 
   private static final String SMS_MODULE = "openmrs-sms";
   private static final Log LOGGER = LogFactory.getLog(SmsHttpService.class);
-  private static final String USERNAME = "username";
-  private static final String PASSWORD = "password";
 
-  private final HttpClient commonsHttpClient;
-
+  private HttpClientService httpClientService;
+  private HttpAuthenticationService httpAuthenticationService;
   private TemplateService templateService;
   private ConfigService configService;
   private SmsEventService smsEventService;
   private SmsRecordDao smsRecordDao;
-
-  /**
-   * The package-private constructor which <b>facilitates unit-tests</b> and allows usage of
-   * custom/mock HttpClient object.
-   *
-   * @param commonsHttpClient the Http Client to use, not null
-   */
-  SmsHttpService(HttpClient commonsHttpClient) {
-    this.commonsHttpClient = commonsHttpClient;
-  }
-
-  /** The default constructor, used by Spring to initialize this bean. */
-  public SmsHttpService() {
-    this(new HttpClient(new MultiThreadedHttpConnectionManager()));
-  }
 
   /**
    * This method allows sending outgoing sms messages through HTTP. The configuration specified in
@@ -83,46 +62,65 @@ public class SmsHttpService {
    */
   @Transactional
   public synchronized void send(OutgoingSms sms) {
+    final Config config = configService.getConfigOrDefault(sms.getConfig());
+    final Template template = templateService.getTemplate(config.getTemplateName());
 
-    Config config = configService.getConfigOrDefault(sms.getConfig());
-    Template template = templateService.getTemplate(config.getTemplateName());
-    HttpMethod httpMethod = null;
-    Integer failureCount = sms.getFailureCount();
-    Integer httpStatus = null;
-    String httpResponse = null;
-    String errorMessage = null;
-    Map<String, Object> props = generateProps(sms, template, config);
-    List<SmsEvent> events = new ArrayList<>();
-    List<SmsRecord> auditRecords = new ArrayList<>();
+    try {
+      final HttpMethod sendSMSMethod = prepHttpMethod(sms, template, config);
+      final SendSmsState sendSmsState =
+          new SendSmsState()
+              .setHttpClient(httpClientService.getProviderHttpClient(config))
+              .setTemplate(template)
+              .setHttpMethod(sendSMSMethod)
+              .doRequest();
 
-    //
-    // Generate the HTTP request
-    //
-    SendSmsState sendSmsState =
-        new SendSmsState()
-            .setCommonsHttpClient(commonsHttpClient)
-            .setTemplate(template)
-            .setHttpMethod(prepHttpMethod(template, props, config))
-            .setHttpStatus(httpStatus)
-            .setHttpResponse(httpResponse)
-            .setErrorMessage(errorMessage)
-            .build();
-    httpMethod = sendSmsState.getHttpMethod();
-    httpStatus = sendSmsState.getHttpStatus();
-    httpResponse = sendSmsState.getHttpResponse();
-    errorMessage = sendSmsState.getErrorMessage();
+      handleSendSMSResponse(config, sms, sendSmsState);
+    } catch (Exception e) {
+      LOGGER.error(
+          MessageFormat.format(
+              "Failed to make SMS HTTP request for config {0} and sms id: {1}",
+              config.getName(), sms.getOpenMrsId()),
+          e);
+
+      for (String recipient : sms.getRecipients()) {
+        smsRecordDao.createOrUpdate(
+            new SmsRecord(
+                config.getName(),
+                SmsDirection.OUTBOUND,
+                recipient,
+                sms.getMessage(),
+                DateUtil.now(),
+                DeliveryStatusesConstants.ABORTED,
+                null,
+                sms.getOpenMrsId(),
+                null,
+                e.getMessage()));
+      }
+    }
+  }
+
+  private void handleSendSMSResponse(Config config, OutgoingSms sms, SendSmsState sendSmsState) {
+    Integer httpStatus = sendSmsState.getHttpStatus();
+    String httpResponse = sendSmsState.getHttpResponse();
+    String errorMessage = sendSmsState.getErrorMessage();
 
     //
     // make sure we don't talk to the SMS provider too fast (some only allow a max of n per minute
     // calls)
     //
-    delayProviderAccess(template);
+    delayProviderAccess(sendSmsState.getTemplate());
+
+    List<SmsEvent> events = new ArrayList<>();
+    List<SmsRecord> auditRecords = new ArrayList<>();
+    Integer failureCount = sms.getFailureCount();
 
     //
     // Analyze provider's response
     //
-    Response templateResponse = template.getOutgoing().getResponse();
-    if (httpStatus == null || !templateResponse.isSuccessStatus(httpStatus) || httpMethod == null) {
+    Response templateResponse = sendSmsState.getTemplate().getOutgoing().getResponse();
+    if (httpStatus == null
+        || !templateResponse.isSuccessStatus(httpStatus)
+        || sendSmsState.getHttpMethod() == null) {
       //
       // HTTP Request Failure
       //
@@ -141,14 +139,14 @@ public class SmsHttpService {
       //
       // HTTP Request Success, now look more closely at what the provider is telling us
       //
-      ResponseHandler handler = createResponseHandler(template, templateResponse, config, sms);
+      ResponseHandler handler =
+          createResponseHandler(sendSmsState.getTemplate(), templateResponse, config, sms);
 
       try {
-        handler.handle(sms, httpResponse, httpMethod.getResponseHeaders());
+        handler.handle(sms, httpResponse, sendSmsState.getHttpMethod().getResponseHeaders());
       } catch (IllegalStateException | IllegalArgumentException e) {
         // exceptions generated above should only come from config/template issues, try to display
-        // something
-        // useful in the openmrs messages and tomcat log
+        // something useful in the openmrs messages and tomcat log
         throw e;
       }
       events = handler.getEvents();
@@ -196,64 +194,12 @@ public class SmsHttpService {
     throw new IllegalStateException(String.format("Unexpected HTTP method: %s", method.getClass()));
   }
 
-  private void authenticate(Map<String, Object> props, Config config) {
-    if (props.containsKey(USERNAME) && props.containsKey(PASSWORD)) {
-      String u = props.get(USERNAME).toString();
-      String p = props.get(PASSWORD).toString();
-      commonsHttpClient.getParams().setAuthenticationPreemptive(true);
-      commonsHttpClient
-          .getState()
-          .setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(u, p));
-    } else {
-      String message;
-      if (props.containsKey(USERNAME)) {
-        message = String.format("Config %s: missing password", config.getName());
-      } else if (props.containsKey(PASSWORD)) {
-        message = String.format("Config %s: missing username", config.getName());
-      } else {
-        message = String.format("Config %s: missing username and password", config.getName());
-      }
-      throw new IllegalStateException(message);
-    }
-  }
-
   private void delayProviderAccess(Template template) {
     // todo: serialize access to configs, ie: one provider may allow 100 sms/min and another may
     // allow 10...
     // This prevents us from sending more messages per second than the provider allows
     Integer milliseconds = template.getOutgoing().getMillisecondsBetweenMessages();
     sleep(milliseconds);
-  }
-
-  private Map<String, Object> generateProps(OutgoingSms sms, Template template, Config config) {
-    Map<String, Object> props = new HashMap<>(config.getProps().size());
-    props.put("recipients", template.recipientsAsString(sms.getRecipients()));
-    props.put("message", escapeForJson(sms.getMessage()));
-    props.put("openMrsId", sms.getOpenMrsId());
-    props.put("callback", configService.getServerUrl() + "/ws/sms/status/" + config.getName());
-    if (sms.getCustomParams() != null) {
-      props.putAll(sms.getCustomParams());
-    }
-
-    for (ConfigProp configProp : config.getProps()) {
-      props.put(configProp.getName(), configProp.getValue());
-    }
-
-    // ***** WARNING *****
-    // This displays usernames & passwords in the server log! But then again, so does the settings
-    // UI...
-    // ***** WARNING *****
-    if (LOGGER.isDebugEnabled()) {
-      for (Map.Entry<String, Object> entry : props.entrySet()) {
-        LOGGER.debug(String.format("PROP %s: %s", entry.getKey(), entry.getValue()));
-      }
-    }
-
-    return props;
-  }
-
-  private String escapeForJson(String text) {
-    return text.replace("\\", "\\\\").replace("\"", "\\\"");
   }
 
   // CHECKSTYLE:OFF: ParameterNumber
@@ -300,8 +246,9 @@ public class SmsHttpService {
               null,
               errorMessage));
     }
+
     events.add(
-            SmsEventsHelper.outboundEvent(
+        SmsEventsHelper.outboundEvent(
             config.retryOrAbortSubject(failureCount),
             config.getName(),
             sms.getRecipients(),
@@ -331,15 +278,23 @@ public class SmsHttpService {
     return handler;
   }
 
-  private HttpMethod prepHttpMethod(Template template, Map<String, Object> props, Config config) {
-    HttpMethod method = template.generateRequestFor(props);
+  private HttpMethod prepHttpMethod(OutgoingSms sms, Template template, Config config) {
+    final Map<String, Object> props =
+        new TemplatePropertiesBuilder()
+            .withConfigService(configService)
+            .withTemplate(template)
+            .withConfig(config)
+            .withOutgoingSms(sms)
+            .build();
+    final HttpMethod method = template.generateRequestFor(props);
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug(printableMethodParams(method));
     }
 
-    if (template.getOutgoing().hasAuthentication().equals(Boolean.TRUE)) {
-      authenticate(props, config);
-    }
+    httpAuthenticationService.authenticate(
+        new HttpAuthenticationContext(
+            httpClientService.getProviderHttpClient(config), method, config, template, props));
+
     return method;
   }
 
@@ -352,6 +307,15 @@ public class SmsHttpService {
     } catch (InterruptedException ex) {
       Thread.currentThread().interrupt();
     }
+  }
+
+  public synchronized void setHttpClientService(HttpClientService httpClientService) {
+    this.httpClientService = httpClientService;
+  }
+
+  public synchronized void setHttpAuthenticationService(
+      HttpAuthenticationService httpAuthenticationService) {
+    this.httpAuthenticationService = httpAuthenticationService;
   }
 
   public synchronized void setTemplateService(TemplateService templateService) {

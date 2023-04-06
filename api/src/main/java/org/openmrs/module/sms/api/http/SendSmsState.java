@@ -25,16 +25,17 @@ public class SendSmsState {
 
   private static final Log LOGGER = LogFactory.getLog(SendSmsState.class);
   private static final long MINUTE = 60000;
+
   private Template template;
-  private HttpClient commonsHttpClient;
+  private HttpClient httpClient;
   private HttpMethod httpMethod;
+
   private Integer httpStatus;
   private String httpResponse;
   private String errorMessage;
 
-  public SendSmsState setCommonsHttpClient(HttpClient commonsHttpClient) {
-    this.commonsHttpClient = commonsHttpClient;
-    return this;
+  public Template getTemplate() {
+    return template;
   }
 
   public SendSmsState setTemplate(Template template) {
@@ -42,8 +43,12 @@ public class SendSmsState {
     return this;
   }
 
-  public SendSmsState setHttpMethod(HttpMethod httpMethod) {
-    this.httpMethod = httpMethod;
+  public HttpClient getHttpClient() {
+    return httpClient;
+  }
+
+  public SendSmsState setHttpClient(HttpClient httpClient) {
+    this.httpClient = httpClient;
     return this;
   }
 
@@ -51,8 +56,8 @@ public class SendSmsState {
     return httpMethod;
   }
 
-  public SendSmsState setHttpStatus(Integer httpStatus) {
-    this.httpStatus = httpStatus;
+  public SendSmsState setHttpMethod(HttpMethod httpMethod) {
+    this.httpMethod = httpMethod;
     return this;
   }
 
@@ -60,34 +65,24 @@ public class SendSmsState {
     return httpStatus;
   }
 
-  public SendSmsState setHttpResponse(String httpResponse) {
-    this.httpResponse = httpResponse;
-    return this;
-  }
-
   public String getHttpResponse() {
     return httpResponse;
-  }
-
-  public SendSmsState setErrorMessage(String errorMessage) {
-    this.errorMessage = errorMessage;
-    return this;
   }
 
   public String getErrorMessage() {
     return errorMessage;
   }
 
-  public SendSmsState build() {
+  public SendSmsState doRequest() {
     boolean shouldRetry = true;
     int retryCount = 0;
+
     while (shouldRetry) {
       shouldRetry = false;
+
       try {
-        httpStatus = commonsHttpClient.executeMethod(httpMethod);
-        if (httpMethod != null) {
-          httpResponse = httpMethod.getResponseBodyAsString();
-        }
+        httpStatus = httpClient.executeMethod(httpMethod);
+        httpResponse = httpMethod != null ? httpMethod.getResponseBodyAsString() : null;
       } catch (UnknownHostException e) {
         errorMessage =
             String.format(
@@ -96,6 +91,7 @@ public class SendSmsState {
       } catch (IllegalArgumentException | IOException | IllegalStateException e) {
         String msg =
             String.format("Problem with '%s' template? %s", template.getName(), e.toString());
+
         if (SocketException.class.isAssignableFrom(e.getClass())
             && retryCount < SMSConstants.SMS_DEFAULT_RETRY_COUNT) {
           LOGGER.warn(msg);
@@ -111,6 +107,7 @@ public class SendSmsState {
         }
       }
     }
+
     return this;
   }
 
