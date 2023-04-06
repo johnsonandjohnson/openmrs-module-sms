@@ -35,7 +35,7 @@ import static org.junit.Assert.assertThat;
 
 public class SmsServiceImplTest extends BaseModuleContextSensitiveTest {
 
-	private final String CONFIG = "nexmo";
+	private final String CONFIG = "nexmo-generic";
 
 	public static final String LONG_TEXT = "Really long text which will cause exception if will be enough long. " +
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
