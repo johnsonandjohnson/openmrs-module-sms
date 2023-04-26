@@ -14,6 +14,7 @@ common:
   staticAnalysis:
     type: sonar
     enabled: true
+    rbacEnable: true
     createEmptyAnalyis: false
     shortLivedBuildResults:
       QUALITY_GATE:
