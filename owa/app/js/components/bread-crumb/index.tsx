@@ -18,6 +18,7 @@ import { IRootState } from '../../reducers';
 import * as Default from '../../shared/utils/messages';
 import { getIntl } from "@openmrs/react-components/lib/components/localization/withLocalization";
 import './bread-crumb.scss';
+import { LocalizedMessage } from '@openmrs/react-components';
 
 const MODULE_ROUTE = '/';
 const OMRS_ROUTE = '../../';
@@ -68,7 +69,7 @@ class BreadCrumb extends React.PureComponent<IBreadCrumbProps, IBreadCrumbState>
   renderHomeCrumb = () => {
     return (
       <a href={OMRS_ROUTE} className="breadcrumb-link-item home-crumb">
-        <FontAwesomeIcon icon={['fas', 'home']} />
+        <LocalizedMessage id="SMS_HOME_BREADCRUMB" defaultMessage="Home"/>
       </a>);
   }
 

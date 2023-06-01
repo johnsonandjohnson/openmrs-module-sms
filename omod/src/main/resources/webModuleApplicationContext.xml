@@ -20,4 +20,6 @@
 
     <context:component-scan base-package="org.openmrs.module.sms.web.controller"/>
 
+    <bean id="smsStringConverter" class="org.springframework.http.converter.StringHttpMessageConverter"/>
+
 </beans>
