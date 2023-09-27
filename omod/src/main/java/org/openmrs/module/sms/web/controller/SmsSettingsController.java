@@ -25,6 +25,7 @@ import org.openmrs.module.sms.api.templates.TemplateForWeb;
 import org.openmrs.module.sms.api.validate.ValidationComponent;
 import org.openmrs.module.sms.api.web.ErrorResponse;
 import org.openmrs.module.sms.api.web.ValidationErrorResponse;
+import org.openmrs.module.sms.web.dto.ConfigsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -116,8 +117,8 @@ public class SmsSettingsController extends RestController {
             @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = "Error in retrieving all configurations")})
     @RequestMapping(value = "/configs", method = RequestMethod.GET)
     @ResponseBody
-    public Configs getConfigs() {
-        return smsSettingsService.getConfigs();
+    public ConfigsDTO getConfigs() {
+        return new ConfigsDTO(smsSettingsService.getConfigs());
     }
 
     /**
@@ -135,10 +136,11 @@ public class SmsSettingsController extends RestController {
     @RequestMapping(value = "/configs", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Configs setConfigs(@ApiParam(name = "configs", value = "All configurations to save")
-            @RequestBody Configs configs) {
+    public ConfigsDTO setConfigs(@ApiParam(name = "configs", value = "All configurations to save")
+            @RequestBody ConfigsDTO configsDTO) {
+        final Configs configs = configsDTO.newConfigs();
         validationComponent.validate(configs);
-        return smsSettingsService.setConfigs(configs);
+        return new ConfigsDTO(smsSettingsService.setConfigs(configs));
     }
 
     /**
