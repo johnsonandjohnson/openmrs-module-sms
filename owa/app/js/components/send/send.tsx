@@ -13,12 +13,17 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import {
-  sendSms, getSmsConfigs, reset, handleMessageUpdate,
-  handleConfigUpdate, handleDeliveryTimeUpdate,
-  handleRecipientsUpdate, handleCustomParamsUpdate
+  getSmsConfigs,
+  handleConfigUpdate,
+  handleCustomParamsUpdate,
+  handleDeliveryTimeUpdate,
+  handleMessageUpdate,
+  handleRecipientsUpdate,
+  reset,
+  sendSms
 } from '../../reducers/send.reducer';
 import * as Yup from 'yup';
-import { validateForm, validateField } from '../../utils/validation-util';
+import { validateForm } from '../../utils/validation-util';
 import ErrorDesc from '../ErrorDesc';
 import * as Default from '../../utils/messages';
 import { getIntl } from "@openmrs/react-components/lib/components/localization/withLocalization";
@@ -49,13 +54,21 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
   }
 
   validationSchema = Yup.object().shape({
-    recipients: Yup.string()
-      .matches(new RegExp('^\\+?\\d{1,15}(,\\+?\\d{1,15})*$'), getIntl().formatMessage({ id: 'SMS_NUMBERS_OR_COMMAS_REQUIRED', defaultMessage: Default.NUMBERS_OR_COMMAS_REQUIRED }))
-      .required(getIntl().formatMessage({ id: 'SMS_FIELD_REQUIRED', defaultMessage: Default.FIELD_REQUIRED })),
+    recipients: Yup.array().of(
+      Yup.string().matches(new RegExp("^\\+?\\d{1,15}$"), getIntl().formatMessage({
+        id: 'NUMBERS_OR_COMMAS_REQUIRED',
+        defaultMessage: Default.NUMBERS_OR_COMMAS_REQUIRED
+      }))
+    )
+      .required(getIntl().formatMessage({ id: 'SMS_FIELD_REQUIRED', defaultMessage: Default.FIELD_REQUIRED }))
+      .min(1, getIntl().formatMessage({ id: 'SMS_FIELD_REQUIRED', defaultMessage: Default.FIELD_REQUIRED })),
     message: Yup.string()
       .required(getIntl().formatMessage({ id: 'SMS_FIELD_REQUIRED', defaultMessage: Default.FIELD_REQUIRED })),
     customParams: Yup.string()
-        .matches(new RegExp("^(((\\S+):(\\S*)){0,1}\\n{0,1})*$"), getIntl().formatMessage({ id: 'SMS_CUSTOM_PARAMS_FORMAT', defaultMessage: Default.CUSTOM_PARAMS_FORMAT }))
+      .matches(new RegExp("^(((\\S+):(\\S*)){0,1}\\n{0,1})*$"), getIntl().formatMessage({
+        id: 'SMS_CUSTOM_PARAMS_FORMAT',
+        defaultMessage: Default.CUSTOM_PARAMS_FORMAT
+      }))
   });
 
   componentDidMount() {
@@ -133,8 +146,8 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
   }
 
   recipientsChange(event) {
-    let recipientsArray = event.target.value;
-    this.props.handleRecipientsUpdate(recipientsArray.split(','));
+    let recipientsArray = event.target.value.split(',');
+    this.props.handleRecipientsUpdate(recipientsArray);
     let form = {
         ... this.props.sendForm, recipients: recipientsArray
     };
@@ -184,7 +197,8 @@ export class Send extends React.PureComponent<ISendProps, ISendState> {
 
   renderError(fieldName: string) {
     if (this.state.errors) {
-      return <ErrorDesc field={this.state.errors[fieldName]} />
+      // Render only 1st error for the fieldName
+      return <ErrorDesc field={this.state.errors[Object.keys(this.state.errors).filter(key => key.indexOf(fieldName) == 0)?.[0]]} />
     }
   }
 
