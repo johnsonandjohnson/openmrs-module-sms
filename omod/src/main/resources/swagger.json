@@ -86,7 +86,7 @@
           "200" : {
             "description" : "On successful retrieving all configurations",
             "schema" : {
-              "$ref" : "#/definitions/Configs"
+              "$ref" : "#/definitions/ConfigsDTO"
             }
           },
           "400" : {
@@ -108,14 +108,14 @@
           "description" : "All configurations to save",
           "required" : false,
           "schema" : {
-            "$ref" : "#/definitions/Configs"
+            "$ref" : "#/definitions/ConfigsDTO"
           }
         } ],
         "responses" : {
           "200" : {
             "description" : "On successful saving provided configurations",
             "schema" : {
-              "$ref" : "#/definitions/Configs"
+              "$ref" : "#/definitions/ConfigsDTO"
             }
           },
           "400" : {
@@ -437,24 +437,17 @@
         }
       }
     },
-    "Configs" : {
+    "ConfigsDTO" : {
       "type" : "object",
       "properties" : {
-        "defaultConfigName" : {
-          "type" : "string"
-        },
-        "configList" : {
+        "configs" : {
           "type" : "array",
           "items" : {
             "$ref" : "#/definitions/Config"
           }
         },
-        "defaultConfig" : {
-          "$ref" : "#/definitions/Config"
-        },
-        "empty" : {
-          "type" : "boolean",
-          "default" : false
+        "defaultConfigName" : {
+          "type" : "string"
         }
       }
     },
@@ -516,13 +509,10 @@
     "MultipartFile" : {
       "type" : "object",
       "properties" : {
+        "contentType" : {
+          "type" : "string"
+        },
         "originalFilename" : {
-          "type" : "string"
-        },
-        "contentType" : {
-          "type" : "string"
-        },
-        "contentType" : {
           "type" : "string"
         },
         "name" : {
