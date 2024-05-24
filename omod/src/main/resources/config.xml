@@ -34,11 +34,6 @@
         <require_module version="${reportingVersion}">org.openmrs.module.reporting</require_module>
     </require_modules>
 
-    <extension>
-        <point>org.openmrs.admin.list</point>
-        <class>org.openmrs.module.sms.extension.html.AdminList</class>
-    </extension>
-
     <aware_of_modules>
         <aware_of_module version="${legacyVersion}">org.openmrs.module.legacyui</aware_of_module>
         <aware_of_module version="${metadatasharingVersion}">org.openmrs.module.metadatasharing</aware_of_module>
